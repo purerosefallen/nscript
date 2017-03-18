@@ -1,5 +1,4 @@
 --silver forest
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 local m,cm=senya.sayuri_spell(37564901)
 function cm.initial_effect(c)
 	senya.sayuri_return(c,m)
@@ -33,7 +32,7 @@ function cm.mfilterf(c,tp,mg,rc)
 	else return false end
 end
 function cm.mfilter(c)
-	return c:GetLevel()>0 and c:IsSetCard(0xb4) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return c:GetLevel()>0 and senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

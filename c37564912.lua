@@ -1,5 +1,4 @@
 --Sayuri·Rise to be
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 local m,cm=senya.sayuri_ritual(37564912)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
@@ -26,6 +25,7 @@ function cm.initial_effect(c)
 	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
 end
+cm.sayuri_trigger_forced=true
 function cm.sayuri_trigger_condition(c,e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,0,LOCATION_HAND,1,nil) and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,0,LOCATION_DECK,1,nil)
 end
