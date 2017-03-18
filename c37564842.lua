@@ -1,7 +1,6 @@
 --3L·MyonMyonMyon
 local m=37564842
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
 	senya.leff(c,m)
@@ -57,7 +56,7 @@ function cm.lfuscon(e,g,gc,chkfnf)
 		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
 		return senya.lfuscheck_gc(mg,gc,f1,f2,chkf) or senya.filter_sayuri_3L(gc,e:GetHandler(),chkfnf)
 	end
-	return senya.lfuscheck(mg,f1,f2,chkf) or senya:IsExists(cm.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf)
+	return senya.lfuscheck(mg,f1,f2,chkf) or mg:IsExists(cm.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf)
 end
 function cm.lfusop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local f1=cm.lfusfilter
