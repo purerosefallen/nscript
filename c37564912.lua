@@ -40,9 +40,9 @@ function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,1-tp,REASON_EFFECT)
 		Duel.ConfirmCards(tp,g)
-		Duel.ShuffleHand(1-tp)
 		Duel.ShuffleDeck(1-tp)
 	end
+	Duel.ShuffleHand(1-tp)
 end
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
