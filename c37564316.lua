@@ -1,7 +1,6 @@
 --樱华月想 -SDVX Remix-
 local m=37564316
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	senya.enable_kaguya_check_3L()
 	senya.setreg(c,m,37564876)
@@ -32,24 +31,9 @@ end
 function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 	local effect_list=senya.codelist_3L
 	local avaliable_list={}
-	local exile_list={}
 	for i,code in pairs(effect_list) do
-		local res=true
-		if code==37564828 then res=false end
-		if e:GetHandler():GetFlagEffect(code-4000)>0 then res=false end
-		local mt=_G["c"..code]
-		if mt then
-			if res and mt.effect_operation_3L then table.insert(avaliable_list,i) end
-		elseif res then
-			_G["c"..code]={}
-			table.insert(exile_list,code)
-			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
-				mt=_G["c"..code]
-				if mt and mt.effect_operation_3L then
-					table.insert(avaliable_list,i)
-				end 
-			end
-		end  
+		local mt=senya.load_metatable(code)
+		if code~=37564828 and e:GetHandler():GetFlagEffect(code-4000)==0 and mt and mt.effect_operation_3L then table.insert(avaliable_list,i) end  
 	end
 	if #avaliable_list>0 then
 		Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
@@ -57,7 +41,7 @@ function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 		for i,v in pairs(avaliable_list) do
 			local descid=1
 			local ccode=effect_list[v]
-			local mt=_G["c"..ccode]
+			local mt=senya.load_metatable(ccode)
 			local effct=mt.custom_effect_count_3L
 			if effct and effct>1 then descid=effct+1 end
 			table.insert(option_list,aux.Stringid(ccode,descid))
@@ -72,12 +56,7 @@ function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 					te:SetCost(cm.ccost(te:GetCost()))
 				end
 			end
-			local mt=_G["c"..rcode]
-			e:GetHandler():RegisterFlagEffect(m,RESET_EVENT+0x1fe0000,0,1,senya.order_table_new(mt))
 		end
-	end
-	for i,ecode in pairs(exile_list) do
-		_G["c"..ecode]=nil
 	end
 end
 function cm.ccost(costf)

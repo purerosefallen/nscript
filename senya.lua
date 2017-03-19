@@ -35,6 +35,24 @@ function cm.setreg(c,m,setcd,ct)
 		return true
 	else return false end
 end
+cm.loaded_metatable_list=cm.loaded_metatable_list or {}
+function cm.load_metatable(code)
+	local m1=_G["c"..code]
+	if m1 then return m1 end
+	local m2=cm.loaded_metatable_list[code]
+	if m2 then return m2 end
+	_G["c"..code]={}
+	if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+		local mt=_G["c"..code]
+		_G["c"..code]=nil
+		if mt then
+			cm.loaded_metatable_list[code]=mt
+			return mt
+		end
+	else
+		_G["c"..code]=nil
+	end
+end
 function cm.isset(c,setcd,ct,chkf)
 	chkf=chkf or Card.GetCode
 	local cdt={chkf(c)}
@@ -62,16 +80,7 @@ function cm.check_set(c,setcode,v,f,...)
 		for i,ncode in pairs(ncodet) do
 			if code==ncode then return true end
 		end
-		local mt=_G["c"..code]
-		if not mt then
-			_G["c"..code]={}
-			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
-				mt=_G["c"..code]
-				_G["c"..code]=nil
-			else
-				_G["c"..code]=nil
-			end
-		end
+		local mt=cm.load_metatable(code)
 		if mt and mt["named_with_"..setcode] and (not v or mt["named_with_"..setcode]==v) then return true end
 	end
 	return false
@@ -1658,17 +1667,7 @@ end
 function cm.check_set_3L(c)
 	if c:IsHasEffect(37564800) then return true end
 	local code=c:GetCode()
-	local mt=_G["c"..code]
-	if not mt then
-		_G["c"..code]={}
-		if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
-			mt=_G["c"..code]
-			_G["c"..code]=nil
-		else
-			_G["c"..code]=nil
-			return false
-		end
-	end
+	local mt=cm.load_metatable(code)
 	if not mt then return false end
 	for str,v in pairs(mt) do   
 		if type(str)=="string" and str:find("_3L") and v then return true end
@@ -1680,16 +1679,7 @@ function cm.check_fusion_set_3L(c)
 	if c:IsHasEffect(37564800) then return true end
 	local codet={c:GetFusionCode()}
 	for j,code in pairs(codet) do
-		local mt=_G["c"..code]
-		if not mt then
-			_G["c"..code]={}
-			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
-				mt=_G["c"..code]
-				_G["c"..code]=nil
-			else
-				_G["c"..code]=nil
-			end
-		end
+		local mt=cm.load_metatable(code)
 		if mt then
 			for str,v in pairs(mt) do   
 				if type(str)=="string" and str:find("_3L") and v  then return true end
@@ -1705,7 +1695,7 @@ function cm.lfus(c,m,exf,...)
 	if c:IsStatus(STATUS_COPYING_EFFECT) then return end
 	--cm.setreg(c,m,37564800)
 	c:EnableReviveLimit()
-	local mt=_G["c"..m]
+	local mt=cm.load_metatable(m)
 	local att=mt.fusion_att_3L
 	local ext_params={...}
 	local e1=Effect.CreateEffect(c)
@@ -1987,7 +1977,7 @@ function cm.leff(c,m)
 	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		local rc=e:GetHandler():GetReasonCard()
 		if rc:GetFlagEffect(m-4000)>0 or not cm.check_set_3L(rc) then return end
-		local mt=_G["c"..m]
+		local mt=cm.load_metatable(m)
 		local ctlm=rc.custom_ctlm_3L or 1
 		local efft={mt.effect_operation_3L(rc,ctlm)}
 		if not rc:IsType(TYPE_EFFECT) then
@@ -2008,7 +1998,7 @@ end
 --chkc=card to check if it can gain c's effect, nil for not checking
 function cm.lefffilter(c,chkc)
 	local cd=c:GetOriginalCode()
-	local mt=_G["c"..cd]
+	local mt=cm.load_metatable(cd)
 	return cm.check_set_3L(c) and c:IsType(TYPE_MONSTER) and mt and mt.effect_operation_3L and (not chkc or chkc:GetFlagEffect(cd-4000)==0)
 end
 --3L get effect by other cards
@@ -2020,7 +2010,7 @@ function cm.lgeff(c,tc,pres,pctlm)
 	else
 		cd=tc:GetOriginalCode()
 	end
-	local mt=_G["c"..cd]
+	local mt=cm.load_metatable(cd)
 	if not mt or c:GetFlagEffect(cd-4000)>0 or not mt.effect_operation_3L then return end
 	local ctlm=pctlm or c.custom_ctlm_3L or 1
 	local efft={mt.effect_operation_3L(c,ctlm)}
@@ -2059,7 +2049,7 @@ function cm.lgeff(c,tc,pres,pctlm)
 end
 function cm.lgetcdfilter(c,ec)
 	local cd=c:GetOriginalCode()
-	local mt=_G["c"..cd]
+	local mt=cm.load_metatable(cd)
 	return mt and mt.effect_operation_3L and ec:GetFlagEffect(cd-4000)>0
 end
 function cm.lrmefffilter(c,code)
@@ -2087,7 +2077,7 @@ function cm.lgetct(tc)
 	local t=cm.lgetcd(tc)
 	local v=0
 	for i,cd in pairs(t) do
-		local mt=_G["c"..cd] or (tc:GetFlagEffectLabel(37564316) and cm.order_table[tc:GetFlagEffectLabel(37564316)])
+		local mt=cm.load_metatable(cd)
 		local mct=mt.custom_effect_count_3L or 1
 		v=v+mct
 	end
@@ -2097,7 +2087,7 @@ end
 function cm.lreseff(tc,code)
 	local effm=tc:GetFlagEffectLabel(code-4000)
 	if not effm then return false end
-	local mt=_G["c"..code] or (tc:GetFlagEffectLabel(37564316) and cm.order_table[tc:GetFlagEffectLabel(37564316)])
+	local mt=cm.load_metatable(code)
 	Duel.Hint(tc:GetControler(),HINT_OPSELECTED,cm.desc(10))
 	local efft=cm.order_table[effm]
 	for i,te in pairs(efft) do
@@ -2135,7 +2125,7 @@ function cm.lrmeff(tp,tc,ct,maxct,chk,...)
 		for i,v in pairs(avaliable_list) do
 			local descid=1
 			local ccode=effect_list[v]
-			local mt=_G["c"..ccode] or (tc:GetFlagEffectLabel(37564316) and cm.order_table[tc:GetFlagEffectLabel(37564316)])
+			local mt=cm.load_metatable(ccode)
 			local effct=mt.custom_effect_count_3L
 			if effct and effct>1 then descid=effct+1 end
 			table.insert(option_list,aux.Stringid(ccode,descid))
@@ -2613,13 +2603,13 @@ function cm.check_set_sayuri(c)
 end
 cm.sayuri_fit_monster=cm.sayuri_fit_monster or {}
 function cm.sayuri_ritual(m)
-	local mt=_G["c"..m]
+	local mt=cm.load_metatable(m)
 	mt.named_with_sayuri=true
 	table.insert(cm.sayuri_fit_monster,m)
 	return m,mt
 end
 function cm.sayuri_spell(m)
-	local mt=_G["c"..m]
+	local mt=cm.load_metatable(m)
 	mt.named_with_sayuri=true
 	mt.fit_monster=cm.sayuri_fit_monster
 	return m,mt
