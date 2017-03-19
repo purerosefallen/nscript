@@ -59,13 +59,17 @@ function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 	if hg:GetCount()==0 then return end
 	local sg=hg:RandomSelect(tp,1)
 	Duel.ConfirmCards(tp,sg)
-	if not Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil,sg:GetFirst()) or not Duel.SelectYesNo(tp,m*16+1) then return end
+	if not Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil,sg:GetFirst()) or not Duel.SelectYesNo(tp,m*16+1) then
+		Duel.ShuffleHand(1-tp)
+		return
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,cm.thfilter,tp,LOCATION_DECK,0,1,1,nil,sg:GetFirst())
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+	Duel.ShuffleHand(1-tp)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or ep==tp then return false end
