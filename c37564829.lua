@@ -1,7 +1,6 @@
 --3L·黑暗的彼方
 local m=37564829
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	senya.leff(c,m)
@@ -71,16 +70,15 @@ function cm.effect_operation_3L(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetOperation(function(e,tp)
 		local c=e:GetHandler()
-		local res1,res2=senya.lres(chk)
 		local ct=c:GetFlagEffectLabel(m)
 		local v=math.min(senya.kaguya_check_3L[1-tp],7)
 		if not ct then
-			c:RegisterFlagEffect(m,res1,EFFECT_FLAG_CLIENT_HINT,res2,v,aux.Stringid(m,v+2))
+			c:RegisterFlagEffect(m,0x1fe1000,EFFECT_FLAG_CLIENT_HINT,1,v,aux.Stringid(m,v+2))
 			return
 		end
 		if v==ct then return end
 		c:ResetFlagEffect(m)
-		c:RegisterFlagEffect(m,res1,EFFECT_FLAG_CLIENT_HINT,res2,v,aux.Stringid(m,v+2))
+		c:RegisterFlagEffect(m,0x1fe1000,EFFECT_FLAG_CLIENT_HINT,1,v,aux.Stringid(m,v+2))
 	end)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2,true)   
@@ -130,7 +128,7 @@ function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 	if Duel.GetCurrentPhase()==PHASE_END then return end
