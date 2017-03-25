@@ -116,10 +116,15 @@ function cm.syntg(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 			local mf=g2:FilterSelect(tp,cm.ffilter,1,1,nil,c,lv-lv1,g2,minc,tp)
 			Duel.SetSelectedCard(mf)
+			g:Merge(mf)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-2,63,c)
+			g:Merge(m2)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
+			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
+			g:Merge(m2)
 		end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
-		g:Merge(m2)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 		local tuner=nil
