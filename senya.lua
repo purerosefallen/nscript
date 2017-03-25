@@ -1098,7 +1098,6 @@ function cm.nnhr(c)
 	e2:SetRange(LOCATION_ONFIELD+LOCATION_GRAVE)
 	e2:SetValue(37564765)
 	c:RegisterEffect(e2)
-	cm.nntr(c)
 end
 function cm.nnhrp(c)
 	local e2=Effect.CreateEffect(c)
@@ -1111,7 +1110,6 @@ function cm.nnhrp(c)
 	local e6=e2:Clone()
 	e6:SetRange(LOCATION_PZONE)
 	c:RegisterEffect(e6)
-	cm.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(cm.desc(8))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -1273,9 +1271,6 @@ function cm.PendOperationNanahira()
 				Duel.HintSelection(Group.FromCards(rpz))
 			end
 end
-function cm.nntr(c)
-	cm.sgreg(c,37564765)
-end
 function cm.nncon(og)
 return function(e,tp)
 	tp=tp or e:GetHandlerPlayer()
@@ -1298,6 +1293,31 @@ function cm.nnhrset(c,setcd)
 	e5:SetCode(setcd)
 	c:RegisterEffect(e5)
 	return e5
+end
+function cm.nntrap(c,...)
+	local t={...}
+	for i,te in pairs(t) do
+		local e1=te:Clone()
+		if te:GetDescription()==0 then
+			e1:SetDescription(37564553*16)
+		end
+		e1:SetType(EFFECT_TYPE_QUICK_O)
+		e1:SetRange(LOCATION_MZONE)
+		if te:GetCode()==EVENT_FREE_CHAIN then
+			e1:SetHintTiming(0x1e0)
+		end
+		e1:SetCost(cm.serlcost)
+		e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+			return bit.band(e:GetHandler():GetSummonType(),0x553)==0x553
+		end)
+		local op=te:GetOperation()
+		e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			e:GetHandler():ReleaseEffectRelation(e)
+			if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		end)
+		c:RegisterEffect(e1)
+	end
 end
 --for infinity negate effect
 function cm.neg(c,lmct,lmcd,cost,excon,exop,loc,force)

@@ -2,6 +2,7 @@
 local m=37564534
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
 	local e1=Effect.CreateEffect(c)
@@ -59,13 +60,13 @@ function cm.f1(c,e,tp)
 	return c:IsCode(37564765) and c:IsAbleToGrave() and Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,nil,e,tp) and c:IsFaceup()
 end
 function cm.f2(c,e,tp)
-	return c:IsHasEffect(37564765) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c.desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.f3(c,e,tp)
 	return c:IsCode(37564765) and c:IsAbleToGrave() and not c:IsImmuneToEffect(e) and c:IsFaceup()
 end
 function cm.filter(c)
-	return c:IsHasEffect(37564765) and bit.band(c:GetType(),TYPE_TRAP+TYPE_COUNTER)==TYPE_TRAP+TYPE_COUNTER and c:IsAbleToHand()
+	return c.desc_with_nanahira and bit.band(c:GetType(),TYPE_TRAP+TYPE_COUNTER)==TYPE_TRAP+TYPE_COUNTER and c:IsAbleToHand()
 end
 function cm.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGrave() and Duel.IsExistingMatchingCard(cm.f1,tp,LOCATION_MZONE,0,1,e:GetHandler(),e,tp) end

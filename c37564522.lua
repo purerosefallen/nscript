@@ -2,6 +2,7 @@
 local m=37564522
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhrp(c)
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +29,7 @@ function cm.desfilter(c,tp)
 	end
 end
 function cm.filter(c,ignore)
-	return c:IsHasEffect(37564765) and c:IsType(TYPE_TRAP) and c:IsSSetable(ignore)
+	return c.desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsSSetable(ignore)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and cm.desfilter(chkc,tp) and chkc~=e:GetHandler() end

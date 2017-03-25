@@ -1,6 +1,7 @@
 local m=37564524
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e22=Effect.CreateEffect(c)
@@ -23,7 +24,10 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetOperation(cm.atkop)
 	c:RegisterEffect(e1)
-	senya.scopy(c,LOCATION_DECK+LOCATION_GRAVE,0,aux.FilterBoolFunction(Card.IsHasEffect,37564765),nil,nil,1,EFFECT_COUNT_CODE_SINGLE,nil,false)
+	senya.scopy(c,LOCATION_DECK+LOCATION_GRAVE,0,cm.check_nnhr,nil,nil,1,EFFECT_COUNT_CODE_SINGLE,nil,false)
+end
+function cm.check_nnhr(c)
+	return c.desc_with_nanahira
 end
 function cm.mfilter(c,xyzc)
 	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzc) and c:IsCode(37564765)

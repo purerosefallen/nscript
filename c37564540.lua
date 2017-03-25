@@ -2,6 +2,7 @@
 local m=37564540
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
 	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.FilterBoolFunction(Card.IsCode,37564765))
@@ -26,7 +27,9 @@ function cm.initial_effect(c)
 	e1:SetCode(EFFECT_TRAP_ACT_IN_HAND)
 	e1:SetTargetRange(LOCATION_HAND,0)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsHasEffect,37564765))
+	e1:SetTarget(function(e,c)
+		return c.desc_with_nanahira
+	end)
 	c:RegisterEffect(e1)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)

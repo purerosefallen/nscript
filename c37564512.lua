@@ -2,8 +2,8 @@
 local m=37564512
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
 	--Activate(effect)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -15,6 +15,7 @@ function cm.initial_effect(c)
 	e2:SetTarget(cm.target2)
 	e2:SetOperation(cm.activate2)
 	c:RegisterEffect(e2)
+	senya.nntrap(c,e2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_TRAP_ACT_IN_HAND)

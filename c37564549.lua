@@ -2,8 +2,9 @@
 local m=37564549
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(senya.fuscate())
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
@@ -93,7 +94,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.f2(c,e,tp)
-	return c:IsHasEffect(37564765) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c.desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local te=e:GetLabelObject()

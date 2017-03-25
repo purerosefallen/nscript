@@ -2,8 +2,8 @@
 local m=37564518
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
 	--Activate(summon)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -31,7 +31,7 @@ function cm.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON)
 	c:RegisterEffect(e3)
-	--Activate(effect)
+	senya.nntrap(c,e1,e2,e3,e4)
 end 
 function cm.rcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -62,7 +62,7 @@ function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.activate2(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 	local c=e:GetHandler()

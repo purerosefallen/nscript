@@ -2,8 +2,9 @@
 local m=37564510
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -17,7 +18,7 @@ function cm.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil)
 end
 function cm.filter(c,e,tp)
-	return (c:IsCode(37564765) or c:IsHasEffect(37564765)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsCode(37564765) or c.desc_with_nanahira) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

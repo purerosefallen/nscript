@@ -1,8 +1,9 @@
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 local m=37564527
 local cm=_G["c"..m]
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)

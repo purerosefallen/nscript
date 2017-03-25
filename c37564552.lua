@@ -1,5 +1,7 @@
 --Nanahira & Sayuri
+--if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 local m,cm=senya.sayuri_ritual(37564552)
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	senya.nnhr(c)
@@ -34,7 +36,7 @@ function cm.mat_filter(c)
 	return c:GetLevel()~=8
 end
 function cm.matfilter(c,rc)
-	return c:IsCanBeRitualMaterial(rc) and (c:IsHasEffect(37564765) or senya.check_set_sayuri(c)) and c:IsType(TYPE_MONSTER)
+	return c:IsCanBeRitualMaterial(rc) and (c.desc_with_nanahira or senya.check_set_sayuri(c)) and c:IsType(TYPE_MONSTER)
 end
 function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

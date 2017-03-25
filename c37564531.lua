@@ -2,8 +2,9 @@
 local m=37564531
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_SYNCHRO_LEVEL)
@@ -24,7 +25,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.costfilter(c)
-	return c:IsHasEffect(37564765) and c:IsType(TYPE_MONSTER) and c:IsReleasable() 
+	return c.desc_with_nanahira and c:IsType(TYPE_MONSTER) and c:IsReleasable() 
 end
 function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

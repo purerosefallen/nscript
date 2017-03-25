@@ -2,8 +2,9 @@
 local m=37564542
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(senya.desc(8))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -51,7 +52,7 @@ function cm.f(c)
 	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsReleasable()
 end
 function cm.thfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsHasEffect(37564765) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c.desc_with_nanahira and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_EXTRA,0,1,nil) end

@@ -2,8 +2,8 @@
 local m=37564514
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -12,6 +12,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(senya.multi_choice_target(m,cm.tg1,cm.tg2))
 	e1:SetOperation(senya.multi_choice_operation(cm.op1,cm.op2))
 	c:RegisterEffect(e1)
+	senya.nntrap(c,e1)
 end
 function cm.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(37564765)

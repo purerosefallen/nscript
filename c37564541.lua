@@ -2,6 +2,7 @@
 local m=37564541
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhrp(c)
 	local e2=Effect.CreateEffect(c)
@@ -13,7 +14,7 @@ function cm.initial_effect(c)
 	e2:SetCondition(function(e)
 		local seq=e:GetHandler():GetSequence()
 		local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-		return tc and tc:IsHasEffect(37564765)
+		return tc and tc.desc_with_nanahira
 	end)
 	c:RegisterEffect(e2)
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +29,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c)
-	return c:IsHasEffect(37564765) and c:IsAbleToHand()
+	return c.desc_with_nanahira and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end

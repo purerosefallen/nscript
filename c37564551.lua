@@ -2,8 +2,9 @@
 local m=37564551
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
+	--senya.nntr(c)
 	--spell
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_ACTIVATE)
@@ -14,7 +15,6 @@ function cm.initial_effect(c)
 	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return not Duel.CheckEvent(EVENT_CHAINING) and senya.nncon(false)(e,tp)
 	end)
-	e6:SetCost(senya.fbdcost())
 	e6:SetTarget(cm.scopytg)
 	e6:SetOperation(cm.scopyop)
 	c:RegisterEffect(e6)
@@ -24,10 +24,10 @@ function cm.initial_effect(c)
 	e7:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e7:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
 	e7:SetCondition(senya.nncon(false))
-	e7:SetCost(senya.fbdcost())
 	e7:SetTarget(cm.scopytg2)
 	e7:SetOperation(cm.scopyop)
 	c:RegisterEffect(e7)
+	senya.nntrap(c,e6,e7)
 	--monster
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(senya.desc(6))
@@ -42,7 +42,7 @@ function cm.initial_effect(c)
 	end)
 	e8:SetCost(senya.fbdcost())
 	e8:SetTarget(cm.scopytg3)
-	e8:SetOperation(cm.scopyop2)
+	e8:SetOperation(cm.scopyop)
 	c:RegisterEffect(e8)
 	local e9=Effect.CreateEffect(c)
 	e9:SetDescription(senya.desc(6))
@@ -53,7 +53,7 @@ function cm.initial_effect(c)
 	e9:SetCountLimit(1,1)
 	e9:SetCost(senya.fbdcost())
 	e9:SetTarget(cm.scopytg4)
-	e9:SetOperation(cm.scopyop2)
+	e9:SetOperation(cm.scopyop)
 	c:RegisterEffect(e9)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -103,11 +103,8 @@ function cm.scopytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	if chk==0 then
 		if not tc then return false end
-		if e:GetLabel()==0 then return false end
-		e:SetLabel(0)
 		return cm.scopyf1(tc)
 	end
-	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
@@ -125,11 +122,8 @@ function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	if chk==0 then
 		if not tc then return false end
-		if e:GetLabel()==0 then return false end
-		e:SetLabel(0)
 		return cm.scopyf2(tc,e,tp,eg,ep,ev,re,r,rp)
 	end
-	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp
 	local fchain=cm.scopyf1(tc)
 	if fchain then
@@ -213,14 +207,9 @@ function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
 	if not te then return end
 	e:SetLabelObject(te:GetLabelObject())
 	local op=te:GetOperation()
-	if op then op(e,tp,eg,ep,ev,re,r,rp) end
-end
-function cm.scopyop2(e,tp,eg,ep,ev,re,r,rp)
-	local te=e:GetLabelObject()
-	if not te then return end
-	e:SetLabelObject(te:GetLabelObject())
-	local op=te:GetOperation()
-	e:GetHandler():ReleaseEffectRelation(e)
+	if not e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		e:GetHandler():ReleaseEffectRelation(e)
+	end
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
 function cm.scopyf1(c)
@@ -236,13 +225,13 @@ function cm.scopyf2(c,e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,m,0,0x11,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,m,0,0x21,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,m,0,0x11,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT) then
+	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,m,0,0x21,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT) then
 		c:AddMonsterAttribute(TYPE_EFFECT)
 		Duel.SpecialSummonStep(c,0,tp,tp,true,true,POS_FACEUP)
 			c:AddMonsterAttributeComplete()

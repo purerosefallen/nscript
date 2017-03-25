@@ -2,6 +2,7 @@
 local m=37564538
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
 	c:EnableReviveLimit()
@@ -44,7 +45,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.spfilter(c)
-	return c:IsHasEffect(37564765) and c:IsType(TYPE_TRAP) and c:IsAbleToGraveAsCost()
+	return c.desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsAbleToGraveAsCost()
 end
 function cm.spcon(e,c)
 	if c==nil then return true end

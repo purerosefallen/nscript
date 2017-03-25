@@ -2,6 +2,7 @@
 local m=37564543
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
 	local e1=Effect.CreateEffect(c)
@@ -22,7 +23,9 @@ function cm.initial_effect(c)
 	e1:SetTargetRange(LOCATION_SZONE,0)
 	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsHasEffect,37564765))
+	e1:SetTarget(function(e,c)
+		return c.desc_with_nanahira
+	end)
 	c:RegisterEffect(e1)
 end
 function cm.spfilter(c,sp)
@@ -37,7 +40,7 @@ function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cm.filter(c)
-	return c:IsSSetable() and c:IsType(TYPE_TRAP) and c:IsHasEffect(37564765)
+	return c:IsSSetable() and c:IsType(TYPE_TRAP) and c.desc_with_nanahira
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

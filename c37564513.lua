@@ -2,8 +2,8 @@
 local m=37564513
 local cm=_G["c"..m]
 --if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+cm.desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -11,6 +11,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(senya.multi_choice_target(m,cm.tg1,cm.tg2))
 	e1:SetOperation(senya.multi_choice_operation(cm.op1,cm.op2))
 	c:RegisterEffect(e1)
+	senya.nntrap(c,e1)
 end
 function cm.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)  
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and chkc~=e:GetHandler() end
