@@ -45,8 +45,8 @@ end
 function c66677705.lvcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66677705.remfilter,tp,LOCATION_REMOVED,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,c66677705.remfilter,tp,LOCATION_REMOVED,0,2,2,e:GetHandler())
-	Duel.SendtoDeck(g,nil,1,REASON_COST)
+	local g=Duel.SelectMatchingCard(tp,c66677705.remfilter,tp,LOCATION_REMOVED,0,1,1,e:GetHandler())
+	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c66677705.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

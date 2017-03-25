@@ -56,7 +56,7 @@ function cm.lfuscon(e,g,gc,chkfnf)
 		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
 		return senya.lfuscheck_gc(mg,gc,f1,f2,chkf) or senya.filter_sayuri_3L(gc,e:GetHandler(),chkfnf)
 	end
-	return senya.lfuscheck(mg,f1,f2,chkf) or mg:IsExists(cm.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf)
+	return senya.lfuscheck(mg,f1,f2,chkf) or mg:IsExists(senya.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf)
 end
 function cm.lfusop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local f1=cm.lfusfilter
@@ -79,7 +79,7 @@ function cm.lfusop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 		Duel.SetFusionMaterial(g1)
 		return
 	end
-	if g:IsExists(cm.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf) and (not senya.lfuscheck(g,f1,f2,chkf) or Duel.SelectYesNo(tp,37564914*16)) then
+	if g:IsExists(senya.filter_sayuri_3L,1,nil,e:GetHandler(),chkfnf) and (not senya.lfuscheck(g,f1,f2,chkf) or Duel.SelectYesNo(tp,37564914*16)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 		local g1=g:FilterSelect(tp,senya.filter_sayuri_3L,1,1,nil,e:GetHandler(),chkfnf)
 		Duel.SetFusionMaterial(g1)

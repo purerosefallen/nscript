@@ -1,7 +1,6 @@
 --Wait for Spring
 local m=37564529
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
@@ -12,23 +11,30 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
 end
-cm.fit_monster={37564504,37564526}
+cm.fit_monster={37564504,37564526,37564552}
 function cm.filter(c,e,tp,m1,m2,ft)
+	local ec=e:GetHandler()
+	if not ec.fit_monster then return false end
 	if not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
-	local cd=c:GetOriginalCode()
-	if cd~=37564504 and cd~=37564526 then return false end
+	local cd1=c:GetOriginalCode()
+	local cd2=c:GetCode()
+	local check=false
+	for i,cd in pairs(ec.fit_monster) do
+		if cd==cd1 or cd==cd2 then chk=true end
+	end
+	if not check then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
 	mg:Merge(m2)
 	if ft>0 then
-		return mg:CheckWithSumGreater(Card.GetRitualLevel,7,c)
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,c:GetLevel(),1,99,c)
 	else
-		return mg:IsExists(cm.mfilterf,1,nil,tp,mg,c)
+		return ft>-1 and mg:IsExists(cm.mfilterf,1,nil,tp,mg,c)
 	end
 end
 function cm.mfilterf(c,tp,mg,rc)
 	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
 		Duel.SetSelectedCard(c)
-		return mg:CheckWithSumGreater(Card.GetRitualLevel,7,rc)
+		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
 	else return false end
 end
 function cm.mfilter(c)

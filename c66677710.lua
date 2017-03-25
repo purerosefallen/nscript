@@ -1,9 +1,8 @@
 local m=66677710
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	--e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
