@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.mk(c,3,m-4000,false,cm.dogcon,nil,nil,true)
+	senya.mk(c,2,m-4000,false,cm.dogcon,nil,nil,true)
 end
 cm.mat_filter=senya.sayuri_mat_filter_8
 function cm.dogcon(e,tp,eg,ep,ev,re,r,rp)

@@ -2599,7 +2599,7 @@ function cm.RemainCheckOperation(e,tp,eg,ep,ev,re,r,rp)
 end
 --for sayuri
 function cm.check_set_sayuri(c)
-	return cm.check_set(c,"sayuri")
+	return cm.check_set(c,"sayuri") or c:IsHasEffect(37564900)
 end
 cm.sayuri_fit_monster=cm.sayuri_fit_monster or {}
 function cm.sayuri_ritual(m)
