@@ -1,7 +1,9 @@
 --蔷薇的统领者
 local m=37564021
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	--spsummon condition
@@ -33,7 +35,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.spfilter1(c)
-	return c:IsSetCard(0x771) and c:IsAbleToRemoveAsCost() 
+	return senya.check_set_rose(c) and c:IsAbleToRemoveAsCost() 
 end
 function cm.spcon(e,c)
 	if c==nil then return true end
@@ -55,10 +57,10 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(tg,POS_FACEUP,REASON_COST)
 end
 function cm.matfilter(c)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x770)
+	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
 end
 function cm.filter(c,e,tp)
-	return c:IsSetCard(0x770) and e:GetHandler():IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_EXTRA,0,1,c)
+	return senya.check_set_elem(c) and e:GetHandler():IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_EXTRA,0,1,c)
 end
 function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

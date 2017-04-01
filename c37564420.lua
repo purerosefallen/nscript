@@ -1,6 +1,8 @@
 --Taqumi
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564420.initial_effect(c)
+
+local m=37564420
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
@@ -20,7 +22,7 @@ function c37564420.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function c37564420.filter(c,e,tp)
-	return c:IsHasEffect(37564573) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingMatchingCard(c37564420.filter2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
+	return senya.check_set_prism(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingMatchingCard(c37564420.filter2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
 function c37564420.filter2(c,code)
 	return c:IsCode(code) and c:IsAbleToHand()

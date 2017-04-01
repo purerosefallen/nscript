@@ -1,10 +1,11 @@
 --百慕 理想的妹妹·梅娅
 local m=37564426
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prism=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.setreg(c,m,37564573)
+	--senya.setreg(c,m,37564573)
 	senya.bmdamchk(c,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+  EFFECT_FLAG_UNCOPYABLE)
@@ -49,7 +50,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.spfilter(c,fc)
-	return c:IsHasEffect(37564573) and (c:IsAbleToHandAsCost() or c:IsAbleToExtraAsCost())
+	return senya.check_set_prism(c) and (c:IsAbleToHandAsCost() or c:IsAbleToExtraAsCost())
 end
 function cm.spcon(e,c)
 	if c==nil then return true end

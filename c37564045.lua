@@ -1,7 +1,7 @@
 --恋爱Circulation
 local m=37564045
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,3)
 	c:EnableReviveLimit()

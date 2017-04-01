@@ -1,6 +1,8 @@
 --元素精灵·提亚
 local m=37564007
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
@@ -16,7 +18,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.filter(c)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x770)
+	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter1(chkc) end

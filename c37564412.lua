@@ -1,6 +1,9 @@
 --华光之二重·罗蕾塔
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564412.initial_effect(c)
+
+local m=37564412
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bmrl(c,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -14,7 +17,7 @@ function c37564412.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37564412.filter1(c,e,tp)
-	return c:GetRank()==3 and c:IsHasEffect(37564573) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:GetRank()==3 and senya.check_set_prism(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c37564412.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1

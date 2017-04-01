@@ -1,7 +1,8 @@
 --百慕 冲击的相遇·莉普丝
 local m=37564451
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prism=true
 function cm.initial_effect(c)
 	senya.bm(c)
 	local e3=Effect.CreateEffect(c)

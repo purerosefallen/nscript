@@ -1,7 +1,7 @@
 --Eternal Fantasy
 local m=37564512
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	--Activate(effect)
@@ -29,7 +29,7 @@ function cm.cfilter(c,ori)
 	if c:IsFacedown() then return false end
 	if ori then return c:GetOriginalCode()==37564765 and c:IsLocation(LOCATION_MZONE) end
 	if c:IsCode(37564765) then return true end
-	return (c:IsHasEffect(37564299) or (senya.check_set_3L(c) and c:IsType(TYPE_FUSION)) or (senya.check_set_sayuri(c) and bit.band(c:GetType(),0x81)==0x81)) and c:IsLocation(LOCATION_MZONE)
+	return (senya.check_set_sawawa(c) or (senya.check_set_3L(c) and c:IsType(TYPE_FUSION)) or (senya.check_set_sayuri(c) and bit.band(c:GetType(),0x81)==0x81)) and c:IsLocation(LOCATION_MZONE)
 end
 function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsChainNegatable(ev) and Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_ONFIELD,0,1,nil,false)

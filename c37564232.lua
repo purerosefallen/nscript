@@ -1,9 +1,10 @@
 --Crimson Beat
 local m=37564232
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_sawawa=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564299)
+	--senya.setreg(c,m,37564299)
 	c:EnableReviveLimit()
 	--special summon condition
 	local e1=Effect.CreateEffect(c)
@@ -44,7 +45,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.spfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsHasEffect(37564299) and c:IsAbleToGraveAsCost()
+	return c:IsType(TYPE_MONSTER) and senya.check_set_sawawa(c) and c:IsAbleToGraveAsCost()
 end
 function cm.spcon(e,c)
 	if c==nil then return true end

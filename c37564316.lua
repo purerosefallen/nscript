@@ -1,9 +1,10 @@
 --樱华月想 -SDVX Remix-
 local m=37564316
 local cm=_G["c"..m]
+
+cm.named_with_remix=true
 function cm.initial_effect(c)
 	senya.enable_kaguya_check_3L()
-	senya.setreg(c,m,37564876)
 	c:SetUniqueOnField(1,0,m)
 	aux.AddXyzProcedure(c,aux.FALSE,1,5,senya.RemainFilter(3),aux.Stringid(m,0))
 	c:EnableReviveLimit()

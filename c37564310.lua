@@ -1,6 +1,8 @@
 --帕拉诺尼亚 ???
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564310.initial_effect(c)
+
+local m=37564310
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	senya.rxyz1(c,nil,nil,3,3)
 --atk
 	local e4=Effect.CreateEffect(c)

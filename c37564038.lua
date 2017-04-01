@@ -1,7 +1,9 @@
 --幽玄之乱
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 os=require('os')
-function c37564038.initial_effect(c)
+local m=37564038
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)

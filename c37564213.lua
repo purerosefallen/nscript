@@ -1,6 +1,9 @@
 --Sawawa-High Speed Apple
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564213.initial_effect(c)
+
+local m=37564213
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 senya.sww(c,1,true,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564213,1))
@@ -15,7 +18,7 @@ senya.sww(c,1,true,false,false)
 	c:RegisterEffect(e1)
 end
 function c37564213.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsHasEffect(37564299)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and senya.check_set_sawawa(c)
 end
 function c37564213.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c37564213.filter(chkc,e,tp) end

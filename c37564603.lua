@@ -1,9 +1,10 @@
 --Prim-渚之小恶魔Lovely Radio
 local m=37564603
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prim=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564600)
+	--senya.setreg(c,m,37564600)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(senya.prsyfilter),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -49,7 +50,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
 	Duel.DiscardDeck(tp,1,REASON_COST)
 	local tc=Duel.GetOperatedGroup():GetFirst()
-	if tc and tc:IsHasEffect(37564600) then
+	if tc and senya.check_set_prim(tc) then
 		e:SetLabel(1)
 	else e:SetLabel(0) end
 end
@@ -123,7 +124,7 @@ function c37564603.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564603.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564603)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564603)
 end
 function c37564603.spfilter(c,e,tp,m)
 	return c:IsCode(37564603) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

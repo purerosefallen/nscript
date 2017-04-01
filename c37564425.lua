@@ -1,7 +1,7 @@
 --Prism-Duo
 local m=37564425
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)

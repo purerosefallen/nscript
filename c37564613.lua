@@ -1,9 +1,10 @@
 --Prim-梦见
 local m=37564613
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564613.initial_effect(c)
-	senya.setreg(c,m,37564600)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
+	--senya.setreg(c,m,37564600)
 	--atk def
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -40,7 +41,7 @@ function c37564613.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c37564613.filter(c)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER)
+	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER)
 end
 function c37564613.value(e,c)
 	local g=Duel.GetMatchingGroup(c37564613.filter,c:GetControler(),LOCATION_GRAVE,0,nil)
@@ -61,7 +62,7 @@ function c37564613.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564613.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564613)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564613)
 end
 function c37564613.spfilter(c,e,tp,m)
 	return c:IsCode(37564613) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

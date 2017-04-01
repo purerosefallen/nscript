@@ -1,6 +1,9 @@
 --shikou no ran
 os=require("os")
-function c37564040.initial_effect(c)
+local m=37564040
+local cm=_G["c"..m]
+
+function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564040,1))

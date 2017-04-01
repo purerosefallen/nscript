@@ -1,7 +1,7 @@
 --残留的愿望·Coconatsu
 local m=37564324
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

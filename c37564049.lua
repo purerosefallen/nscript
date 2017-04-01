@@ -1,9 +1,10 @@
 --竹之花 -SDVX Remix-
 local m=37564049
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_remix=true
+cm.named_with_elem=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564876)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,6,4,nil,nil,5)
 	senya.cneg(c,cm.discon,cm.discost,nil,m*16,true,nil)
@@ -22,7 +23,7 @@ function cm.xcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(cm.xfilter,1,nil,4) and e:GetHandler():GetOverlayGroup():IsExists(cm.xfilter,1,nil,5)
 end
 function cm.xfilter(c,rr)
-	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x770) and c:GetRank()==rr
+	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c) and c:GetRank()==rr
 end
 function cm.mtfilter(c)
 	return true

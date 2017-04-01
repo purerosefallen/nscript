@@ -1,6 +1,9 @@
 --Sawawa-High Speed Cucumber
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564202.initial_effect(c)
+
+local m=37564202
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 senya.sww(c,2,true,true,false)
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564202,1))

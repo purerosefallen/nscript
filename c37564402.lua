@@ -1,6 +1,9 @@
 --百慕 魔法的应援·妮娜
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564402.initial_effect(c)
+
+local m=37564402
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564402.target,c37564402.operation,false,CATEGORY_RECOVER+CATEGORY_DAMAGE)
 end
 function c37564402.target(e,tp,eg,ep,ev,re,r,rp,chk)

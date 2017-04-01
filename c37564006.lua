@@ -1,5 +1,9 @@
 --元素精灵·皮卡
-function c37564006.initial_effect(c)
+local m=37564006
+local cm=_G["c"..m]
+
+cm.named_with_elem=true
+function cm.initial_effect(c)
 		--超量
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -15,7 +19,7 @@ function c37564006.initial_effect(c)
 	Duel.AddCustomActivityCounter(37564006,ACTIVITY_SPSUMMON,c37564006.counterfilter)
 end
 function c37564006.counterfilter(c)
-	return c:IsSetCard(0x770) or c:GetSummonLocation()~=LOCATION_EXTRA
+	return senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
 end
 function c37564006.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(37564006,tp,ACTIVITY_SPSUMMON)==0 and
@@ -31,10 +35,10 @@ function c37564006.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c37564006.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0x770) and c:IsLocation(LOCATION_EXTRA)
+	return not senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
 end
 function c37564006.filter1(c,e,tp)
-	return c:GetRank()==4 and c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:GetRank()==4 and senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c37564006.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1

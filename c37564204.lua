@@ -1,6 +1,9 @@
 --Sawawa-Pattern Fire
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564204.initial_effect(c)
+
+local m=37564204
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564204,1))
 	e2:SetType(EFFECT_TYPE_QUICK_O)

@@ -1,5 +1,10 @@
 --大气元素·希布利兹
-function c37564036.initial_effect(c)
+local m=37564036
+local cm=_G["c"..m]
+
+
+cm.named_with_elem=true
+function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)
 	local e1=Effect.CreateEffect(c)

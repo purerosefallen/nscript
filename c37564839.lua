@@ -1,7 +1,7 @@
 --3L·mono
 local m=37564839
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e6=Effect.CreateEffect(c)
@@ -68,8 +68,8 @@ end
 function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
-		senya.lgeff(c,tc,2)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and tc then
+		if not senya.lgeff(c,tc,2) then return end
 		if c:GetFlagEffect(m)==0 then
 			local tcode=senya.order_table_new({tc:GetOriginalCode()})
 			c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2,tcode)

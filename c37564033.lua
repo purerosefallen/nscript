@@ -1,5 +1,7 @@
 --舰队-吹雪改二
-function c37564033.initial_effect(c)
+local m=37564033
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),4,3)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

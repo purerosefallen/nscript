@@ -1,7 +1,7 @@
 --Alice Dere
 local m=37564224
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -30,7 +30,7 @@ function cm.mfilterf(c,tp,mg,rc)
 	else return false end
 end
 function cm.mfilter(c)
-	return c:IsHasEffect(37564299) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

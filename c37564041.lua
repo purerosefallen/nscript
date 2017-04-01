@@ -1,5 +1,10 @@
 --閻～少女之梦、虚无的世界～
-function c37564041.initial_effect(c)
+local m=37564041
+local cm=_G["c"..m]
+
+
+cm.named_with_elem=true
+function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

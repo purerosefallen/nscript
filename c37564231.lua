@@ -1,7 +1,8 @@
 --Sawawa-Blinding Destruction
 local m=37564231
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_sawawa=true
 function cm.initial_effect(c)
 	senya.sww(c,2,true,false,false)
 	local e2=Effect.CreateEffect(c)
@@ -40,7 +41,7 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.effcon(e)
 	local tp=e:GetHandler():GetControler()
-	return senya.swwblex(e,tp) and Duel.IsExistingMatchingCard(Card.IsHasEffect,tp,LOCATION_GRAVE,0,1,nil,37564299)
+	return senya.swwblex(e,tp) and Duel.IsExistingMatchingCard(senya.check_set_sawawa,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.filter(e,c)
 	return c:GetAttack()>=3000 and c:IsFaceup() and not c:IsImmuneToEffect(e) and c:IsDestructable()

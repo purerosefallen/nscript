@@ -1,7 +1,9 @@
 --quesar
 local m=37564032
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,6,4,cm.ovfilter,aux.Stringid(m,0),63)
 	c:EnableReviveLimit()

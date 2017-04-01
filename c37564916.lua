@@ -1,5 +1,5 @@
 --Sayuri·Bad Apple II
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 local m,cm=senya.sayuri_ritual(37564916)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()

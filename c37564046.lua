@@ -1,10 +1,12 @@
 --元灵的聚集·Bronya
 local m=37564046
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x770),cm.mf,1,63,true)
+	aux.AddFusionProcFunFunRep(c,senya.check_set_elem,cm.mf,1,63,true)
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	ge2:SetCode(EVENT_SPSUMMON_SUCCESS)

@@ -1,5 +1,7 @@
 --8计划
-function c37564109.initial_effect(c)
+local m=37564109
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

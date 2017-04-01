@@ -1,9 +1,10 @@
 --Prim-Affection
 local m=37564608
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564608.initial_effect(c)
-	senya.setreg(c,m,37564600)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
+	--senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564608,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -45,7 +46,7 @@ function c37564608.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c37564608.lfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c37564608.filter(c)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER) and not c:IsCode(37564608) and c:IsAbleToHand()
+	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and not c:IsCode(37564608) and c:IsAbleToHand()
 end
 function c37564608.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564608.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -60,11 +61,12 @@ function c37564608.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564608.reccon(e,tp,eg,ep,ev,re,r,rp)
+	local rc=e:GetHandler():GetReasonCard()
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
-		and e:GetHandler():GetReasonCard():IsHasEffect(37564600)
+		and senya.check_set_prim(rc)
 end
 function c37564608.filter1(c,e,tp)
-	return c:IsHasEffect(37564600) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
+	return senya.check_set_prim(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
 end
 function c37564608.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c37564608.filter1(chkc,e,tp) end
@@ -84,7 +86,7 @@ function c37564608.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564608.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564608)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564608)
 end
 function c37564608.spfilter(c,e,tp,m)
 	return c:IsCode(37564608) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

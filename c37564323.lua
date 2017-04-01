@@ -1,7 +1,7 @@
 --幻想游园祭
 local m=37564323
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	--senya.nntr(c)
@@ -30,19 +30,14 @@ function cm.initial_effect(c)
 		c:RegisterEffect(e2)
 	end
 end
-function cm.f(c,setcode)
-	return c:IsHasEffect(setcode) and c:IsType(TYPE_MONSTER)
-end
 function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
 end
 function cm.tgfilter(c)
-	if not c:IsAbleToGrave() then return false end
+	if not c:IsAbleToGrave() or not c:IsType(TYPE_MONSTER) then return false end
 	if senya.check_set_3L(c) then return true end
-	local t={37564299,37564765}
-	for i,v in pairs(t) do
-		if cm.f(c,v) then return true end
-	end
+	if senya.check_set_sawawa(c) then return true end
+	if c.desc_with_nanahira then return true end
 	return false
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -55,7 +50,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.filter1(c,e,tp)
-	return cm.f(c,37564299) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_sawawa(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.mgfilter(c)
 	return c:IsCanBeXyzMaterial(nil)

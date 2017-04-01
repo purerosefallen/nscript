@@ -1,9 +1,10 @@
 --Touhou Sawawa Arrange
 local m=37564200
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_sawawa=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564299)
+	--senya.setreg(c,m,37564299)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -45,7 +46,7 @@ function cm.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function cm.thfilter(c)
-	return c:IsHasEffect(37564299) and c:IsAbleToHand() and (not c:IsCode(m))
+	return senya.check_set_sawawa(c) and c:IsAbleToHand() and (not c:IsCode(m))
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end

@@ -1,6 +1,9 @@
 --百慕 指尖确认·真子
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564408.initial_effect(c)
+
+local m=37564408
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564408.target,c37564408.activate,true,CATEGORY_TOHAND)
 end
 function c37564408.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

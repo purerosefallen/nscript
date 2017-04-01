@@ -1,9 +1,10 @@
 --Prim-It's My Miracle
 local m=37564610
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564610.initial_effect(c)
-	senya.setreg(c,m,37564600)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
+	--senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -37,7 +38,7 @@ function c37564610.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c37564610.sfilter(c)
-	return c:IsHasEffect(37564600) and c:IsFaceup()
+	return senya.check_set_prim(c) and c:IsFaceup()
 end
 function c37564610.spcon(e,c)
 	if c==nil then return true end
@@ -46,11 +47,12 @@ function c37564610.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c37564610.reccon(e,tp,eg,ep,ev,re,r,rp)
+	local rc=e:GetHandler():GetReasonCard()
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
-		and e:GetHandler():GetReasonCard():IsHasEffect(37564600)
+		and senya.check_set_prim(rc)
 end
 function c37564610.filter(c)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c37564610.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564610.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -65,7 +67,7 @@ function c37564610.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564610.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564610)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564610)
 end
 function c37564610.spfilter(c,e,tp,m)
 	return c:IsCode(37564610) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

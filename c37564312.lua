@@ -1,7 +1,7 @@
 --scarlet 2
 local m=37564312
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,10,2)
 	c:EnableReviveLimit()

@@ -1,9 +1,10 @@
 --传说的华光之二重·内克塔里娅
 local m=37564400
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prism=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564573)
+	--senya.setreg(c,m,37564573)
 	senya.rxyz1(c,3,cm.mfilter,2,63)
 --atk
 	local e2=Effect.CreateEffect(c)

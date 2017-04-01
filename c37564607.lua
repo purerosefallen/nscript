@@ -1,7 +1,8 @@
 --Prim-加油热血啦啦队
 local m=37564607
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prim=true
 function cm.initial_effect(c)
 	senya.prl4(c,m)
 	local e1=Effect.CreateEffect(c)
@@ -50,11 +51,11 @@ function cm.drtarg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
 end
 function cm.cfilter(c)
-	return c:IsHasEffect(37564600) and c:IsLocation(LOCATION_GRAVE)
+	return senya.check_set_prim(c) and c:IsLocation(LOCATION_GRAVE)
 end
 function cm.swwcostfilter(c,e,tp)
 	local g=Duel.GetMatchingGroup(cm.filter,tp,LOCATION_GRAVE,0,c,e,tp)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and g:CheckWithSumEqual(Card.GetLevel,4,1,ft)
+	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and g:CheckWithSumEqual(Card.GetLevel,4,1,ft)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	 if chk==0 then return Duel.IsExistingMatchingCard(cm.swwcostfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) and e:GetHandler():IsAbleToRemoveAsCost() end
@@ -64,7 +65,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	 Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function cm.filter(c,e,tp)
-	return c:IsHasEffect(37564600) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
+	return senya.check_set_prim(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	--if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cm.filter(chkc,e,tp) end
@@ -89,7 +90,7 @@ function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function cm.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
 end
 function cm.spfilter(c,e,tp,m)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

@@ -1,7 +1,9 @@
 --元灵的绽放·Blossom
 local m=37564053
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)
@@ -21,7 +23,7 @@ function cm.initial_effect(c)
 	senya.scopy(c,0,0,nil,cm.xcon,nil,1,nil,nil,true)
 end
 function cm.xmfilter(c)
-	return c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:GetRank()==4
+	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.xcon(e)
 	return e:GetHandler():GetOverlayGroup():IsExists(cm.xmfilter,1,nil)

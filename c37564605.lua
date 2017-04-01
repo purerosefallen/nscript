@@ -1,8 +1,9 @@
 --Prim-旋律教条 ~Miserables~
 local m=37564605
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564605.initial_effect(c)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
 	senya.prl4(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
@@ -51,7 +52,7 @@ function c37564605.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564605.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564605)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564605)
 end
 function c37564605.spfilter(c,e,tp,m)
 	return c:IsCode(37564605) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

@@ -1,6 +1,8 @@
 --Syan High Speed
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564219.initial_effect(c)	
+
+local m=37564219
+local cm=_G["c"..m]
+function cm.initial_effect(c)	
 local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -13,7 +15,7 @@ local e1=Effect.CreateEffect(c)
 	c:RegisterEffect(e1)
 end
 function c37564219.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and c:IsHasEffect(37564299) and c:IsFaceup()
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and senya.check_set_sawawa(c) and c:IsFaceup()
 end
 function c37564219.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and c37564219.filter(chkc) end

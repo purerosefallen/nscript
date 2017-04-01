@@ -1,5 +1,10 @@
 --Unconscious Dark
-function c37564030.initial_effect(c)
+local m=37564030
+local cm=_G["c"..m]
+
+
+cm.named_with_elem=true
+function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,c37564030.ovfilter,aux.Stringid(37564030,0))
 	c:EnableReviveLimit()
 --ctxm
@@ -51,7 +56,7 @@ function c37564030.exat(e,c)
 	return c:GetFlagEffect(375640302)
 end
 function c37564030.ovfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x770) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
 end
 function c37564030.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end
@@ -146,7 +151,7 @@ function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564030.spfilter(c,e,tp)
-	return c:IsSetCard(0x770) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
+	return senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function c37564030.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()

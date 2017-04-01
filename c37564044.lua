@@ -1,7 +1,9 @@
 --绽放于大地的旋律
 local m=37564044
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	senya.rxyz1(c,4,cm.mfilter,2,63,true)
 	--senya.rxyz1(c,4,nil,true)
@@ -54,7 +56,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e7)]]
 end
 function cm.mfilter(c)
-	return c:IsSetCard(0x770) and c:GetOverlayCount()>0
+	return senya.check_set_elem(c) and c:GetOverlayCount()>0
 end
 function cm.nfilter(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsCode(37564050)

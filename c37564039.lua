@@ -1,8 +1,10 @@
 --Glitter -Starving Trancer Remix-
 local m=37564039
 local cm=_G["c"..m]
+
+cm.named_with_rose=true
+cm.named_with_remix=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564876)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -47,7 +49,7 @@ function cm.rfilter(c)
 	return c:IsType(TYPE_XYZ) and c:GetFlagEffect(m)==0
 end
 function cm.mtfilter(c)
-	return c:IsSetCard(0x770)
+	return senya.check_set_elem(c)
 end
 function cm.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.mtfilter,tp,LOCATION_EXTRA,0,1,nil) end
@@ -66,7 +68,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function cm.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x770)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) end

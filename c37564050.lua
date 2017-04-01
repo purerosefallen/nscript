@@ -1,9 +1,11 @@
 --元灵的幻影·Kano
 local m=37564050
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
-	senya.rxyz4(c,4,aux.FilterBoolFunction(Card.IsSetCard,0x770),1,1,63)
+	senya.rxyz4(c,4,senya.check_set_elem,1,1,63)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetCategory(CATEGORY_DESTROY)

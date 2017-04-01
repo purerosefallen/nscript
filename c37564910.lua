@@ -1,9 +1,9 @@
 --Keep the Faith -Sayuri Remix-
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 local m,cm=senya.sayuri_ritual(37564910)
+cm.named_with_remix=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.setreg(c,m,37564876)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)

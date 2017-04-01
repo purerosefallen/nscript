@@ -1,6 +1,8 @@
 --闪电元灵·轰隆隆
 local m=37564051
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564765,0))
@@ -25,7 +27,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c,e,tp)
-	return c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
+	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
 end
 function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -42,7 +44,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function cm.xyzfilter(c)
-	return c:IsSetCard(0x770) and c:IsXyzSummonable(nil)
+	return senya.check_set_elem(c) and c:IsXyzSummonable(nil)
 end
 function cm.xyztg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.xyzfilter,tp,LOCATION_EXTRA,0,1,nil) end

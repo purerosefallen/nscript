@@ -1,7 +1,8 @@
 --Prim-被爱拐走♥爱情好盲目
 local m=37564606
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prim=true
 function cm.initial_effect(c)
 	senya.prl4(c,m)
 	local e2=Effect.CreateEffect(c)
@@ -94,13 +95,13 @@ function cm.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.sfilter(c,tp)
 	local ty=c:GetSummonType()
-	return ty==SUMMON_TYPE_SYNCHRO and c:IsHasEffect(37564600) and c:GetSummonPlayer()==tp
+	return ty==SUMMON_TYPE_SYNCHRO and senya.check_set_prim(c) and c:GetSummonPlayer()==tp
 end
 function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function cm.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
 end
 function cm.spfilter(c,e,tp,m)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

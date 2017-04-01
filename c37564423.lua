@@ -1,9 +1,10 @@
 --百慕 窈窕名流·夏洛特
 local m=37564423
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prism=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564573)
+	--senya.setreg(c,m,37564573)
 	senya.bmdamchk(c,false)
 	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2)
 	c:EnableReviveLimit()

@@ -1,6 +1,9 @@
 --百慕 珍重的乐句·玲奈
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564406.initial_effect(c)
+
+local m=37564406
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564406.target,c37564406.activate,true,CATEGORY_TODECK+CATEGORY_DRAW)
 end
 function c37564406.filter(c)

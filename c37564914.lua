@@ -1,7 +1,7 @@
 --Sayuri & 3L
 local m=37564914
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 cm.named_with_sayuri=true
 function cm.initial_effect(c)
 	senya.leff(c,m)

@@ -1,6 +1,9 @@
 --Sawawa-Seventh Doll
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564214.initial_effect(c)
+
+local m=37564214
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 senya.sww(c,2,true,false,false)
 	--move
 	local e1=Effect.CreateEffect(c)
@@ -58,7 +61,7 @@ end
 
 
 function c37564214.costfilter(c)
-	return c:IsHasEffect(37564299) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c37564214.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564214.costfilter,tp,LOCATION_GRAVE,0,1,nil) end

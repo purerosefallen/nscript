@@ -1,7 +1,9 @@
 --元素毁灭者·Aya Ayane
 local m=37564012
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -36,7 +38,7 @@ function cm.sprfilter1(c)
 	return c:GetSummonLocation()==LOCATION_EXTRA and not c:IsType(TYPE_PENDULUM) and c:IsReleasable()
 end
 function cm.spcfilter(c)
-	return c:IsSetCard(0x771) and not c:IsPublic()
+	return senya.check_set_rose(c) and not c:IsPublic()
 end
 function cm.sprcon(e,c)
 	if c==nil then return true end

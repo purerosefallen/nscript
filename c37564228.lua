@@ -1,6 +1,9 @@
 --Sawawa-永远的三日天下
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564228.initial_effect(c)
+
+local m=37564228
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	senya.sww(c,1,true,false,false)
 	senya.bmdamchk(c,true)
 	local e3=Effect.CreateEffect(c)

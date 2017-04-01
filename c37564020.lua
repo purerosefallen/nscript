@@ -1,5 +1,9 @@
 --White Rose Insanity
-function c37564020.initial_effect(c)
+local m=37564020
+local cm=_G["c"..m]
+
+cm.named_with_rose=true
+function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -16,11 +20,11 @@ function c37564020.initial_effect(c)
 end
 
 function c37564020.thfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x770) and c:GetOverlayCount()>0
+	return c:IsFaceup() and senya.check_set_elem(c) and c:GetOverlayCount()>0
 	and c:IsAbleToExtra() and Duel.IsExistingMatchingCard(c37564020.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode(),c:GetRank())
 end
 function c37564020.spfilter2(c,e,tp,code,rk)
-	return c:IsSetCard(0x770) and c:GetRank()==rk and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_elem(c) and c:GetRank()==rk and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37564020.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c37564020.thfilter(chkc,e,tp) end

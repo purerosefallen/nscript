@@ -1,5 +1,7 @@
 --Pluto
-function c37564322.initial_effect(c)	
+local m=37564322
+local cm=_G["c"..m]
+function cm.initial_effect(c)	
 	--Activate
 	--[[local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)

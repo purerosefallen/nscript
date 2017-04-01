@@ -1,5 +1,7 @@
 --同调樱
-function c37564102.initial_effect(c)
+local m=37564102
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()

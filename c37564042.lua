@@ -1,6 +1,8 @@
 --升阶魔法-虚无之梦
 local m=37564042
 local cm=_G["c"..m]
+
+cm.named_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -12,7 +14,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter1(c,e,tp)
-	return c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1)
 end
 function cm.filter2(c,e,tp,mc,rk)
@@ -30,7 +32,7 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,2,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,m)>0 then return end	
+	if Duel.GetFlagEffect(tp,m)>0 then return end   
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
@@ -44,7 +46,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		sc:SetMaterial(Group.FromCards(tc))
 		Duel.Overlay(sc,Group.FromCards(tc))
 		if Duel.SpecialSummonStep(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP) then
-			if not sc:IsSetCard(0x770) then
+			if not senya.check_set_elem(sc) then
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_DISABLE)

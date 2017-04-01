@@ -1,9 +1,10 @@
 --Prim-Mermaid Girl
 local m=37564611
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564611.initial_effect(c)
-	senya.setreg(c,m,37564600)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
+	--senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564611,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -43,7 +44,7 @@ function c37564611.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c37564611.cfilter(c)
-	return c:IsFaceup() and c:IsHasEffect(37564600)
+	return c:IsFaceup() and senya.check_set_prim(c)
 end
 function c37564611.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c37564611.cfilter,1,nil)
@@ -63,10 +64,10 @@ function c37564611.spop1(e,tp,eg,ep,ev,re,r,rp)
 end
 function c37564611.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT)~=0
-		and re:GetHandler():IsHasEffect(37564600) and not e:GetHandler():IsReason(REASON_RETURN)
+		and senya.check_set_prim(re:GetHandler()) and not e:GetHandler():IsReason(REASON_RETURN)
 end
 function c37564611.thfilter(c)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(37564611)
+	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(37564611)
 end
 function c37564611.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564611.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -84,7 +85,7 @@ function c37564611.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564611.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564611)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564611)
 end
 function c37564611.spfilter(c,e,tp,m)
 	return c:IsCode(37564611) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

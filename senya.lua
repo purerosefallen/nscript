@@ -85,6 +85,58 @@ function cm.check_set(c,setcode,v,f,...)
 	end
 	return false
 end
+function cm.check_set_elem(c)
+	return cm.check_set(c,"elem")
+end
+function cm.check_fusion_set_elem(c)
+	if c:IsHasEffect(6205579) then return false end
+	return cm.check_set(c,"elem",Card.GetFusionCode)
+end
+function cm.check_set_rose(c)
+	return cm.check_set(c,"rose")
+end
+function cm.check_set_sawawa(c)
+	return cm.check_set(c,"sawawa")
+end
+function cm.check_set_prism(c)
+	return cm.check_set(c,"prism")
+end
+function cm.check_set_prim(c)
+	return cm.check_set(c,"prim")
+end
+function cm.check_set_sayuri(c)
+	return cm.check_set(c,"sayuri") or c:IsHasEffect(37564900)
+end
+function cm.check_set_remix(c)
+	return cm.check_set(c,"remix")
+end
+function cm.check_set_3L(c)
+	if c:IsHasEffect(37564800) then return true end
+	local codet={c:GetCode()}
+	for j,code in pairs(codet) do
+		local mt=cm.load_metatable(code)
+		if mt then
+			for str,v in pairs(mt) do   
+				if type(str)=="string" and str:find("_3L") and v  then return true end
+			end
+		end
+	end
+	return false
+end
+function cm.check_fusion_set_3L(c)
+	if c:IsHasEffect(6205579) then return false end
+	if c:IsHasEffect(37564800) then return true end
+	local codet={c:GetFusionCode()}
+	for j,code in pairs(codet) do
+		local mt=cm.load_metatable(code)
+		if mt then
+			for str,v in pairs(mt) do   
+				if type(str)=="string" and str:find("_3L") and v  then return true end
+			end
+		end
+	end
+	return false
+end
 function cm.sgreg(c,setcd)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -539,15 +591,12 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --code lists
-cm.oldsetlist={
-0x770, --elem
-}
-cm.newsetlist={
-37564600, --prim
-37564573, --bm
-37564299, --sww
-}
 cm.csetlist={
+"elem",
+"sawawa",
+"prism",
+"prim",
+"3L",
 "sayuri",
 }
 function cm.cgcon(e,tp,eg,ep,ev,re,r,rp)
@@ -559,15 +608,8 @@ end
 function cm.unifilter(c)
 	if not c:IsType(TYPE_MONSTER) then return false end
 	if c:IsCode(37564765) then return true end
-	if cm.check_set_3L(c) then return true end
-	for i,v in pairs(cm.oldsetlist) do
-		if c:IsSetCard(v) then return true end
-	end
-	for i,v in pairs(cm.newsetlist) do
-		if c:IsHasEffect(v) then return true end
-	end
 	for i,v in pairs(cm.csetlist) do
-		if cm.check_set(c,v) then return true end
+		if cm["check_set_"..v] then return true end
 	end
 	return false
 end
@@ -795,7 +837,7 @@ end
 
 --swwss(ct=discount exf=extra function)
 function cm.sww(c,ct,ctxm,ctsm,exf)
-	cm.setreg(c,nil,37564299)
+	--cm.setreg(c,nil,37564299)
 	if ctxm then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -842,7 +884,7 @@ function cm.swwssop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.swwssfilter(c,e,exf)
-	return (c:IsHasEffect(37564299) or (exf and exf(c))) and not c:IsCode(e:GetHandler():GetOriginalCode()) and c:IsAbleToGraveAsCost()
+	return (cm.check_set_sawawa(c) or (exf and exf(c))) and not c:IsCode(e:GetHandler():GetOriginalCode()) and c:IsAbleToGraveAsCost()
 end
 --for judge blank extra
 function cm.swwblex(e,tp)
@@ -851,7 +893,7 @@ function cm.swwblex(e,tp)
 end
 --for sww rm grave
 function cm.swwcostfilter(c)
-	return c:IsHasEffect(37564299) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return cm.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function cm.swwrmcost(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -867,7 +909,7 @@ end
 --bmss ctg=category istg=is-target-effect
 
 function cm.bm(c,tg,op,istg,ctg)
-	cm.setreg(c,nil,37564573)
+	--cm.setreg(c,nil,37564573)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(37564765,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
@@ -932,7 +974,7 @@ function cm.bmsscon(e,tp,eg,ep,ev,re,r,rp)
 end
 --check if is bm
 function cm.bmchkfilter(c)
-	return c:IsHasEffect(37564573) and c:IsType(TYPE_MONSTER)
+	return cm.check_set_prism(c) and c:IsType(TYPE_MONSTER)
 end
 --damage chk for bm
 --1=remove 2=extraattack 3=atk3000 4=draw
@@ -1025,7 +1067,7 @@ end
 --for release bm L5
 --fr=must be ssed
 function cm.bmrl(c,fr)
-	cm.setreg(c,nil,37564573)
+	--cm.setreg(c,nil,37564573)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564765,0))
@@ -1389,11 +1431,10 @@ function cm.drawop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function cm.prsyfilter(c)
-	return c:IsHasEffect(37564600) and c:IsType(TYPE_SYNCHRO)
+	return cm.check_set_prim(c) and c:IsType(TYPE_SYNCHRO)
 end
 function cm.prl4(c,cd)
-	cm.setreg(c,cd,37564600)
-	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsHasEffect,37564600),1)
+	aux.AddSynchroProcedure(c,nil,cm.check_set_prim,1)
 	c:EnableReviveLimit()
 end
 function cm.xmcon(ct,excon)
@@ -1683,31 +1724,6 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
---3L set check
-function cm.check_set_3L(c)
-	if c:IsHasEffect(37564800) then return true end
-	local code=c:GetCode()
-	local mt=cm.load_metatable(code)
-	if not mt then return false end
-	for str,v in pairs(mt) do   
-		if type(str)=="string" and str:find("_3L") and v then return true end
-	end
-	return false
-end
-function cm.check_fusion_set_3L(c)
-	if c:IsHasEffect(6205579) then return false end
-	if c:IsHasEffect(37564800) then return true end
-	local codet={c:GetFusionCode()}
-	for j,code in pairs(codet) do
-		local mt=cm.load_metatable(code)
-		if mt then
-			for str,v in pairs(mt) do   
-				if type(str)=="string" and str:find("_3L") and v  then return true end
-			end
-		end
-	end
-	return false
-end
 --3L fusion monster, c=card, m=code
 --exf=extra function
 function cm.lfus(c,m,exf,...)
@@ -1963,6 +1979,7 @@ end
 function cm.enable_kaguya_check_3L()
 	if cm.kaguya_check_3L then return end
 	cm.kaguya_check_3L={}
+	cm.previous_chain_info={}
 	cm.kaguya_check_3L[0]=0
 	cm.kaguya_check_3L[1]=0
 	local e1=Effect.GlobalEffect()
@@ -1973,6 +1990,10 @@ function cm.enable_kaguya_check_3L()
 		if cm.kaguya_check_3L[ep]==7 then
 			Duel.RaiseEvent(eg,EVENT_CUSTOM+37564829,re,r,rp,ep,ev)
 		end
+		local cid=Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)
+		local ceg=eg:Clone()
+		ceg:KeepAlive()
+		cm.previous_chain_info[cid]={ceg,ep,ev,re,r,rp}
 	end)
 	Duel.RegisterEffect(e1,0)
 	local e2=Effect.GlobalEffect()
@@ -2300,8 +2321,8 @@ function cm.multi_choice_operation(...)
 end
 --order_table system
 --allows storing value of any type by Label or FlagEffectLabel
---senya.order_table_new will create a new space in senya.order_table and returns the address
---usually stores the address in Label and uses them by using the Label as the key to senya.order_table
+--cm.order_table_new will create a new space in cm.order_table and returns the address
+--usually stores the address in Label and uses them by using the Label as the key to cm.order_table
 cm.order_table=cm.order_table or {}
 cm.order_count=cm.order_count or 0
 function cm.order_table_new(v)
@@ -2618,9 +2639,6 @@ function cm.RemainCheckOperation(e,tp,eg,ep,ev,re,r,rp)
 	end)
 end
 --for sayuri
-function cm.check_set_sayuri(c)
-	return cm.check_set(c,"sayuri") or c:IsHasEffect(37564900)
-end
 cm.sayuri_fit_monster=cm.sayuri_fit_monster or {}
 function cm.sayuri_ritual(m)
 	local mt=cm.load_metatable(m)

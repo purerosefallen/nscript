@@ -1,6 +1,9 @@
 --Sawawa-Prism Crash
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564229.initial_effect(c)
+
+local m=37564229
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	senya.sww(c,1,true,false,false)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(37564229,0))
@@ -16,7 +19,7 @@ function c37564229.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c37564229.drfilter(c,e,tp)
-	return c:IsHasEffect(37564299) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_sawawa(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37564229.desfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHand() and c:IsRace(RACE_FAIRY) and c:IsFaceup()

@@ -1,6 +1,9 @@
 --Sawawa-Cosmic Drive
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564208.initial_effect(c)
+
+local m=37564208
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	senya.sww(c,1,true,false,false)
    local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564208,1))
@@ -16,7 +19,7 @@ function c37564208.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37564208.filter(c)
-	return c:IsFaceup() and c:IsHasEffect(37564299)
+	return c:IsFaceup() and senya.check_set_sawawa(c)
 end
 function c37564208.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c37564208.filter(chkc) end

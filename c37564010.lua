@@ -1,6 +1,8 @@
 --元素精灵·德库兹克
 local m=37564010
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -21,11 +23,11 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cm.filter(c,e,tp)
 	local rk=c:GetRank()
-	return c:IsType(TYPE_XYZ) and c:IsFaceup() and c:IsSetCard(0x770) and c:GetOverlayCount()>0
+	return c:IsType(TYPE_XYZ) and c:IsFaceup() and senya.check_set_elem(c) and c:GetOverlayCount()>0
 		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk,c)
 end
 function cm.spfilter(c,e,tp,rk,tc)
-	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsSetCard(0x770) and tc:IsCanBeXyzMaterial(c)
+	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and senya.check_set_elem(c) and tc:IsCanBeXyzMaterial(c)
 end
 function cm.chkfilter(c,tc)
 	local rk=tc:GetRank()

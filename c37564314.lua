@@ -1,7 +1,7 @@
 --Sway
 local m=37564314
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
 	--Activate
 	local e0=Effect.CreateEffect(c)
@@ -30,7 +30,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.thfilter(c)
-	return c:IsHasEffect(37564876) and c:IsAbleToHand()
+	return senya.check_set_remix(c) and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,3,nil) end

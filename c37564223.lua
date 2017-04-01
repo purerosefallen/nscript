@@ -1,9 +1,10 @@
 --Ultimate Creations
 local m=37564223
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_sawawa=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564299)
+	--senya.setreg(c,m,37564299)
 	c:SetUniqueOnField(1,1,m)
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
@@ -62,7 +63,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function cm.tlimit(e,c)
-	return not c:IsHasEffect(37564299)
+	return not senya.check_set_sawawa(c)
 end
 function cm.ttcon(e,c)
 	if c==nil then return true end
@@ -82,7 +83,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function cm.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and c:IsHasEffect(37564299)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and senya.check_set_sawawa(c)
 end
 function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.tgfilter,tp,LOCATION_DECK,0,1,nil) end

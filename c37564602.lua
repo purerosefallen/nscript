@@ -1,9 +1,10 @@
 --Prim-狂咲焰华
 local m=37564602
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prim=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564600)
+	--senya.setreg(c,m,37564600)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(senya.prsyfilter),2)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -82,7 +83,7 @@ function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function cm.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
 end
 function cm.spfilter(c,e,tp,m)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

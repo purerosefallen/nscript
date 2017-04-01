@@ -1,9 +1,11 @@
 --Prim
 local m=37564013
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_elem=true
+cm.named_with_prim=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564600)
+	--senya.setreg(c,m,37564600)
 	senya.rxyz1(c,4,nil,2,63)
 	--攻击上升
 	local e2=Effect.CreateEffect(c)
@@ -90,7 +92,7 @@ function cm.initial_effect(c)
 		--c:RegisterEffect(e0)
 end
 function cm.mtfilter(c)
-	return c:IsSetCard(0x770)
+	return senya.check_set_elem(c)
 end
 function cm.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.mtfilter,tp,LOCATION_EXTRA,0,1,nil) end

@@ -1,5 +1,7 @@
 --融合樱
-function c37564103.initial_effect(c)
+local m=37564103
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x772),2,true)

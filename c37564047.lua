@@ -1,7 +1,8 @@
 --Green Rose Melody
 local m=37564047
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_rose=true
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -13,7 +14,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.xf(c)
-	return c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:IsFaceup()
+	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:IsFaceup()
 end
 function cm.xfilter(c)
 	return c:IsCanBeFusionMaterial() and c:IsType(TYPE_MONSTER)
@@ -26,7 +27,7 @@ function cm.filter1(c,e)
 end
 function cm.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf) and c:IsSetCard(0x770)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf) and senya.check_set_elem(c)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

@@ -1,7 +1,7 @@
 --Yamanobori Kibun
 local m=37564528
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
@@ -12,7 +12,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.nntr(c,e1)
+	senya.nntrap(c,e1)
 end
 function cm.filter1(c,tp)
 	return c:IsCode(37564765) and c:IsPosition(POS_FACEUP_ATTACK) and c:IsAttackable() and Duel.IsExistingTarget(cm.filter2,tp,0,LOCATION_MZONE,1,c,c)

@@ -1,7 +1,7 @@
 --new utakat
 local m=37564303
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	senya.rxyz1(c,nil,nil,3,3)
 	senya.mk(c,7,m,false,cm.dogcon)

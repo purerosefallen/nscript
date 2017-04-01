@@ -1,6 +1,8 @@
 --千年的疾走梦   
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564218.initial_effect(c)
+
+local m=37564218
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCondition(senya.swwblex)

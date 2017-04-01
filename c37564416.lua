@@ -1,9 +1,10 @@
 --百慕 甜蜜和声·莫娜
 local m=37564416
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_prism=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564573)
+	--senya.setreg(c,m,37564573)
 	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2,nil,nil,5)
 	c:EnableReviveLimit()
 	local e4=Effect.CreateEffect(c)

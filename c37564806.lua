@@ -1,7 +1,7 @@
 --3L·Look for the Truth
 local m=37564806
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 cm.fusion_att_3L=ATTRIBUTE_EARTH
 function cm.initial_effect(c)
 	senya.lfus(c,m)

@@ -1,7 +1,7 @@
 --樱之舞
 local m=37564326
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	aux.AddRitualProcGreaterCode(c,m-1)
 	local e1=Effect.CreateEffect(c)

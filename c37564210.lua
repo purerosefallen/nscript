@@ -1,9 +1,9 @@
 --千年幻想郷～千年疾走響～
 local m=37564210
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564299)
+	--senya.setreg(c,m,37564299)
 	c:SetUniqueOnField(1,1,m)
 	c:EnableReviveLimit()
 	--ctss
@@ -58,7 +58,7 @@ local e8=Effect.CreateEffect(c)
 	c:RegisterEffect(e8)
 end
 function cm.spfilter(c)
-	return c:IsHasEffect(37564299) and c:IsAbleToRemoveAsCost()
+	return senya.check_set_sawawa(c) and c:IsAbleToRemoveAsCost()
 end
 function cm.spcon(e,c)
 	if c==nil then return true end

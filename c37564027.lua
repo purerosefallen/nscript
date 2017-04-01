@@ -1,6 +1,8 @@
 --元素引导者·Scorpiour
 local m=37564027
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)
@@ -43,7 +45,7 @@ function cm.indcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cm.indfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
 end
 function cm.indfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:GetRank()==4
+	return c:IsFaceup() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -67,13 +69,13 @@ function cm.ssop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.filter1(c)
-	return c:IsSetCard(0x770) 
+	return senya.check_set_elem(c) 
 end
 function cm.filter2(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.xmfilter(c)
-	return c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:GetRank()==4
+	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_COST)~=0 and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_XYZ) and re:GetHandler():IsSetCard(0x770) and e:GetHandler():GetOverlayGroup():IsExists(cm.xmfilter,1,nil)

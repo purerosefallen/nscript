@@ -1,7 +1,7 @@
 --AGEHA
 local m=37564107
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)

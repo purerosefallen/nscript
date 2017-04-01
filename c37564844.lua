@@ -1,7 +1,7 @@
 --3L·MyonMyonMyonMyonMyonMyon
 local m=37564844
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,aux.FALSE,10,5,cm.xfilter,m*16)

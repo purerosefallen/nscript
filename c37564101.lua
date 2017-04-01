@@ -1,5 +1,7 @@
 --超量樱
-function c37564101.initial_effect(c)
+local m=37564101
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,8,2)
 	c:EnableReviveLimit()

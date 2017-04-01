@@ -1,7 +1,8 @@
 --元素精灵·坡库鲁
 local m=37564008
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	senya.sgreg(c,m)
 	--spsummon
@@ -20,7 +21,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c,e,tp)
-	return c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc,e,tp) end

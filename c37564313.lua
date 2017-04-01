@@ -1,9 +1,9 @@
 --哈特曼的妖怪少女 -SDVX Remix-
 local m=37564313
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_remix=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564876)
 	senya.rxyz1(c,nil,nil,3,3)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

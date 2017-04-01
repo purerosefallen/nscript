@@ -1,6 +1,9 @@
 --百慕 沉默的歌姬·伊丝卡
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564404.initial_effect(c)
+
+local m=37564404
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564404.target,c37564404.activate,true,CATEGORY_SPECIAL_SUMMON)
 end
 function c37564404.filter(c,e,tp)

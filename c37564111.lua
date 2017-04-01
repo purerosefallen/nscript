@@ -1,5 +1,7 @@
 --Ryu☆ Din Don Dan
-function c37564111.initial_effect(c)
+local m=37564111
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcCode4(c,37564101,37564102,37564103,37564104,true,true)
 	--spsummon condition

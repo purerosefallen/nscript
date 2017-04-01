@@ -1,6 +1,9 @@
 --百慕 甜蜜乐园·玛妮娅
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564422.initial_effect(c)
+
+local m=37564422
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564422.sptg,c37564422.spop,false,CATEGORY_SPECIAL_SUMMON)
 end
 function c37564422.filter(c,e,tp)

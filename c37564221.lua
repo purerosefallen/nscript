@@ -1,6 +1,9 @@
 --Septette for the Dead Princess
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564221.initial_effect(c)
+
+local m=37564221
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	senya.sww(c,2,true,false,false)
 	local e9=Effect.CreateEffect(c)
 	e9:SetDescription(aux.Stringid(37564221,1))

@@ -1,6 +1,8 @@
 --元素精灵·布瓦
 local m=37564009
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -16,7 +18,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.filter(c,e,tp)
-	return c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
+	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

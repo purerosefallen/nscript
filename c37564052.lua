@@ -1,6 +1,8 @@
 --元灵的后续·Monosu
 local m=37564052
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)

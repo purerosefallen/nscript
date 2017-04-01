@@ -1,6 +1,9 @@
 --百慕 魔法的音杖·夏尔温
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564403.initial_effect(c)
+
+local m=37564403
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564403.target,c37564403.activate,false,CATEGORY_DRAW)
 end
 function c37564403.target(e,tp,eg,ep,ev,re,r,rp,chk)

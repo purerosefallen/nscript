@@ -1,7 +1,7 @@
 --四季的流转者·Kana
 local m=37564327
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	senya.AddFusionProcFunMulti(c,false,table.unpack(cm.filters))
 	local e1=Effect.CreateEffect(c)

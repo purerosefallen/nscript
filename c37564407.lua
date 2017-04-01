@@ -1,5 +1,8 @@
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564407.initial_effect(c)
+
+local m=37564407
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564407.target,c37564407.operation,true,CATEGORY_TOHAND)
 end
 function c37564407.filter(c)

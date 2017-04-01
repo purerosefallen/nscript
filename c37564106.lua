@@ -1,5 +1,7 @@
 --第七天堂
-function c37564106.initial_effect(c)
+local m=37564106
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

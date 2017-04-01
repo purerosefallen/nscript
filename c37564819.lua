@@ -1,7 +1,7 @@
 --3L·苍空之舞-墨染之樱
 local m=37564819
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e3=Effect.CreateEffect(c)

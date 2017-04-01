@@ -1,9 +1,10 @@
 --Prim-胧
 local m=37564612
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564612.initial_effect(c)
-	senya.setreg(c,m,37564600)
+
+cm.named_with_prim=true
+function cm.initial_effect(c)
+	--senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564612,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -31,10 +32,10 @@ function c37564612.initial_effect(c)
 end
 function c37564612.condition(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT)~=0
-		and re:GetHandler():IsHasEffect(37564600)
+		and senya.check_set_prim(re:GetHandler())
 end
 function c37564612.thfilter(c)
-	return c:IsHasEffect(37564600) and c:IsAbleToHand() and (not c:IsCode(37564612))
+	return senya.check_set_prim(c) and c:IsAbleToHand() and (not c:IsCode(37564612))
 end
 function c37564612.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564612.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -52,7 +53,7 @@ function c37564612.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564612.mtfilter(c,e)
-	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564612)
+	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564612)
 end
 function c37564612.spfilter(c,e,tp,m)
 	return c:IsCode(37564612) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

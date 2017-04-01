@@ -1,7 +1,7 @@
 --Crazy Cinderella
 local m=37564220
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -16,7 +16,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsHasEffect(37564299) and c:IsFaceup()
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and senya.check_set_sawawa(c) and c:IsFaceup()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and cm.filter(chkc,e,tp) end

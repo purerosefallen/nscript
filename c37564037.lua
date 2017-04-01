@@ -1,6 +1,8 @@
 --元素精灵·夏克
 local m=37564037
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -23,7 +25,7 @@ function cm.initial_effect(c)
 	Duel.AddCustomActivityCounter(m,ACTIVITY_SPSUMMON,cm.counterfilter)
 end
 function cm.counterfilter(c)
-	return c:IsSetCard(0x770) or c:GetSummonLocation()~=LOCATION_EXTRA
+	return senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(m,tp,ACTIVITY_SPSUMMON)==0 end
@@ -37,7 +39,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function cm.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0x770) and c:IsLocation(LOCATION_EXTRA)
+	return not senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
 end
 function cm.cfilter(c)
 	return c:IsFaceup() and c:IsLevelBelow(4) and c:IsLevelAbove(4)
@@ -61,7 +63,7 @@ end
 function cm.efcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	return r==REASON_XYZ and rc:IsSetCard(0x770)
+	return r==REASON_XYZ and senya.check_set_elem(rc)
 end
 
 function cm.efop(e,tp,eg,ep,ev,re,r,rp)

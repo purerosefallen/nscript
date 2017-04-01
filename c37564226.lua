@@ -1,7 +1,7 @@
 --Reverse or Treat?
 local m=37564226
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 function cm.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
@@ -16,11 +16,11 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e,tp)
-	return c:IsFaceup() and c:IsHasEffect(37564299) and c:IsAbleToGrave()
+	return c:IsFaceup() and senya.check_set_sawawa(c) and c:IsAbleToGrave()
 		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetCode())
 end
 function cm.spfilter(c,e,tp,code)
-	return c:IsHasEffect(37564299) and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return senya.check_set_sawawa(c) and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc,e,tp) end

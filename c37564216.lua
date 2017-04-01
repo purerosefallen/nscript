@@ -1,6 +1,9 @@
 --Sawawa-Tokamak Sol Cannon
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564216.initial_effect(c)
+
+local m=37564216
+local cm=_G["c"..m]
+cm.named_with_sawawa=true
+function cm.initial_effect(c)
 	senya.sww(c,1,true,false,false)
 --effects
    local e1=Effect.CreateEffect(c)

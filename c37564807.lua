@@ -1,7 +1,7 @@
 --3L·MyonMyonMyonMyon
 local m=37564807
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 function cm.initial_effect(c)
 	senya.setreg(c,m,37564850)
 	senya.lfusm(c,nil,2,2)

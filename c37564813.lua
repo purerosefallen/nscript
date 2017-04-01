@@ -1,9 +1,9 @@
 --妖隐 -BANAMI & 3L Remix-
 local m=37564813
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+cm.named_with_remix=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564876)
 	senya.leff(c,m)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)

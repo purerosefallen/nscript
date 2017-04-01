@@ -1,7 +1,9 @@
 --元素掌握者·Ayane
 local m=37564011
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	senya.rxyz1(c,4,nil,2,63)

@@ -1,9 +1,9 @@
 --soku
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 local m,cm=senya.sayuri_ritual(37564904)
+cm.named_with_remix=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.setreg(c,m,37564876)
 	senya.icopy(c,1,m,senya.sedescost,cm.condition2,LOCATION_HAND)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

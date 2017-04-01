@@ -1,5 +1,7 @@
 --Ryu☆ L.E.D.
-function c37564110.initial_effect(c)
+local m=37564110
+local cm=_G["c"..m]
+function cm.initial_effect(c)
 --xmlm
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

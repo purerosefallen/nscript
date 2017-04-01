@@ -1,6 +1,8 @@
 --奇迹元素·阿特摩斯
 local m=37564001
 local cm=_G["c"..m]
+
+cm.named_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)

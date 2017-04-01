@@ -1,6 +1,9 @@
 --百慕 全力偶像·萨妮娅
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564410.initial_effect(c)
+
+local m=37564410
+local cm=_G["c"..m]
+cm.named_with_prism=true
+function cm.initial_effect(c)
 	senya.bm(c,c37564410.target,c37564410.operation,true)
 end
 function c37564410.target(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -1,5 +1,5 @@
 --graze
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+--
 local m,cm=senya.sayuri_spell(37564902)
 function cm.initial_effect(c)
 	senya.sayuri_return(c,m)

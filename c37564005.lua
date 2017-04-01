@@ -1,5 +1,9 @@
 --元素精灵·萨尼
-function c37564005.initial_effect(c)
+local m=37564005
+local cm=_G["c"..m]
+
+cm.named_with_elem=true
+function cm.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

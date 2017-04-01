@@ -1,8 +1,9 @@
 --Sayuri-月光乱舞
 local m=37564918
 local cm=_G["c"..m]
---if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
+
 cm.named_with_sayuri=true
+cm.named_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -23,7 +24,7 @@ function cm.rfilter(c,rc)
 	return c:GetRank()==rc:GetLevel()
 end
 function cm.exfilter(c)
-	return c:IsAbleToRemove() and c:IsSetCard(0x770) and c:IsType(TYPE_XYZ)
+	return c:IsAbleToRemove() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
