@@ -101,6 +101,10 @@ end
 function cm.check_set_prism(c)
 	return cm.check_set(c,"prism")
 end
+function cm.check_fusion_set_prism(c)
+	if c:IsHasEffect(6205579) then return false end
+	return cm.check_set(c,"prism",Card.GetFusionCode)
+end
 function cm.check_set_prim(c)
 	return cm.check_set(c,"prim")
 end
