@@ -1,5 +1,4 @@
 --Sayuri·Lunatic Blue
---
 local m,cm=senya.sayuri_ritual(37564913)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
@@ -111,7 +110,7 @@ end
 function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
-	local co=4-c:GetSequence()
+	local co=4-c:GetSequence()  --to be changed when link rule released
 	for i=0,4 do
 		for loc=4,8,4 do
 			local g=Group.CreateGroup()
@@ -127,6 +126,13 @@ function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 				local tc2=g:GetFirst()
 				cm.move(tc2,co,e)
 			end
+		end
+	end
+	for j=6,7 do
+		local pc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,j)
+		if pc and pc:IsControler(1-tp) then
+			Duel.HintSelection(Group.FromCards(pc))
+			cm.exile(pc)
 		end
 	end
 	for j=7,5,-1 do

@@ -1670,7 +1670,7 @@ function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local te=re:Clone()
 	local tg=te:GetTarget()
 	local code=te:GetCode()
-	local cres,teg,tep,tev,tre,tr,trp
+	local tres,teg,tep,tev,tre,tr,trp
 	if code>0 and code~=EVENT_FREE_CHAIN and code~=EVENT_CHAINING and Duel.CheckEvent(code) then
 		tres,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(code,true)
 	end
