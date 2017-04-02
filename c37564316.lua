@@ -1,7 +1,6 @@
 --樱华月想 -SDVX Remix-
 local m=37564316
 local cm=_G["c"..m]
-
 cm.named_with_remix=true
 function cm.initial_effect(c)
 	senya.enable_kaguya_check_3L()
@@ -29,27 +28,28 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.operation0)
 	c:RegisterEffect(e1)
 end
+function cm.get_announce(t)
+	local rt={t[1],OPCODE_ISCODE}
+	for i=2,#t do
+		table.insert(rt,t[i])
+		table.insert(rt,OPCODE_ISCODE)
+		table.insert(rt,OPCODE_OR)
+	end
+	--table.insert(rt,TYPE_MONSTER)
+	--table.insert(rt,OPCODE_ISTYPE)
+	--table.insert(rt,OPCODE_AND)
+	return table.unpack(rt)
+end
 function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 	local effect_list=senya.codelist_3L
 	local avaliable_list={}
 	for i,code in pairs(effect_list) do
 		local mt=senya.load_metatable(code)
-		if code~=37564828 and e:GetHandler():GetFlagEffect(code-4000)==0 and mt and mt.effect_operation_3L then table.insert(avaliable_list,i) end  
+		if e:GetHandler():GetFlagEffect(code-4000)==0 and mt and mt.effect_operation_3L and not mt.announce_forbidden_3L then table.insert(avaliable_list,code) end  
 	end
 	if #avaliable_list>0 then
 		Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
-		local option_list={}
-		for i,v in pairs(avaliable_list) do
-			local descid=1
-			local ccode=effect_list[v]
-			local mt=senya.load_metatable(ccode)
-			local effct=mt.custom_effect_count_3L
-			if effct and effct>1 then descid=effct+1 end
-			table.insert(option_list,aux.Stringid(ccode,descid))
-		end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
-		local option=avaliable_list[Duel.SelectOption(tp,table.unpack(option_list))+1]
-		local rcode=effect_list[option]
+		local rcode=Duel.AnnounceCardFilter(tp,cm.get_announce(avaliable_list))
 		local et=senya.lgeff(e:GetHandler(),rcode)
 		if et then
 			for i,te in pairs(et) do

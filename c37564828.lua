@@ -1,7 +1,6 @@
 --3L·花开艳丽终将凋落
 local m=37564828
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)
@@ -24,6 +23,7 @@ function cm.effect_operation_3L(c)
 	c:RegisterEffect(e3,true)
 	return e3
 end
+cm.announce_forbidden_3L=true
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,m,0,0x21,1000,800,1,RACE_BEAST,ATTRIBUTE_EARTH) end
