@@ -13,28 +13,6 @@ function cm.desc(id)
 	id=id or 0
 	return 37564765*16+id
 end
---effect setcode tech
-cm.setchk=cm.setchk or {}
-function cm.setreg(c,m,setcd,ct)
-	if c:IsStatus(STATUS_COPYING_EFFECT) then return false end
-	m=m or c:GetOriginalCode()
-	ct=ct or 1
-	cm.setchk[m]=cm.setchk[m] or {}
-	if not cm.setchk[m][setcd] then
-		cm.setchk[m][setcd]=ct
-		for i=1,ct do
-			local ex=Effect.GlobalEffect()
-			ex:SetType(EFFECT_TYPE_FIELD)
-			ex:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
-			ex:SetCode(setcd)
-			ex:SetTargetRange(0xff,0xff)
-			ex:SetValue(i)
-			ex:SetTarget(aux.TargetBoolFunction(Card.IsCode,m))
-			Duel.RegisterEffect(ex,0)
-		end
-		return true
-	else return false end
-end
 cm.loaded_metatable_list=cm.loaded_metatable_list or {}
 function cm.load_metatable(code)
 	local m1=_G["c"..code]
@@ -52,18 +30,6 @@ function cm.load_metatable(code)
 	else
 		_G["c"..code]=nil
 	end
-end
-function cm.isset(c,setcd,ct,chkf)
-	chkf=chkf or Card.GetCode
-	local cdt={chkf(c)}
-	for i,cd in pairs(cdt) do
-		if cm.setchk[cd] then
-			if res and cm.setchk[cd][setcd] and (not ct or cm.setchk[cd][setcd]==ct) then return true end   
-		else
-			cm.setchk[cd]={}
-		end
-	end
-	return false
 end
 function cm.check_set(c,setcode,v,f,...)	
 	local codet=nil
@@ -1566,7 +1532,7 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetLabel(0)
 		return og:IsExists(cm.scopyf1,1,nil,f,e,tp)
 	end
-	e:SetLabel(0)
+	e:SetLabel(te:GetLabel())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=og:FilterSelect(tp,cm.scopyf1,1,1,nil,f,e,tp)
 	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(true,true,true)
@@ -1697,6 +1663,15 @@ function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	local ex=Effect.GlobalEffect()
+	ex:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	ex:SetCode(EVENT_CHAIN_END)
+	ex:SetLabelObject(e)
+	ex:SetOperation(function()
+		e:SetLabel(0)
+		ex:Reset()
+	end)
+	Duel.RegisterEffect(ex,tp)
 end
 function cm.cneg(c,con,cost,exop,desc,des,loc)
 	local e3=Effect.CreateEffect(c)
