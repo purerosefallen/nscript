@@ -34,7 +34,7 @@ end
 function cm.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return bc and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and bc:IsAbleToChangeControler()
+	return c:IsFaceup() and bc and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and bc:IsAbleToChangeControler()
 end
 function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
