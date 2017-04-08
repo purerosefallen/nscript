@@ -1,11 +1,9 @@
 --3L·MyonMyonMyonMyonMyon
 local m=37564843
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,3,cm.xfilter,m*16)
-	senya.setreg(c,m,37564850)
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -45,7 +43,7 @@ function cm.mfilter(c)
 	return senya.check_set_3L(c)
 end
 function cm.xfilter(c)
-	return c:IsHasEffect(37564850) and c:IsType(TYPE_FUSION) and c:IsFaceup() and senya.lgetct(c)>1
+	return senya.check_set(c,"myon") and c:IsType(TYPE_FUSION) and c:IsFaceup() and senya.lgetct(c)>1
 end
 function cm.hfilter(c,ec)
 	return senya.lefffilter(c,ec) and c:IsPublic()

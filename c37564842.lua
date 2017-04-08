@@ -1,10 +1,10 @@
 --3L·MyonMyonMyon
 local m=37564842
 local cm=_G["c"..m]
+cm.named_with_myon=true
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
 	senya.leff(c,m)
-	senya.setreg(c,m,37564850)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

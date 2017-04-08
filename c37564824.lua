@@ -3,16 +3,24 @@ local m=37564824
 local cm=_G["c"..m]
 function cm.initial_effect(c)
 	senya.leff(c,m)
-	senya.rxyz3(c,cm.xfilter,2)
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e0:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		return c:GetSummonType()==SUMMON_TYPE_XYZ and c:GetOverlayGroup():IsExists(senya.lefffilter,1,nil,e:GetHandler())
+	senya.rxyz3(c,cm.xfilter,2,63)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_ADJUST)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(function(e)
+		return e:GetHandler():GetOverlayGroup():IsExists(senya.lefffilter,1,nil,e:GetHandler())
 	end)
-	e0:SetOperation(cm.skipop)
-	c:RegisterEffect(e0)
+	e2:SetOperation(cm.op)
+	c:RegisterEffect(e2)
+	--special check
+	--for removing effect as cost
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(37564827)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	c:RegisterEffect(e3)
 end
 function cm.effect_operation_3L(c)
 	local e3=Effect.CreateEffect(c)
@@ -26,6 +34,9 @@ function cm.effect_operation_3L(c)
 	c:RegisterEffect(e3,true)
 	return e3
 end
+function cm.omit_group_3L(c)
+	return c:GetOverlayGroup()
+end
 function cm.distg(e,c)
 	return c:IsFacedown()
 end
@@ -36,13 +47,46 @@ function cm.xfilter(c,xyzcard)
 	end
 	return false
 end
-function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
+function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
-	local tc=c:GetOverlayGroup():FilterSelect(tp,senya.lefffilter,1,1,nil,e:GetHandler()):GetFirst()
-	local descid=1
-	local effct=tc.custom_effect_count_3L
-	if effct and effct>1 then descid=effct+1 end
-	Duel.Hint(HINT_OPSELECTED,1-tp,tc:GetOriginalCode()*16+descid)
-	senya.lgeff(c,tc)
+	local og=c:GetOverlayGroup():Filter(senya.lefffilter,nil,e:GetHandler())
+	og:ForEach(function(tc)  
+		local t=senya.lgeff(c,tc,false,63)
+		if not t then return end
+		for i,te in pairs(t) do
+			te:SetCondition(cm.ccon(te:GetCondition(),tc:GetOriginalCode()))
+			if te:IsHasType(0x7e0) then
+				te:SetCost(cm.ccost(te:GetCost(),tc:GetOriginalCode()),tc.single_effect_3L)
+			end
+		end
+	end)
+end
+function cm.ccon(con,cd)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		if e:GetHandler():GetOverlayGroup():IsExists(aux.FilterEqualFunction(Card.GetOriginalCode,cd),1,nil) and e:GetHandler():IsHasEffect(37564827) then
+			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
+		else
+			senya.lreseff(e:GetHandler(),cd)
+			return false
+		end
+	end
+end
+function cm.ccost(costf,cd,chks)
+	if chks then
+		return function(e,tp,eg,ep,ev,re,r,rp,chk)
+			local c=e:GetHandler()
+			if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
+			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
+			e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)
+		end
+	else
+		return function(e,tp,eg,ep,ev,re,r,rp,chk)
+			local c=e:GetHandler()
+			local ctlm=c.custom_ctlm_3L or 1
+			if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
+			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
+			c:RemoveOverlayCard(tp,1,1,REASON_COST)
+			c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
+		end
+	end
+end

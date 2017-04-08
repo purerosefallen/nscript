@@ -3,11 +3,13 @@ local m=37564827
 local cm=_G["c"..m]
 function cm.initial_effect(c)
 	senya.leff(c,m)
-	aux.AddXyzProcedure(c,cm.mfilter,7,2)
+	aux.AddXyzProcedure(c,cm.mfilter,7,2,nil,nil,63)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,0x1e0)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
@@ -33,20 +35,30 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	c:RegisterEffect(e3)
 end
-function cm.omit_group_3L(c,tp)
+function cm.omit_group_3L(c)
 	return c:GetOverlayGroup()
 end
 function cm.effect_operation_3L(c)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_DESTROY_REPLACE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
-	e2:SetTarget(cm.desreptg)
-	e2:SetOperation(cm.desrepop)
-	c:RegisterEffect(e2,true)
-	return e2
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_ADD_SETCODE)
+	e3:SetValue(0x770)
+	e3:SetReset(0x1fe1000)
+	c:RegisterEffect(e3,true)
+	if c:GetFlagEffect(m+1000)==0 then
+		local e2=Effect.CreateEffect(c)
+		e2:SetDescription(m*16+1)
+		e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+		e2:SetCode(EVENT_TO_GRAVE)
+		e2:SetCondition(cm.mkcon)
+		e2:SetTarget(cm.mktg)
+		e2:SetOperation(cm.mkop)
+		c:RegisterEffect(e2,true)
+		c:RegisterFlagEffect(m+1000,0,0,0)
+	end
+	return e3
 end
 function cm.mfilter(c)
 	return senya.check_set_3L(c)
@@ -56,23 +68,21 @@ function cm.filter(c)
 end
 function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,e:GetHandler()) and e:GetHandler():IsType(TYPE_XYZ) end
 	local ct=63
 	for i=1,62 do
 		if not e:GetHandler():CheckRemoveOverlayCard(tp,i,REASON_COST) then
-			ct=i
+			ct=i-1
 			break
 		end
 	end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,e:GetHandler()) and e:GetHandler():IsType(TYPE_XYZ) and i>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,ct,e:GetHandler())
-	local rct=g:GetCount()-1
-	if rct>0 then
-		e:GetHandler():RemoveOverlayCard(tp,rct,rct,REASON_COST)
-	end
+	local rct=g:GetCount()
+	e:GetHandler():RemoveOverlayCard(tp,rct,rct,REASON_COST)
 	local gg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
 	if gg:GetCount()==0 then return end
-	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,gg,1,0,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,gg,gg:GetCount(),0,LOCATION_GRAVE)
 end
 function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
@@ -114,24 +124,26 @@ function cm.ccost(costf,cd)
 		c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
 	end
 end
-function cm.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.mkcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_DESTROY) and e:GetHandler():IsPreviousSetCard(0x770)
+end
+function cm.cfilter(c,e)
+	return not c:IsCode(m) and senya.lefffilter(c,e:GetHandler()) and senya.check_set_3L(c)
+end
+function cm.mktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and chkc~=e:GetHandler() and cm.cfilter(chkc,e) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,true) and Duel.IsExistingTarget(cm.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local g=Duel.SelectTarget(tp,cm.cfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function cm.mkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsOnField() and c:IsFaceup()
-		and Duel.IsExistingMatchingCard(cm.repfilter,tp,0,LOCATION_ONFIELD,1,c) end
-	if Duel.SelectYesNo(tp,aux.Stringid(m,2)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local g=Duel.SelectMatchingCard(tp,cm.repfilter,tp,0,LOCATION_ONFIELD,1,1,c)
-		e:SetLabelObject(g:GetFirst())
-		Duel.HintSelection(g)
-		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
-		return true
-	else return false end
-end
-function cm.desrepop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
-	Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
-end
-function cm.repfilter(c)
-	return not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
+	local tc=Duel.GetFirstTarget()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,0,tp,true,true) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
+	c:CompleteProcedure()
+	if tc then senya.lgeff(c,tc) end
 end

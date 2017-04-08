@@ -1,11 +1,10 @@
 --3L·MyonMyonMyonMyonMyonMyon
 local m=37564844
 local cm=_G["c"..m]
---
+cm.named_with_myon=true
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,aux.FALSE,10,5,cm.xfilter,m*16)
-	senya.setreg(c,m,37564850)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -49,7 +48,7 @@ function cm.omit_group_3L(c)
 	return Duel.GetMatchingGroup(aux.TRUE,c:GetControler(),LOCATION_GRAVE,0,nil)
 end
 function cm.xfilter(c)
-	return c:IsHasEffect(37564850) and c:IsType(TYPE_XYZ) and c:IsFaceup() and c:GetOverlayCount()>2
+	return senya.check_set(c,"myon") and c:IsType(TYPE_XYZ) and c:IsFaceup() and c:GetOverlayCount()>2
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -128,7 +127,7 @@ function cm.ccost(costf,cd,chks)
 			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			local g=Duel.SelectMatchingCard(tp,cm.excfilter,tp,LOCATION_GRAVE,0,1,1,c,cd)
-			Duel.Remove(g,POS_FACEUP,REASON_COST)	   
+			Duel.Remove(g,POS_FACEUP,REASON_COST)	
 			c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
 		end
 	end

@@ -1,9 +1,8 @@
 --3L·MyonMyonMyonMyon
 local m=37564807
 local cm=_G["c"..m]
---
+cm.named_with_myon=true
 function cm.initial_effect(c)
-	senya.setreg(c,m,37564850)
 	senya.lfusm(c,nil,2,2)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)
