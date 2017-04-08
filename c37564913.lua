@@ -110,7 +110,15 @@ end
 function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
-	local co=4-c:GetSequence()  --to be changed when link rule released
+	local co=c:GetSequence()
+	if c:IsControler(tp) then
+		if co==5 then co=3
+		elseif co==6 then co=1
+		else co=4-co end
+	else
+		if co==5 then co=1
+		elseif co==6 then co=3 end
+	end
 	for i=0,4 do
 		for loc=4,8,4 do
 			local g=Group.CreateGroup()
