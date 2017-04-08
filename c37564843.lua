@@ -1,6 +1,7 @@
 --3L·MyonMyonMyonMyonMyon
 local m=37564843
 local cm=_G["c"..m]
+cm.named_with_myon=true
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,3,cm.xfilter,m*16)
