@@ -56,7 +56,7 @@ function cm.check_set_elem(c)
 end
 function cm.check_fusion_set_elem(c)
 	if c:IsHasEffect(6205579) then return false end
-	return cm.check_set(c,"elem",Card.GetFusionCode)
+	return cm.check_set(c,"elem",nil,Card.GetFusionCode)
 end
 function cm.check_set_rose(c)
 	return cm.check_set(c,"rose")
@@ -69,7 +69,7 @@ function cm.check_set_prism(c)
 end
 function cm.check_fusion_set_prism(c)
 	if c:IsHasEffect(6205579) then return false end
-	return cm.check_set(c,"prism",Card.GetFusionCode)
+	return cm.check_set(c,"prism",nil,Card.GetFusionCode)
 end
 function cm.check_set_prim(c)
 	return cm.check_set(c,"prim")
