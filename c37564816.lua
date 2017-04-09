@@ -1,7 +1,6 @@
 --3L·花在幻想的尽头
 local m=37564816
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)
@@ -78,7 +77,10 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			tc:SetMaterial(mat1)
-			Duel.SendtoDeck(mat1,nil,2,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.SendtoDeck(mat1,nil,0,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			for p=0,1 do
+				if mat1:IsExists(cm.shfilter,1,nil,p) then Duel.ShuffleDeck(p) end
+			end		 
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		else
@@ -88,6 +90,9 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc:CompleteProcedure()
 	end
+end
+function cm.shfilter(c,p)
+	return c:IsLocation(LOCATION_DECK) and c:IsControler(p)
 end
 function cm.cfilter(c,tp)
 	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK)
