@@ -2126,10 +2126,20 @@ function cm.lrmeff(tp,tc,ct,maxct,chk,...)
 	local effect_list=cm.lgetcd(tc)
 	local avaliable_list={}
 	local omit_list={...}
-	if tc:IsHasEffect(37564827) and tc.omit_group_3L then
-		tc:omit_group_3L():ForEach(function(oc)
+	if Card.GetAffectingEffect then
+		local oe=tc:GetAffectingEffect(37564827)
+		if oe then
+			local of=cm.order_table[oe:GetValue()]
+			local og=of(tc)
+			for oc in aux.Next(og) do
+				table.insert(omit_list,oc:GetOriginalCode())
+			end
+		end
+	elseif tc:IsHasEffect(37564827) and tc.omit_group_3L then
+		local og=tc:omit_group_3L()
+		for oc in aux.Next(og) do
 			table.insert(omit_list,oc:GetOriginalCode())
-		end)
+		end
 	end
 	for i,code in pairs(effect_list) do
 		local res=true
@@ -2162,7 +2172,10 @@ end
 function cm.lsermeffcost(ct,...)
 local omit_list={...}
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return cm.lrmeff(tp,e:GetHandler(),ct,ct,true,table.unpack(omit_list)) end
+	if chk==0 then
+		if e:GetHandler():IsHasEffect(37564827) then return false end
+		return cm.lrmeff(tp,e:GetHandler(),ct,ct,true,table.unpack(omit_list))
+	end
 	cm.lrmeff(tp,e:GetHandler(),ct,ct,false,table.unpack(omit_list))
 end
 end
@@ -2670,4 +2683,12 @@ function cm.sayuri_mat_filter_8(c)
 end
 function cm.sayuri_mat_filter_12(c)
 	return cm.check_set_sayuri(c) and c:GetLevel()==4
+end
+
+function cm.clone_table(t)
+	local rt={}
+	for i,v in pairs(t) do
+		rt[i]=v
+	end
+	return rt
 end

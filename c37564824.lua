@@ -20,6 +20,7 @@ function cm.initial_effect(c)
 	e3:SetCode(37564827)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetValue(senya.order_table_new(cm.omit_group_3L))
 	c:RegisterEffect(e3)
 end
 function cm.effect_operation_3L(c)

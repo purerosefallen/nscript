@@ -1,7 +1,6 @@
 --3L·Scarlet Moon
 local m=37564838
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m) 
 end
