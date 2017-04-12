@@ -579,7 +579,8 @@ function cm.unifilter(c)
 	if not c:IsType(TYPE_MONSTER) then return false end
 	if c:IsCode(37564765) then return true end
 	for i,v in pairs(cm.csetlist) do
-		if cm["check_set_"..v] then return true end
+		local chkf=cm["check_set_"..v]
+		if chkf(c) then return true end
 	end
 	return false
 end
