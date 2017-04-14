@@ -1,21 +1,17 @@
 --Nanahira & LaiBill
 local m=37564541
 local cm=_G["c"..m]
---
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhrp(c)
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(m)
 	e2:SetRange(LOCATION_PZONE)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetTargetRange(1,0)
-	e2:SetCondition(function(e)
-		local seq=e:GetHandler():GetSequence()
-		local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-		return tc and tc.desc_with_nanahira
-	end)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCondition(senya.nnexpcon)
+	e2:SetValue(senya.order_table_new(cm.pendulum_info))
 	c:RegisterEffect(e2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -28,6 +24,11 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.operation)
 	c:RegisterEffect(e1)
 end
+cm.pendulum_info={
+	location=LOCATION_GRAVE,
+	filter=aux.FilterBoolFunction(Card.IsCode,37564765),
+	max_count=1,
+}
 function cm.filter(c)
 	return c.desc_with_nanahira and c:IsAbleToHand()
 end

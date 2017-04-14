@@ -1,7 +1,7 @@
 --Nanahira & Miyuki
 local m=37564521
 local cm=_G["c"..m]
---
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhrp(c)
@@ -16,26 +16,19 @@ function cm.initial_effect(c)
 	e3:SetTarget(cm.sptg2)
 	e3:SetOperation(cm.spop2)
 	c:RegisterEffect(e3)
-	--[[local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(m,0))
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SPSUMMON_PROC)
-	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e4:SetRange(LOCATION_PZONE)
-	e4:SetCondition(cm.hcon)
-	c:RegisterEffect(e4)]]
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(m)
-	e3:SetRange(LOCATION_PZONE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCondition(function(e)
-		local seq=e:GetHandler():GetSequence()
-		local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-		return tc and tc.desc_with_nanahira
-	end)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(37564541)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetCondition(senya.nnexpcon)
+	e2:SetValue(senya.order_table_new(cm.pendulum_info))
+	c:RegisterEffect(e2)
 end
+cm.pendulum_info={
+	location=LOCATION_SZONE,
+	filter=function(c,e) return c==e:GetHandler() end,
+}
 cm.pendulum_level=7
 function cm.ssfilter(c)
 	return c:IsFaceup() and c:GetOriginalCode()==37564765

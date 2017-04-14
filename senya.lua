@@ -500,6 +500,7 @@ end
 function cm.gsprcon(loc,opf)
 return function(e,c)
 	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
 	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
 	local mg=Duel.GetMatchingGroup(cm.gsprfilter,tp,loc,0,c,c,opf)
@@ -1172,19 +1173,18 @@ function cm.nnhrexp(c,scon)
 	end)
 	c:RegisterEffect(e2)
 end
-function cm.PConditionFilterNanahira(c,e,tp,lscale,rscale)
+function cm.PConditionFilterNanahira(c,e,tp,lscale,rscale,f,te)
 	local lv=0
 	if c.pendulum_level then
 		lv=c.pendulum_level
 	else
 		lv=c:GetLevel()
 	end
-	return (c:IsLocation(LOCATION_HAND)
-		or (c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsLocation(LOCATION_EXTRA))
-		or (c:IsLocation(LOCATION_GRAVE) and c:IsCode(37564765) and Duel.IsPlayerAffectedByEffect(tp,37564541))
-		or (c:IsLocation(LOCATION_SZONE) and c:IsHasEffect(37564521)))
-		and lv>lscale and lv<rscale and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
-		and not c:IsForbidden()
+	return lv>lscale and lv<rscale and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
+		and not c:IsForbidden() and (not f or f(c,te))
+end
+function cm.PConditionFilterExtra(c)
+	return c:IsHasEffect(37564541) and c.pendulum_info
 end
 function cm.PendConditionNanahira()
 	return  function(e,c,og)
@@ -1198,11 +1198,28 @@ function cm.PendConditionNanahira()
 				if lscale>rscale then lscale,rscale=rscale,lscale end
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				if ft<=0 then return false end
+				local g=nil
 				if og then
-					return og:IsExists(cm.PConditionFilterNanahira,1,nil,e,tp,lscale,rscale)
+					g=og:Filter(aux.PConditionFilter,1,nil,e,tp,lscale,rscale)
 				else
-					return Duel.IsExistingMatchingCard(cm.PConditionFilterNanahira,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_SZONE,0,1,nil,e,tp,lscale,rscale)
+					g=Duel.GetMatchingGroup(aux.PConditionFilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,e,tp,lscale,rscale)
 				end
+				if Card.GetAffectingEffect then
+					local ext={c:GetAffectingEffect(37564541),rpz:GetAffectingEffect(37564541)}
+					for i,te in pairs(ext) do
+						local t=cm.order_table[te:GetValue()]
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						g:Merge(exg)
+					end
+				else
+					local cg=Group.FromCards(c,rpz):Filter(cm.PConditionFilterExtra,nil)
+					for tc in aux.Next(cg) do
+						local t=tc.pendulum_info
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						g:Merge(exg)
+					end
+				end
+				return g:GetCount()>0
 			end
 end
 function cm.PendOperationNanahira()
@@ -1214,75 +1231,67 @@ function cm.PendOperationNanahira()
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 				local tg=nil
+				local maxlist={}
 				if og then
-					tg=og:Filter(tp,cm.PConditionFilterNanahira,nil,e,tp,lscale,rscale)
+					tg=og:Filter(aux.PConditionFilter,1,nil,e,tp,lscale,rscale)
 				else
-					tg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,LOCATION_HAND+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_SZONE,0,nil,e,tp,lscale,rscale)
+					tg=Duel.GetMatchingGroup(aux.PConditionFilter,tp,LOCATION_HAND+LOCATION_EXTRA,0,nil,e,tp,lscale,rscale)
+				end
+				if Card.GetAffectingEffect then
+					local ext={c:GetAffectingEffect(37564541),rpz:GetAffectingEffect(37564541)}
+					for i,te in pairs(ext) do
+						local t=cm.order_table[te:GetValue()]
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						tg:Merge(exg)
+						local mct=t.max_count
+						if mct and mct>0 and mct<ft then
+							maxlist[t.location]=mct
+						end
+					end
+				else
+					local cg=Group.FromCards(c,rpz):Filter(cm.PConditionFilterExtra,nil)
+					for tc in aux.Next(cg) do
+						local t=tc.pendulum_info
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						tg:Merge(exg)
+						local mct=t.max_count
+						if mct and mct>0 and mct<ft then
+							maxlist[t.location]=mct
+						end
+					end
 				end
 				local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
-				if ect and (ect<=0 or ect>ft) then ect=nil end
-				local nct=1
-				if ect==nil or tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=ect then
-					if Duel.IsPlayerAffectedByEffect(tp,37564541) and tg:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)>nct then   
-						repeat
-							local ct=math.min(ft,nct)
-							Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-							local g=tg:Select(tp,1,ct,nil)
-							tg:Sub(g)
-							sg:Merge(g)
-							ft=ft-g:GetCount()
-							nct=nct-g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
-						until ft==0 or nct==0 or tg:GetCount()==0 or not Duel.SelectYesNo(tp,210)
-						local hg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_EXTRA+LOCATION_SZONE)
-						if ft>0 and nct==0 and hg:GetCount()>0 and Duel.SelectYesNo(tp,210) then
-							Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-							local g=hg:Select(tp,1,ft,nil)
-							sg:Merge(g)
-						end
-					else
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=tg:Select(tp,1,ft,nil)
-						sg:Merge(g)
-					end
-				elseif Duel.IsPlayerAffectedByEffect(tp,37564541) and tg:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)>nct then
-					repeat
-						local ct=ft
-						if nct>0 then ct=math.min(ct,nct) end
-						if ect>0 then ct=math.min(ct,ect) end
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=tg:Select(tp,1,ct,nil)
-						tg:Sub(g)
-						sg:Merge(g)
-						ft=ft-g:GetCount()
-						ect=ect-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-						nct=nct-g:FilterCount(Card.IsLocation,nil,LOCATION_GRAVE)
-						if ect==0 then
-							tg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_GRAVE+LOCATION_SZONE)
-						end
-						if nct==0 then
-							tg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_EXTRA+LOCATION_SZONE)
-						end
-					until ft==0 or tg:GetCount()==0 or not Duel.SelectYesNo(tp,210)
-				else
-					repeat
-						local ct=math.min(ft,ect)
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=tg:Select(tp,1,ct,nil)
-						tg:Sub(g)
-						sg:Merge(g)
-						ft=ft-g:GetCount()
-						ect=ect-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-					until ft==0 or ect==0 or tg:GetCount()==0 or not Duel.SelectYesNo(tp,210)
-					local hg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND+LOCATION_SZONE)
-					if ft>0 and ect==0 and hg:GetCount()>0 and Duel.SelectYesNo(tp,210) then
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-						local g=hg:Select(tp,1,ft,nil)
-						sg:Merge(g)
-					end
+				if ect and ect>0 and ect<ft and (not maxlist[LOCATION_EXTRA] or maxlist[LOCATION_EXTRA]>ect) then
+					 maxlist[LOCATION_EXTRA]=ect
 				end
+				local exit_permit=false
+				repeat
+					local ct=ft
+					for loc,lct in pairs(maxlist) do
+						if tg:FilterCount(Card.IsLocation,nil,loc)>0 and lct>0 then ct=math.min(ct,lct) end
+					end
+					if ct==ft then exit_permit=true end
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+					local g=tg:Select(tp,1,ct,nil)
+					tg:Sub(g)
+					sg:Merge(g)
+					ft=ft-g:GetCount()
+					for loc,lct in pairs(maxlist) do
+						local remain=lct-g:FilterCount(Card.IsLocation,nil,loc)
+						maxlist[loc]=remain
+						if remain<=0 then
+							tg:Remove(Card.IsLocation,nil,loc)
+						end
+					end
+				until ft==0 or tg:GetCount()==0 or exit_permit or not Duel.SelectYesNo(tp,210)
 				Duel.HintSelection(Group.FromCards(c))
 				Duel.HintSelection(Group.FromCards(rpz))
 			end
+end
+function cm.nnexpcon(e)
+	local seq=e:GetHandler():GetSequence()
+	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
+	return tc and tc.desc_with_nanahira
 end
 function cm.nncon(og)
 return function(e,tp)
