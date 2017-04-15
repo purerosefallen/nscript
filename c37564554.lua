@@ -1,7 +1,6 @@
 --Nanahira & Scorpiour
 local m=37564554
 local cm=_G["c"..m]
-
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhrp(c)
@@ -29,7 +28,7 @@ cm.pendulum_info={
 	max_count=1,
 }
 function cm.filter(c)
-	return (c.desc_with_nanahira or c:IsCode(37564765)) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return (c.desc_with_nanahira or c:IsCode(37564765)) and c:IsAbleToDeck()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end
