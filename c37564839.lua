@@ -1,7 +1,6 @@
 --3L·mono
 local m=37564839
 local cm=_G["c"..m]
-
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e6=Effect.CreateEffect(c)
@@ -15,7 +14,7 @@ function cm.initial_effect(c)
 	e6:SetOperation(cm.activate)
 	c:RegisterEffect(e6)
 end
-cm.reset_operation_3L={
+--[[cm.reset_operation_3L={
 function(e,c)
 	local copym=c:GetFlagEffectLabel(m)
 	if not copym then return end
@@ -26,7 +25,7 @@ function(e,c)
 	end
 	c:ResetFlagEffect(m)
 end,
-}
+}]]
 function cm.effect_operation_3L(c,ctlm)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))

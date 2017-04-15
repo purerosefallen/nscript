@@ -1,7 +1,6 @@
 --3L·Keep the Faith
 local m=37564820
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +27,7 @@ function cm.effect_operation_3L(c,ctlm)
 	c:RegisterEffect(e1,true)
 	return e1
 end
-cm.reset_operation_3L={
+--[[cm.reset_operation_3L={
 function(e,c)
 	local copym=c:GetFlagEffectLabel(m)
 	if not copym then return end
@@ -39,7 +38,7 @@ function(e,c)
 	end
 	c:ResetFlagEffect(m)
 end,
-}
+}]]
 function cm.filter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and senya.check_set_3L(c) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf)

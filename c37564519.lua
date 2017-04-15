@@ -1,7 +1,6 @@
 --Nanahira & 3L
 local m=37564519
 local cm=_G["c"..m]
---
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.leff(c,m)
@@ -28,7 +27,7 @@ function cm.effect_operation_3L(c,ctlm)
 	c:RegisterEffect(e1,true)
 	return e1
 end
-cm.reset_operation_3L={
+--[[cm.reset_operation_3L={
 function(e,c)
 	local copym=c:GetFlagEffectLabel(m)
 	if not copym then return end
@@ -39,7 +38,7 @@ function(e,c)
 	end
 	c:ResetFlagEffect(m)
 end,
-}
+}]]
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
