@@ -1,7 +1,6 @@
 --3L·月时针
 local m=37564814
 local cm=_G["c"..m]
---
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e4=Effect.CreateEffect(c)
@@ -57,5 +56,6 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(mg,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+		tc:CompleteProcedure()
 	end
 end
