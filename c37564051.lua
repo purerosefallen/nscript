@@ -1,7 +1,6 @@
 --闪电元灵·轰隆隆
 local m=37564051
 local cm=_G["c"..m]
-
 cm.named_with_elem=true
 function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
@@ -29,7 +28,8 @@ end
 function cm.filter(c,e,tp)
 	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==4
 end
-function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.rmcon(e,c,og)
+	local tp=e:GetHandlerPlayer()
 	local c=e:GetHandler()
 	return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_HAND,0,1,nil,e,tp) and c:IsFaceup() and not c:IsDisabled() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 end

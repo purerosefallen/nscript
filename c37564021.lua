@@ -1,8 +1,6 @@
 --蔷薇的统领者
 local m=37564021
 local cm=_G["c"..m]
-
-
 cm.named_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
@@ -62,14 +60,15 @@ end
 function cm.filter(c,e,tp)
 	return senya.check_set_elem(c) and e:GetHandler():IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_EXTRA,0,1,c)
 end
-function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.rmcon(e,c,og)
+	local tp=e:GetHandlerPlayer()
 	local c=e:GetHandler()
 	return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) and c:IsFaceup() and not c:IsDisabled() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and c:GetOriginalCode()==m
 end
 function cm.rmop(e,tp,eg,ep,ev,re,r,rp,c,sg,og)  
 	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sc=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()	
+	local sc=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()  
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local mg2=Duel.SelectMatchingCard(tp,cm.matfilter,tp,LOCATION_EXTRA,0,1,3,sc)
 	senya.overlaygroup(e:GetHandler(),mg2,true,true)
@@ -77,4 +76,14 @@ function cm.rmop(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	sc:SetMaterial(mg2)
 	senya.overlaycard(sc,e:GetHandler(),true,true)
 	sg:AddCard(sc)
+	local e1=Effect.CreateEffect(sc)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetReset(0xfe1000)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetOperation(function(e)
+		e:GetHandler():CompleteProcedure()
+		e:Reset()
+	end)
+	sc:RegisterEffect(e1,true)
 end

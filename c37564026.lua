@@ -1,7 +1,6 @@
 --元素爆发·冰雪
 local m=37564026
 local cm=_G["c"..m]
-
 cm.named_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,cm.ovfilter,aux.Stringid(m,0))
@@ -34,7 +33,8 @@ end
 function cm.ovfilter(c)
 	return c:IsFaceup() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>=3
 end
-function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.rmcon(e,c,og)
+	local tp=e:GetHandlerPlayer()
 	local c=e:GetHandler()
 	return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) and c:GetOverlayCount()>1 and c:IsFaceup() and not c:IsDisabled()
 end
