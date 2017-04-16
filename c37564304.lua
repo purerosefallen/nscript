@@ -28,10 +28,10 @@ function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ch=Duel.GetCurrentChain()
-	local cd=ch*1000+m-6400
+	local cd=ch*1000+m-64000
 	if chk==0 then return Duel.GetFlagEffect(tp,cd+1000)==0 end
 	Duel.RegisterFlagEffect(tp,cd,RESET_PHASE+PHASE_END,0,1)
-	c:RegisterFlagEffect(cd,0x1fe1000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,m*16+ch-2)
+	e:GetHandler():RegisterFlagEffect(cd,0x1fe1000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,m*16+ch-2)
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -41,7 +41,7 @@ function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
