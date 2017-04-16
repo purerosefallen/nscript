@@ -93,17 +93,18 @@ function cm.move(c,co,e)
 		if Duel.CheckLocation(c:GetControler(),c:GetLocation(),s-1) then
 			Duel.MoveSequence(c,s-1)
 		else
-			cm.exile(c)
+			cm.exile(c,e)
 		end
 	elseif s<co then
 		if Duel.CheckLocation(c:GetControler(),c:GetLocation(),s+1) then
 			Duel.MoveSequence(c,s+1)
 		else
-			cm.exile(c)
+			cm.exile(c,e)
 		end
 	end
 end
-function cm.exile(c)	
+function cm.exile(c,e)
+	if c:IsImmuneToEffect(e) then return end
 	senya.ExileCard(c)
 	Duel.SendtoGrave(c,REASON_RULE+REASON_RETURN)
 end
@@ -140,14 +141,14 @@ function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 		local pc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,j)
 		if pc and pc:IsControler(1-tp) then
 			Duel.HintSelection(Group.FromCards(pc))
-			cm.exile(pc)
+			cm.exile(pc,e)
 		end
 	end
 	for j=7,5,-1 do
 		local pc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,j)
 		if pc then
 			Duel.HintSelection(Group.FromCards(pc))
-			cm.exile(pc)
+			cm.exile(pc,e)
 		end
 	end
 end

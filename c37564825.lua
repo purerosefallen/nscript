@@ -1,7 +1,6 @@
 --感情的摩天楼 -3L Remix-
 local m=37564825
 local cm=_G["c"..m]
-
 cm.named_with_remix=true
 function cm.initial_effect(c)
 	senya.leff(c,m)
@@ -93,7 +92,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 			local seq=rc:GetSequence()
 			if seq>5 then return false end
 			if rc:GetControler()==tp then return true end
-			if seq==5 then return Duel.CheckLocation(tp,LOCATION_SZONE,5) end
+			if seq==5 then return true end
 			return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		end)
 		e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
