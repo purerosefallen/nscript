@@ -1,5 +1,4 @@
 --Nanahira & Sayuri
---
 local m,cm=senya.sayuri_ritual(37564552)
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
@@ -20,7 +19,7 @@ function cm.initial_effect(c)
 	e4:SetOperation(cm.spop2)
 	c:RegisterEffect(e4)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(m,1))
+	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -120,7 +119,7 @@ function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetReset(RESET_EVENT+0x1fe0000)
 			tc:RegisterEffect(e3)
 		end
-		Duel.AdjustInstantly(tc)
+		Duel.AdjustInstantly()
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
