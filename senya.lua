@@ -1208,14 +1208,14 @@ function cm.PendConditionNanahira()
 					local ext={c:GetAffectingEffect(37564541),rpz:GetAffectingEffect(37564541)}
 					for i,te in pairs(ext) do
 						local t=cm.order_table[te:GetValue()]
-						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te:GetHandler())
 						g:Merge(exg)
 					end
 				else
 					local cg=Group.FromCards(c,rpz):Filter(cm.PConditionFilterExtra,nil)
 					for tc in aux.Next(cg) do
 						local t=tc.pendulum_info
-						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,tc)
 						g:Merge(exg)
 					end
 				end
@@ -1241,7 +1241,7 @@ function cm.PendOperationNanahira()
 					local ext={c:GetAffectingEffect(37564541),rpz:GetAffectingEffect(37564541)}
 					for i,te in pairs(ext) do
 						local t=cm.order_table[te:GetValue()]
-						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te:GetHandler())
 						tg:Merge(exg)
 						local mct=t.max_count
 						if mct and mct>0 and mct<ft then
@@ -1252,7 +1252,7 @@ function cm.PendOperationNanahira()
 					local cg=Group.FromCards(c,rpz):Filter(cm.PConditionFilterExtra,nil)
 					for tc in aux.Next(cg) do
 						local t=tc.pendulum_info
-						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,te)
+						local exg=Duel.GetMatchingGroup(cm.PConditionFilterNanahira,tp,t.location,0,nil,e,tp,lscale,rscale,t.filter,tc)
 						tg:Merge(exg)
 						local mct=t.max_count
 						if mct and mct>0 and mct<ft then
