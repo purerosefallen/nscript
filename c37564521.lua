@@ -27,7 +27,7 @@ function cm.initial_effect(c)
 end
 cm.pendulum_info={
 	location=LOCATION_SZONE,
-	filter=function(c,e) return c==e:GetHandler() end,
+	filter=function(c,ec) return c==ec end,
 }
 cm.pendulum_level=7
 function cm.ssfilter(c)
