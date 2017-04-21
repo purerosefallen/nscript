@@ -2006,7 +2006,8 @@ function cm.leff(c,m)
 	end)
 	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		local rc=e:GetHandler():GetReasonCard()
-		if rc:GetFlagEffect(m-4000)>0 or not cm.check_set_3L(rc) then return end
+		if rc:GetFlagEffect(m-4000)>0 or not cm.check_set_3L(rc) or rc:GetFlagEffect(37564848)>0 then return end
+		--for check alice
 		local mt=cm.load_metatable(m)
 		local ctlm=rc.custom_ctlm_3L or 1
 		local efft={mt.effect_operation_3L(rc,ctlm)}

@@ -1,7 +1,7 @@
 --utakat sp
 local m=37564305
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	local e9=Effect.CreateEffect(c)
 	e9:SetDescription(senya.desc(0))
@@ -27,12 +27,14 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.spop)
 	c:RegisterEffect(e1)
 end
-function cm.dfilter(c)
+function cm.dfilter(c,ft)
+	if ft<=0 and c:GetSequence()>4 then return false end
 	return c:IsRace(RACE_ZOMBIE) and c:IsAttribute(ATTRIBUTE_FIRE) and c:IsDestructable() and c:IsFaceup()
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cm.dfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(cm.dfilter,tp,LOCATION_MZONE,0,1,nil) and Duel.IsPlayerCanDraw(tp,1) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingTarget(cm.dfilter,tp,LOCATION_MZONE,0,1,nil,ft) and Duel.IsPlayerCanDraw(tp,1) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,cm.dfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)

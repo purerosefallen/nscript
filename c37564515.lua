@@ -1,7 +1,8 @@
 --Nanahira & Firce777
 local m=37564515
 local cm=_G["c"..m]
---
+
+
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
@@ -14,7 +15,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e5)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564777,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DRAW)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,37560515)
@@ -36,8 +37,8 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,37562515)
-	e3:SetCost(cm.secost)
-	e3:SetOperation(cm.seop)
+	e3:SetCost(senya.secost)
+	e3:SetOperation(senya.seop)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(78651105,0))
@@ -58,16 +59,6 @@ function cm.sesscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.sessfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	local g=Duel.SelectMatchingCard(tp,cm.sessfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function cm.swwsstg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-end
-function cm.swwssop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) and Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.Draw(tp,1,REASON_EFFECT)
-	end
 end
 function cm.sethcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.sessfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler(),at) end

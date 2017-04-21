@@ -1,6 +1,7 @@
 --感情的摩天楼 -3L Remix-
 local m=37564825
 local cm=_G["c"..m]
+
 cm.named_with_remix=true
 function cm.initial_effect(c)
 	senya.leff(c,m)
