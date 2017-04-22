@@ -1,8 +1,6 @@
 --Nanahira & Firce777
 local m=37564515
 local cm=_G["c"..m]
-
-
 cm.desc_with_nanahira=true
 function cm.initial_effect(c)
 	senya.nnhr(c)
@@ -20,8 +18,8 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,37560515)
 	e1:SetCost(cm.sesscost)
-	e1:SetTarget(cm.swwsstg)
-	e1:SetOperation(cm.swwssop)
+	e1:SetTarget(senya.swwsstg)
+	e1:SetOperation(senya.swwssop)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
