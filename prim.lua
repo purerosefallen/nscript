@@ -235,7 +235,7 @@ function prim.sessrfilter(c,at)
 	return c:IsAttribute(at) and c:IsAbleToRemove() and Duel.IsExistingMatchingCard(aux.TRUE,c:GetControler(),LOCATION_DECK,0,1,nil)
 end
 function prim.sesscfilter(c,at,sp,dr)
-	if not c:IsDiscardable() then return false end
+	if not c:IsDiscardable() or not c:IsType(TYPE_MONSTER) then return false end
 	if c:IsSetCard(0x777) and dr then return true end
 	if c:IsAttribute(at) and sp then return true end
 	return false
@@ -252,7 +252,7 @@ function prim.ses(c,at)
 		local rmg=Duel.GetMatchingGroup(prim.sessrfilter,tp,LOCATION_DECK,0,nil,at)
 		local sp=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and spg:GetCount()>0
 		local dr=Duel.IsPlayerCanDraw(tp,1) and rmg:GetCount()>0
-		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(prim.sesscfilter,tp,LOCATION_HAND,0,e:GetHandler(),at,sp,dr) end
+		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(prim.sesscfilter,tp,LOCATION_HAND,0,1,e:GetHandler(),at,sp,dr) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
 		local g=Duel.SelectMatchingCard(tp,prim.sesscfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler(),at,sp,dr)
 		local tc=g:GetFirst()
