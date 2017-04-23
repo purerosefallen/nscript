@@ -28,7 +28,7 @@ function prim.se(c,at)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,cd2)
-	e3:SetCost(prim.secost(at))
+	e3:SetTarget(prim.setg(at))
 	e3:SetOperation(prim.seop(at))
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
@@ -128,11 +128,35 @@ function prim.sefilter(c,at,e,tp)
 		return false
 	end
 end
-function prim.secost(at)
+function prim.setg(at)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(prim.sefilter,tp,LOCATION_HAND,0,1,e:GetHandler(),at,e,tp) end
 	Duel.DiscardHand(tp,prim.sefilter,1,1,REASON_COST,e:GetHandler(),at,e,tp)
-	e:SetLabelObject(Duel.GetOperatedGroup():GetFirst())
+	local tc=Duel.GetOperatedGroup():GetFirst()
+	e:SetLabelObject(tc)
+	local ctg=0
+	if tc:IsSetCard(0x777) then
+		ctg=bit.bor(ctg,CATEGORY_REMOVE+CATEGORY_DRAW)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
+		Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+	end
+	if tc:IsAttribute(at) then
+		if at==ATTRIBUTE_WIND then
+			ctg=bit.bor(ctg,CATEGORY_TOHAND+CATEGORY_SEARCH)
+			Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+		elseif at==ATTRIBUTE_FIRE then
+			local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+			ctg=bit.bor(ctg,CATEGORY_DESTROY)
+			Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+		elseif at==ATTRIBUTE_EARTH then
+			ctg=bit.bor(ctg,CATEGORY_SPECIAL_SUMMON)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
+		elseif at==ATTRIBUTE_WATER then
+			ctg=bit.bor(ctg,CATEGORY_TOGRAVE+CATEGORY_DECKDES)
+			Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+		end
+	end
+	e:SetCategory(ctg)
 end
 end
 function prim.seop(at)
@@ -157,7 +181,7 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-	if at1==ATTRIBUTE_FIRE and Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
+	if at1==ATTRIBUTE_FIRE and Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 		local g=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 		Duel.HintSelection(g)
