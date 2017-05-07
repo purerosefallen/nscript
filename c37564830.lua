@@ -1,7 +1,7 @@
 --3L·少女密室
 local m=37564830
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e2=Effect.CreateEffect(c)
@@ -72,12 +72,12 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,m+1,0,0x4011,800,1000,1,RACE_FIEND,ATTRIBUTE_DARK) then return end
 	local token=Duel.CreateToken(tp,m+1)
 	if Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP) then
-		local e1=Effect.CreateEffect(c)
+		--[[local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(37564800)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e1,true)
+		token:RegisterEffect(e1,true)]]
 		local t=senya.lgetcd(c)
 		local chk=false
 		for i,cd in pairs(t) do

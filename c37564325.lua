@@ -1,8 +1,7 @@
 --苍空的舞姬·纱由里
 local m=37564325
 local cm=_G["c"..m]
---
-cm.named_with_sayuri=true
+
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

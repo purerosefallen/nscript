@@ -1,7 +1,8 @@
 --3L·MyonMyonMyon
 local m=37564842
 local cm=_G["c"..m]
-cm.named_with_myon=true
+
+cm.named_with_myon=3
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
 	senya.leff(c,m)

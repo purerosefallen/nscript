@@ -311,7 +311,7 @@ function prim.ses(c,at)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_REMOVE)
 	e2:SetProperty(0x14000)
-	e2:SetCountLimit(1,m-7700)
+	e2:SetCountLimit(1,m)
 	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		if not re then return false end
 		local rc=re:GetHandler()

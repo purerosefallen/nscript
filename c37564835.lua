@@ -1,7 +1,7 @@
 --3L·春色小径
 local m=37564835
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e2=Effect.CreateEffect(c)
@@ -25,9 +25,16 @@ function cm.effect_operation_3L(c)
 	e2:SetOperation(cm.op)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2,true)
-	return e2
+	local ex=Effect.CreateEffect(c)
+	ex:SetType(EFFECT_TYPE_SINGLE)
+	ex:SetCode(m-1000)
+	ex:SetRange(LOCATION_MZONE)
+	ex:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	ex:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(ex,true)
+	return e2,ex
 end
-cm.reset_operation_3L={
+--[[cm.reset_operation_3L={
 function(e,c)
 	e:SetOperation(aux.NULL)
 	local copyt=senya.order_table[e:GetLabel()]
@@ -37,7 +44,7 @@ function(e,c)
 		end
 	end
 end,
-}
+}]]
 function cm.copyfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_TRAPMONSTER)
 end
@@ -69,16 +76,32 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cm.copyfilter,tp,0,LOCATION_MZONE,nil)
 	local maxg=g:GetMaxGroup(cm.val) or Group.CreateGroup()
 	local dg=exg:Filter(cm.gfilter,nil,maxg)
-	dg:ForEach(function(tc)  
+	for tc in aux.Next(dg) do
 		c:ResetEffect(copyt[tc],RESET_COPY)
 		exg:RemoveCard(tc)
 		copyt[tc]=nil
-	end)
+	end
 	local cg=maxg:Filter(cm.gfilter1,nil,exg)
-	cg:ForEach(function(tc)  
-		copyt[tc]=senya.CopyEffectExtraCount(c,c.custom_ctlm_3L,tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
-		exg:AddCard(tc)
-	end)
+	local f=Card.RegisterEffect
+	Card.RegisterEffect=function(tc,e,forced)
+		e:SetCondition(cm.rcon(e:GetCondition(),tc,copyt))	  
+		f(tc,e,forced)
+	end
+	for tc in aux.Next(cg) do
+		copyt[tc]=senya.CopyEffectExtraCount(c,senya.lkoishicount(c),tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
+	end
+	Card.RegisterEffect=f
+end
+function cm.rcon(con,tc,copyt)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		if not c:IsHasEffect(m-1000) then
+			c:ResetEffect(c,copyt[tc],RESET_COPY)
+			copyt[tc]=nil
+			return false
+		end
+		return not con or con(e,tp,eg,ep,ev,re,r,rp)
+	end
 end
 function cm.costfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and senya.check_set_3L(c)

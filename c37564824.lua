@@ -1,6 +1,7 @@
 --3L·死灵的夜樱
 local m=37564824
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	senya.rxyz3(c,cm.xfilter,2,63)
@@ -64,7 +65,7 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.ccon(con,cd)
 	return function(e,tp,eg,ep,ev,re,r,rp)
-		if e:GetHandler():GetOverlayGroup():IsExists(aux.FilterEqualFunction(Card.GetOriginalCode,cd),1,nil) and e:GetHandler():IsHasEffect(37564827) then
+		if (e:GetHandler():GetOverlayGroup():IsExists(aux.FilterEqualFunction(Card.GetOriginalCode,cd),1,nil) and e:GetHandler():IsHasEffect(37564827)) then
 			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
 		else
 			senya.lreseff(e:GetHandler(),cd)
@@ -83,7 +84,7 @@ function cm.ccost(costf,cd,chks)
 	else
 		return function(e,tp,eg,ep,ev,re,r,rp,chk)
 			local c=e:GetHandler()
-			local ctlm=c.custom_ctlm_3L or 1
+			local ctlm=senya.lkoishicount(c)
 			if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 			c:RemoveOverlayCard(tp,1,1,REASON_COST)

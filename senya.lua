@@ -1542,17 +1542,26 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetLabel(0)
 		return og:IsExists(cm.scopyf1,1,nil,f,e,tp)
 	end
-	e:SetLabel(te:GetLabel())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=og:FilterSelect(tp,cm.scopyf1,1,1,nil,f,e,tp)
 	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(true,true,true)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
+	e:SetLabel(te:GetLabel())
 	local tg=te:GetTarget()
 	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	local ex=Effect.GlobalEffect()
+	ex:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	ex:SetCode(EVENT_CHAIN_END)
+	ex:SetLabelObject(e)
+	ex:SetOperation(function(e)
+		e:GetLabelObject():SetLabel(0)
+		ex:Reset()
+	end)
+	Duel.RegisterEffect(ex,tp)
 end
 end
 function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
@@ -1590,7 +1599,6 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetLabel(0)
 		return og:IsExists(cm.scopyf2,1,nil,e,tp,eg,ep,ev,re,r,rp,f)
 	end
-	e:SetLabel(0)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=og:FilterSelect(tp,cm.scopyf2,1,1,nil,e,tp,eg,ep,ev,re,r,rp,f)
 	local tc=g:GetFirst()
@@ -1602,6 +1610,7 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		te=tc:GetActivateEffect()
 	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetLabel(te:GetLabel())
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
 	local tg=te:GetTarget()
@@ -1614,6 +1623,15 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	local ex=Effect.GlobalEffect()
+	ex:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	ex:SetCode(EVENT_CHAIN_END)
+	ex:SetLabelObject(e)
+	ex:SetOperation(function(e)
+		e:GetLabelObject():SetLabel(0)
+		ex:Reset()
+	end)
+	Duel.RegisterEffect(ex,tp)
 end
 end
 function cm.icopy(c,lmct,lmcd,cost,excon,loc)
@@ -1661,7 +1679,7 @@ function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		end) then return false end
 		return res
 	end
-	e:SetLabel(0)
+	e:SetLabel(te:GetLabel())
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
 	if tg then
@@ -1677,8 +1695,8 @@ function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	ex:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	ex:SetCode(EVENT_CHAIN_END)
 	ex:SetLabelObject(e)
-	ex:SetOperation(function()
-		e:SetLabel(0)
+	ex:SetOperation(function(e)
+		e:GetLabelObject():SetLabel(0)
 		ex:Reset()
 	end)
 	Duel.RegisterEffect(ex,tp)
@@ -1994,6 +2012,14 @@ function cm.enable_kaguya_check_3L()
 	end)
 	Duel.RegisterEffect(e2,0)
 end
+function cm.lkoishicount(c)
+	if Card.GetAffectingEffect then
+		local te=c:GetAffectingEffect(37564826)
+		return te and te:GetValue() or 1
+	else
+		return c.custom_ctlm_3L or 1
+	end
+end
 function cm.leff(c,m)
 	cm.enable_kaguya_check_3L()
 	--cm.setreg(c,m,37564800)
@@ -2009,8 +2035,7 @@ function cm.leff(c,m)
 		if rc:GetFlagEffect(m-4000)>0 or not cm.check_set_3L(rc) or rc:GetFlagEffect(37564848)>0 then return end
 		--for check alice
 		local mt=cm.load_metatable(m)
-		local ctlm=rc.custom_ctlm_3L or 1
-		local efft={mt.effect_operation_3L(rc,ctlm)}
+		local efft={mt.effect_operation_3L(rc,cm.lkoishicount(c))}
 		if not rc:IsType(TYPE_EFFECT) then
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
@@ -2043,7 +2068,7 @@ function cm.lgeff(c,tc,pres,pctlm)
 	end
 	local mt=cm.load_metatable(cd)
 	if not mt or c:GetFlagEffect(cd-4000)>0 or not mt.effect_operation_3L then return end
-	local ctlm=pctlm or c.custom_ctlm_3L or 1
+	local ctlm=pctlm or cm.lkoishicount(c)
 	local efft={mt.effect_operation_3L(c,ctlm)}
 	c:RegisterFlagEffect(cd-4000,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,cm.order_table_new(efft),cd*16+1)
 	if pres then
@@ -2702,4 +2727,38 @@ function cm.clone_table(t)
 		rt[i]=v
 	end
 	return rt
+end
+function cm.CheckGroupRecursive(c,sg,g,f,min,max,ext_params)
+	sg:AddCard(c)
+	local ct=sg:GetCount()
+	local res=(ct>=min and f(sg,table.unpack(ext_params)))
+		or (ct<max and g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params))
+	sg:RemoveCard(c)
+	return res
+end
+function cm.CheckGroup(g,f,cg,min,max,...)
+	local min=min or 1
+	local max=max or g:GetCount()
+	if min>max then return false end
+	local ext_params={...}
+	local sg=Group.CreateGroup()
+	if cg then sg:Merge(cg) end
+	local ct=sg:GetCount()
+	if ct>=min and ct<max and f(sg,...) then return true end
+	return g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params)
+end
+function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
+	local min=min or 1
+	local max=max or g:GetCount()
+	local ext_params={...}
+	local sg=Group.CreateGroup()
+	if cg then sg:Merge(cg) end
+	local ct=sg:GetCount()
+	while ct<max and not (ct>=min and f(sg,...) and not (g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params) and Duel.SelectYesNo(tp,210))) do
+		Duel.Hint(HINT_SELECTMSG,tp,desc)
+		local tg=g:FilterSelect(tp,cm.CheckGroupRecursive,1,1,sg,sg,g,f,min,max,ext_params)
+		sg:Merge(tg)
+		ct=sg:GetCount()
+	end
+	return sg
 end

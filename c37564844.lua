@@ -1,7 +1,8 @@
 --3L·MyonMyonMyonMyonMyonMyon
 local m=37564844
 local cm=_G["c"..m]
-cm.named_with_myon=true
+
+cm.named_with_myon=6
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,aux.FALSE,10,5,cm.xfilter,m*16)
@@ -55,10 +56,13 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		if not c:IsReleasable() then return false end
-		for i,v in pairs({37564807,37564842,37564843}) do
-			if c:GetFlagEffect(v-4000)==0 then return false end
+		local ct=0
+		local t=senya.lgetcd(c)
+		for i,v in pairs(t) do
+			local mt=senya.load_metatable(v)
+			if mt and mt.named_with_myon then ct=ct+1 end
 		end
-		return true
+		return ct>=4
 	end
 	Duel.Release(c,REASON_COST)
 end
@@ -123,12 +127,12 @@ function cm.ccost(costf,cd,chks)
 	else
 		return function(e,tp,eg,ep,ev,re,r,rp,chk)
 			local c=e:GetHandler()
-			local ctlm=c.custom_ctlm_3L or 1
+			local ctlm=senya.lkoishicount(c)
 			if chk==0 then return Duel.IsExistingMatchingCard(cm.excfilter,tp,LOCATION_GRAVE,0,1,c,cd) and c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			local g=Duel.SelectMatchingCard(tp,cm.excfilter,tp,LOCATION_GRAVE,0,1,1,c,cd)
-			Duel.Remove(g,POS_FACEUP,REASON_COST)	
+			Duel.Remove(g,POS_FACEUP,REASON_COST)   
 			c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
 		end
 	end

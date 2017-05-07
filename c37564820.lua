@@ -1,6 +1,7 @@
 --3L·Keep the Faith
 local m=37564820
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)
@@ -114,7 +115,7 @@ function cm.rop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Remove(gc,POS_FACEUP,REASON_EFFECT)
 	local code=gc:GetOriginalCode()
 	if not gc:IsType(TYPE_TRAPMONSTER) then  
-		local cid=senya.CopyEffectExtraCount(c,c.custom_ctlm_3L,code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
+		local cid=senya.CopyEffectExtraCount(c,senya.lkoishicount(c),code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
 		if c:GetFlagEffect(m)==0 then
 			local tcode=senya.order_table_new({{ccode=code,ccid=cid}})
 			c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2,tcode)

@@ -18,6 +18,18 @@ function cm.initial_effect(c)
 	e2:SetLabel(senya.order_table_new({}))
 	e2:SetOperation(cm.op)
 	c:RegisterEffect(e2)
+	local ex=Effect.CreateEffect(c)
+	ex:SetType(EFFECT_TYPE_SINGLE)
+	ex:SetCode(m)
+	ex:SetRange(LOCATION_MZONE)
+	ex:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SINGLE_RANGE)
+	c:RegisterEffect(ex)
+	local ex=Effect.CreateEffect(c)
+	ex:SetType(EFFECT_TYPE_SINGLE)
+	ex:SetCode(m-1000)
+	ex:SetRange(LOCATION_MZONE)
+	ex:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	c:RegisterEffect(ex)
 end
 cm.mat_filter=senya.sayuri_mat_filter_12
 function cm.cfilter(c,ori)
@@ -31,7 +43,7 @@ function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 end
 cm.sayuri_trigger_forced=true
 function cm.copyfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_TRAPMONSTER)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_TRAPMONSTER) and not c:IsHasEffect(m)
 end
 function cm.gfilter(c,g)
 	if not g then return true end
@@ -53,32 +65,31 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local g=Duel.GetMatchingGroup(cm.copyfilter,tp,0,LOCATION_MZONE,nil)
 	local dg=exg:Filter(cm.gfilter,nil,g)
-	dg:ForEach(function(tc)  
+	for tc in aux.Next(dg) do
 		c:ResetEffect(copyt[tc],RESET_COPY)
 		exg:RemoveCard(tc)
 		copyt[tc]=nil
-	end)
+	end
 	local cg=g:Filter(cm.gfilter1,nil,exg)
-	cg:ForEach(function(tc)  
-		copyt[tc]=cm.copy(c,tc:GetOriginalCode())
-		exg:AddCard(tc)
-	end)
-end
-function cm.copy(c,code)
 	local f=Card.RegisterEffect
 	Card.RegisterEffect=function(tc,e,forced)
-		if e:IsHasType(0x7e0) then
-			e:SetCondition(cm.rcon(e:GetCondition()))
-		end
+		e:SetCondition(cm.rcon(e:GetCondition(),tc,copyt))
 		f(tc,e,forced)
 	end
-	local cid=c:CopyEffect(code,RESET_EVENT+0x1fe0000,1)
+	for tc in aux.Next(cg) do
+		copyt[tc]=c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
+	end
 	Card.RegisterEffect=f
-	return cid
 end
-function cm.rcon(con)
+function cm.rcon(con,tc,copyt)
 	return function(e,tp,eg,ep,ev,re,r,rp)
-		if e:GetHandler():GetFlagEffect(m)>0 then return true end
-		return not con or con(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		if not c:IsHasEffect(m-1000) then
+			c:ResetEffect(c,copyt[tc],RESET_COPY)
+			copyt[tc]=nil
+			return false
+		end
+		if not con or con(e,tp,eg,ep,ev,re,r,rp) then return true end
+		return e:IsHasType(0x7e0) and c:GetFlagEffect(m)>0
 	end
 end

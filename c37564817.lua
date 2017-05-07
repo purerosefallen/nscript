@@ -1,7 +1,7 @@
 --3L·随花起舞
 local m=37564817
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e1=Effect.CreateEffect(c)

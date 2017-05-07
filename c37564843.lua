@@ -1,7 +1,8 @@
 --3L·MyonMyonMyonMyonMyon
 local m=37564843
 local cm=_G["c"..m]
-cm.named_with_myon=true
+
+cm.named_with_myon=5
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,3,cm.xfilter,m*16)
@@ -81,7 +82,7 @@ end
 function cm.ccost(costf,cd)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
-		local ctlm=c.custom_ctlm_3L or 1
+		local ctlm=senya.lkoishicount(c)
 		if chk==0 then return c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 		if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 		c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
