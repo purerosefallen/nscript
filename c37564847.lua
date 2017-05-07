@@ -1,6 +1,7 @@
 --3L·Firefly
 local m=37564847
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
 	senya.leff(c,m)
 	local e6=Effect.CreateEffect(c)
@@ -178,7 +179,7 @@ function cm.cop(te)
 		if not te then return end
 		local c=e:GetHandler()
 		local tg=te:GetTarget()
-		if bit.band(c:GetType(),TYPE_FIELD+TYPE_CONTINUOUS)==0 then
+		if bit.band(c:GetType(),TYPE_FIELD+TYPE_CONTINUOUS+TYPE_PENDULUM)==0 then
 			c:CancelToGrave(false)
 		end
 		local code=te:GetCode()
