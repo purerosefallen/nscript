@@ -3,7 +3,7 @@ local m=37564817
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -26,7 +26,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCountLimit(ctlm)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return re~=e
 	end)
@@ -36,7 +36,7 @@ function cm.effect_operation_3L(c,ctlm)
 	return e1
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
+	return Senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -71,7 +71,7 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 		return te:GetOwnerPlayer()~=e:GetOwnerPlayer()
 	end)
 	e1:SetTarget(function(e,c)
-		return senya.check_set_3L(c) and c:IsFaceup()
+		return Senya.check_set_3L(c) and c:IsFaceup()
 	end)
 	e1:SetReset(RESET_CHAIN)
 	Duel.RegisterEffect(e1,tp)

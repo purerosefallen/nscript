@@ -3,10 +3,10 @@ local m=37564044
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
-	senya.rxyz1(c,4,cm.mfilter,2,63,true)
-	--senya.rxyz1(c,4,nil,true)
+	Senya.AddXyzProcedureRank(c,4,cm.mfilter,2,63,true)
+	--Senya.AddXyzProcedureRank(c,4,nil,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_SET_BASE_ATTACK)
@@ -27,9 +27,9 @@ function cm.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(aux.tgoval)
-	e4:SetCondition(senya.xmcon(5))
+	e4:SetCondition(Senya.XMaterialCountCondition(5))
 	--c:RegisterEffect(e4)
-	senya.atkdr(c,nil,nil,nil,nil,nil,true)
+	Senya.AttackOverlayDrainEffect(c,nil,nil,nil,nil,nil,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(37564765,5))
 	e3:SetCategory(CATEGORY_DISABLE_SUMMON)
@@ -42,7 +42,7 @@ function cm.initial_effect(c)
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
-	--[[senya.neg(c,1,nil,senya.rmovcost(2),cm.prcon)
+	--[[Senya.NegateEffectModule(c,1,nil,Senya.RemoveOverlayCost(2),cm.prcon)
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(m,8))
 	e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -50,18 +50,18 @@ function cm.initial_effect(c)
 	e7:SetCode(EVENT_FREE_CHAIN)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCondition(cm.xmcon)
-	e7:SetCost(senya.serlcost)
+	e7:SetCost(Senya.SelfReleaseCost)
 	e7:SetTarget(cm.spptg)
 	e7:SetOperation(cm.sppop)
 	c:RegisterEffect(e7)]]
 end
 function cm.mfilter(c)
-	return senya.check_set_elem(c) and c:GetOverlayCount()>0
+	return Senya.check_set_elem(c) and c:GetOverlayCount()>0
 end
 function cm.nfilter(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsCode(37564050)
 end
-function cm.xmcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.XMaterialCountCondition(e,tp,eg,ep,ev,re,r,rp)
 		local g=e:GetHandler():GetOverlayGroup()
 		local dct=g:FilterCount(Card.IsCode,nil,37564050)
 		local xct=6-dct

@@ -2,13 +2,13 @@
 
 local m=37564230
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_DIRECT_ATTACK)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564230,0))
@@ -22,7 +22,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c37564230.descon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and senya.swwblex(e,tp)
+	return ep~=tp and Senya.CheckNoExtra(e,tp)
 end
 function c37564230.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end

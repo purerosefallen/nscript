@@ -3,7 +3,7 @@ local m=37564032
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,6,4,cm.ovfilter,aux.Stringid(m,0),63)
 	c:EnableReviveLimit()
@@ -32,5 +32,5 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.SelectMatchingCard(tp,cm.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,e:GetHandler())
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		local tc=sg:GetFirst()
-		senya.copy(e,nil,tc,true,2)
+		Senya.CopyStatusAndEffect(e,nil,tc,true,2)
 end

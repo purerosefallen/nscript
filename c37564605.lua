@@ -2,9 +2,9 @@
 local m=37564605
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	senya.prl4(c,m)
+	Senya.PrimLv4CommonEffect(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -22,7 +22,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(c37564605.thcon1)
 	e3:SetTarget(c37564605.sptg)
 	e3:SetOperation(c37564605.spop)
@@ -52,7 +52,7 @@ function c37564605.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564605.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564605)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564605)
 end
 function c37564605.spfilter(c,e,tp,m)
 	return c:IsCode(37564605) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

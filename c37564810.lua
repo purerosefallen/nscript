@@ -1,9 +1,9 @@
 --3L·WARNING!!
 local m=37564810
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -25,7 +25,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(ctlm)
-	e2:SetCost(senya.desccost())
+	e2:SetCost(Senya.DescriptionCost())
 	e2:SetTarget(cm.tdtg)
 	e2:SetOperation(cm.tdop)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
@@ -33,7 +33,7 @@ function cm.effect_operation_3L(c,ctlm)
 	return e2
 end
 function cm.filter(c)
-	return senya.check_set_3L(c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return Senya.check_set_3L(c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

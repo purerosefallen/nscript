@@ -1,11 +1,11 @@
 --3L·幽灵乐团
 local m=37564823
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
-	senya.lfusm(c,nil,2,5)
+	Senya.Fusion_3L(c,Senya.check_fusion_set_3L,nil,2,5)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)

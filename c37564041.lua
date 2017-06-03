@@ -3,7 +3,7 @@ local m=37564041
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4)
 	c:EnableReviveLimit()
@@ -26,7 +26,7 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_BOTH_SIDE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c37564041.discon)
-	e3:SetCost(c37564041.discost)
+	e3:SetCost(c37564041.DiscardHandCost)
 	e3:SetTarget(c37564041.distg)
 	e3:SetOperation(c37564041.disop)
 	c:RegisterEffect(e3)
@@ -37,7 +37,7 @@ end
 function c37564041.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and re:GetHandler()~=e:GetHandler()
 end
-function c37564041.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c37564041.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) and Duel.GetFlagEffect(tp,37564041)==0 end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 	Duel.RegisterFlagEffect(tp,37564041,RESET_PHASE+PHASE_END,0,1)

@@ -1,10 +1,10 @@
 --Too Late Snow
 local m=37564508
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
@@ -18,7 +18,7 @@ function cm.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.serlcost)
+	e1:SetCost(Senya.SelfReleaseCost)
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.operation)
 	c:RegisterEffect(e1)

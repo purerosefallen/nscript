@@ -1,7 +1,8 @@
 --蔷薇的统领者
 local m=37564021
 local cm=_G["c"..m]
-cm.named_with_elem=true
+
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	--spsummon condition
@@ -33,13 +34,13 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.spfilter1(c)
-	return senya.check_set_rose(c) and c:IsAbleToRemoveAsCost() 
+	return Senya.check_set_rose(c) and c:IsAbleToRemoveAsCost() 
 end
 function cm.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(cm.spfilter1,tp,LOCATION_GRAVE+LOCATION_HAND,0,nil)
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	return Duel.GetLocationCountFromEx(tp)>0
 		and g:GetClassCount(Card.GetCode)>=5
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
@@ -55,15 +56,15 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(tg,POS_FACEUP,REASON_COST)
 end
 function cm.matfilter(c)
-	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
+	return c:IsType(TYPE_XYZ) and Senya.check_set_elem(c)
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_elem(c) and e:GetHandler():IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_EXTRA,0,1,c)
+	return Senya.check_set_elem(c) and e:GetHandler():IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_EXTRA,0,1,c) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(e:GetHandler()),c)>0
 end
 function cm.rmcon(e,c,og)
 	local tp=e:GetHandlerPlayer()
 	local c=e:GetHandler()
-	return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) and c:IsFaceup() and not c:IsDisabled() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and c:GetOriginalCode()==m
+	return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) and c:IsFaceup() and not c:IsDisabled() and c:GetOriginalCode()==m
 end
 function cm.rmop(e,tp,eg,ep,ev,re,r,rp,c,sg,og)  
 	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
@@ -71,10 +72,10 @@ function cm.rmop(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 	local sc=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()  
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local mg2=Duel.SelectMatchingCard(tp,cm.matfilter,tp,LOCATION_EXTRA,0,1,3,sc)
-	senya.overlaygroup(e:GetHandler(),mg2,true,true)
+	Senya.OverlayGroup(e:GetHandler(),mg2,true,true)
 	mg2:AddCard(e:GetHandler())
 	sc:SetMaterial(mg2)
-	senya.overlaycard(sc,e:GetHandler(),true,true)
+	Senya.OverlayCard(sc,e:GetHandler(),true,true)
 	sg:AddCard(sc)
 	local e1=Effect.CreateEffect(sc)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

@@ -2,17 +2,17 @@
 
 local m=37564410
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564410.target,c37564410.operation,true)
+	Senya.PrismCommonEffect(c,c37564410.target,c37564410.operation,true)
 end
 function c37564410.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(senya.bmchkfilter,tp,LOCATION_DECK,0,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(Senya.CheckPrism,tp,LOCATION_DECK,0,1,nil)
 		and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>1 end
 end
 function c37564410.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(37564410,0))
-	local g=Duel.SelectMatchingCard(tp,senya.bmchkfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Senya.CheckPrism,tp,LOCATION_DECK,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.ShuffleDeck(tp)

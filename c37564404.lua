@@ -2,12 +2,12 @@
 
 local m=37564404
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564404.target,c37564404.activate,true,CATEGORY_SPECIAL_SUMMON)
+	Senya.PrismCommonEffect(c,c37564404.target,c37564404.activate,true,CATEGORY_SPECIAL_SUMMON)
 end
 function c37564404.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and senya.bmchkfilter(c)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Senya.CheckPrism(c)
 end
 function c37564404.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c37564404.filter(chkc,e,tp) end

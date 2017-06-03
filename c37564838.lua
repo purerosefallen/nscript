@@ -1,8 +1,9 @@
 --3L·Scarlet Moon
 local m=37564838
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
-	senya.leff(c,m) 
+	Senya.CommonEffect_3L(c,m) 
 end
 function cm.effect_operation_3L(c,ctlm)
 	local e2=Effect.CreateEffect(c)
@@ -24,7 +25,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e1:SetCountLimit(ctlm)
-	e1:SetCost(senya.desccost(senya.lsermeffcost(1,m)))
+	e1:SetCost(Senya.DescriptionCost(Senya.RemoveEffectCost_3L(1,m)))
 	e1:SetOperation(cm.atkop)
 	c:RegisterEffect(e1,true)
 	Duel.Readjust()

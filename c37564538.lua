@@ -1,10 +1,10 @@
 --Nanahira & Dazz
 local m=37564538
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	c:EnableReviveLimit()
 	local e22=Effect.CreateEffect(c)
 	e22:SetType(EFFECT_TYPE_SINGLE)
@@ -45,7 +45,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.spfilter(c)
-	return c.desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsAbleToGraveAsCost()
+	return c.Senya_desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsAbleToGraveAsCost()
 end
 function cm.spcon(e,c)
 	if c==nil then return true end
@@ -79,7 +79,7 @@ function cm.add(tc)
 	tc:RegisterEffect(e2)
 	cm.effect_list[tc]=e2
 end
-function cm.desccost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DescriptionCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_CARD,0,m)
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())

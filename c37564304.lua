@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCost(cm.discost)
+	e3:SetCost(cm.DiscardHandCost)
 	e3:SetCondition(cm.discon)
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
@@ -26,12 +26,12 @@ end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and e:GetHandler():GetOriginalCode()==m and ep~=tp
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ch=Duel.GetCurrentChain()
-	local cd=ch*1000+m-64000
+	local cd=ch*1000+m-6400
 	if chk==0 then return Duel.GetFlagEffect(tp,cd+1000)==0 end
 	Duel.RegisterFlagEffect(tp,cd,RESET_PHASE+PHASE_END,0,1)
-	e:GetHandler():RegisterFlagEffect(cd,0x1fe1000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,m*16+ch-2)
+	c:RegisterFlagEffect(cd,0x1fe1000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,m*16+ch-2)
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -41,7 +41,7 @@ function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function cm.disop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+    if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

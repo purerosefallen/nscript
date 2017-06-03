@@ -1,5 +1,6 @@
 --Sayuri·Rise to be
-local m,cm=senya.sayuri_ritual(37564912)
+
+local m,cm=Senya.SayuriRitualPreload(37564912)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -49,7 +50,7 @@ function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function cm.thfilter(c,tc)
-	return senya.check_set_sayuri(c) and c:IsType(bit.band(tc:GetType(),0x7)) and c:IsAbleToHand()
+	return Senya.check_set_sayuri(c) and c:IsType(bit.band(tc:GetType(),0x7)) and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_HAND,1,nil) end

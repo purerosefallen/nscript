@@ -2,9 +2,9 @@
 local m=37564521
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrp(c)
+	Senya.NanahiraPendulum(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(37564765,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -21,8 +21,8 @@ function cm.initial_effect(c)
 	e2:SetCode(37564541)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCondition(senya.nnexpcon)
-	e2:SetValue(senya.order_table_new(cm.pendulum_info))
+	e2:SetCondition(Senya.NanahiraPCardCheck)
+	e2:SetValue(Senya.order_table_new(cm.pendulum_info))
 	c:RegisterEffect(e2)
 end
 cm.pendulum_info={

@@ -1,12 +1,12 @@
 --Aqua Trytone
 local m=37564549
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e0=Effect.CreateEffect(c)
-	e0:SetCategory(senya.fuscate())
+	e0:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)
 	e0:SetTarget(cm.target)
@@ -20,7 +20,7 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_BATTLED)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetLabelObject(e0)
-	e1:SetCost(senya.sermcost)
+	e1:SetCost(Senya.SelfRemoveCost)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
@@ -35,8 +35,8 @@ function cm.filter2(c,e,tp,m,f,chkf)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp)
 		local mgg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mgg)
 		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -54,8 +54,8 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
 	local mgg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_GRAVE,0,nil,e)
 	mg1:Merge(mgg)
 	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
@@ -93,8 +93,8 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		e:SetLabelObject(tc)
 	end
 end
-function cm.f2(c,e,tp)
-	return c.desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cm.f2(c,e,tp,tc)
+	return c.Senya_desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationFromEx(tp,tp,Group.FromCards(tc),c)>0
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local te=e:GetLabelObject()
@@ -105,7 +105,7 @@ function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local ft=0
 		if tc:IsControler(tp) then ft=-1 end
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=ft then return false end
-		if not Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,tc,e,tp) then return false end
+		if not Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,tc,e,tp,tc) then return false end
 		return tc==Duel.GetAttacker() or tc==Duel.GetAttackTarget()
 	end
 	local tc=te:GetLabelObject()
@@ -115,10 +115,10 @@ end
 function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) or not tc:IsAbleToExtra() or tc:IsImmuneToEffect(e) then return end
-	Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,cm.f2,tp,LOCATION_EXTRA,0,1,1,tc,e,tp)
+	local sg=Duel.SelectMatchingCard(tp,cm.f2,tp,LOCATION_EXTRA,0,1,1,tc,e,tp,tc)
 	if sg:GetCount()>0 then
+		Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

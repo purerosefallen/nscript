@@ -1,19 +1,19 @@
 --Nanahira & Halozy
 local m=37564505
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(37564765,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	--e4:SetCountLimit(1,37560505)
 	e4:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e4:SetCost(senya.discost(2))
-	e4:SetTarget(senya.swwsstg)
-	e4:SetOperation(senya.swwssop)
+	e4:SetCost(Senya.DiscardHandCost(2))
+	e4:SetTarget(Senya.SelfSpsummonTarget)
+	e4:SetOperation(Senya.SelfSpsummonOperation)
 	c:RegisterEffect(e4)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -27,7 +27,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c)
-	return c.desc_with_nanahira and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c.Senya_desc_with_nanahira and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

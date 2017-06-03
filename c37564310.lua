@@ -3,7 +3,7 @@
 local m=37564310
 local cm=_G["c"..m]
 function cm.initial_effect(c)
-	senya.rxyz1(c,nil,nil,3,3)
+	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
 --atk
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)

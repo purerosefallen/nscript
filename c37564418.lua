@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c37564418.cfilter(c)
-	return c:IsFaceup() and senya.bmchkfilter(c) and c:IsAbleToHand()
+	return c:IsFaceup() and Senya.CheckPrism(c) and c:IsAbleToHand()
 end
 function c37564418.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564418.cfilter,tp,LOCATION_MZONE,0,1,nil) end

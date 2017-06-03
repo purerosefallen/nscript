@@ -2,8 +2,8 @@
 local m=37564031
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
-cm.named_with_rose=true
+cm.Senya_desc_with_nanahira=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_DRAW)
@@ -13,11 +13,11 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.tgtg)
 	e1:SetOperation(cm.tgop)
 	c:RegisterEffect(e1)
-	senya.nntrap(c,e1)
+	Senya.NanahiraTrap(c,e1)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,senya.cgfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,senya.cgfilter,1,1,nil)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,Senya.cgfilter,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,Senya.cgfilter,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -10,7 +10,7 @@ function c66677706.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c66677706.discon)
-	e3:SetCost(c66677706.discost)
+	e3:SetCost(c66677706.DiscardHandCost)
 	e3:SetTarget(c66677706.distg)
 	e3:SetOperation(c66677706.disop)
 	c:RegisterEffect(e3)
@@ -29,7 +29,7 @@ end
 function c66677706.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and ep~=tp
 end
-function c66677706.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c66677706.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,1,1,nil)

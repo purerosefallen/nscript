@@ -2,10 +2,10 @@
 local m=37564416
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2,nil,nil,5)
+	--Senya.setreg(c,m,37564573)
+	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2,nil,nil,5)
 	c:EnableReviveLimit()
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(m,0))
@@ -15,19 +15,19 @@ function cm.initial_effect(c)
 		return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
 	end)
 	e4:SetProperty(0x14000)
-	e4:SetCost(senya.bmrmcost)
+	e4:SetCost(Senya.PrismRemoveExtraCost)
 	e4:SetTarget(cm.drtg)
 	e4:SetOperation(cm.drop)
 	c:RegisterEffect(e4)
 	--destroy
-	senya.atkdr(c,cm.odrcon,cm.destg)
+	Senya.AttackOverlayDrainEffect(c,cm.odrcon,cm.destg)
 	local e8=Effect.CreateEffect(c)
 	e8:SetCategory(CATEGORY_REMOVE)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetRange(LOCATION_MZONE)
 	e8:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e8:SetCountLimit(1)
-	e8:SetCost(senya.rmovcost(2))
+	e8:SetCost(Senya.RemoveOverlayCost(2))
 	e8:SetCondition(cm.regcon)
 	e8:SetTarget(cm.tgtg)
 	e8:SetOperation(cm.tgop)

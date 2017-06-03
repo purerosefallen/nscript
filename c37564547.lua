@@ -1,11 +1,11 @@
 --Nanahira OverDrive
 local m=37564547
 local cm=_G["c"..m]
---
+
 cm.pendulum_level=7
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrexp(c)
+	Senya.NanahiraExtraPendulum(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564765,0))
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -23,135 +23,130 @@ function cm.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.serlcost)
+	e1:SetCost(Senya.SelfReleaseCost)
 	e1:SetTarget(cm.hdtg)
 	e1:SetOperation(cm.hdop)
 	c:RegisterEffect(e1)
 end
-function cm.matfilter1(c,syncard)
-	if c:IsLocation(LOCATION_MZONE) then
-		if not c:IsType(TYPE_TUNER) or not c:IsCanBeSynchroMaterial(syncard) then return false end
-	else
-		if not c:IsType(TYPE_PENDULUM) or bit.band(c:GetOriginalType(),TYPE_TUNER)==0 or not c:IsCode(37564765) then return false end
+function cm.regcon(e)
+	return e:GetHandler():GetFlagEffect(m-1000)>0
+end
+function cm.adcon(e)
+	local c=e:GetHandler()
+	return c:GetBattleTarget() and cm.regcon(e)
+		and (Duel.GetCurrentPhase()==PHASE_DAMAGE or Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL)
+end
+function cm.adtg(e,c)
+	return c==e:GetHandler():GetBattleTarget()
+end
+function cm.filter(c)
+	return c:IsAbleToDeck()
+end
+function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and cm.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,0,LOCATION_ONFIELD,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectTarget(tp,cm.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
+end
+function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	end
-	return c:IsFaceup() and Duel.IsExistingMatchingCard(cm.matfilter2,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c,syncard)
+end
+function cm.matfilter1(c,syncard)
+	return c:IsFaceup() and c:IsType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)
 end
 function cm.matfilter2(c,syncard)
-	if c:IsFacedown() or not c:IsType(TYPE_PENDULUM) then return false end
-	if c:IsLocation(LOCATION_MZONE) then
-		return c:IsNotTuner() and c:IsRace(RACE_FAIRY) and c:IsCanBeSynchroMaterial(syncard)
-	else
-		return bit.band(c:GetOriginalRace(),RACE_FAIRY)~=0 and bit.band(c:GetOriginalType(),TYPE_TUNER)==0 and c:IsCode(37564765)
-	end
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c:IsNotTuner() and c:IsRace(RACE_FAIRY) and c:IsCanBeSynchroMaterial(syncard)
 end
-function cm.val(c,sc)
-	if c:IsLocation(LOCATION_SZONE) and c:GetSequence()>5 then
+function cm.matfilter3(c,syncard)
+	if not Duel.GetLocationCountFromEx and c:GetSequence()<5 then return false end
+	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_TUNER)~=0
+end
+function cm.matfilter4(c,syncard)
+	if not Duel.GetLocationCountFromEx and c:GetSequence()<5 then return false end
+	return c:IsFaceup() and bit.band(c:GetOriginalType(),TYPE_TUNER)==0 and bit.band(c:GetOriginalRace(),RACE_FAIRY)~=0
+end
+function cm.val(c,syncard)
+	if c:IsLocation(LOCATION_SZONE) then
 		return c:GetOriginalLevel()
 	else
-		return c:GetSynchroLevel(sc)
+		return c:GetSynchroLevel(syncard)
 	end
 end
-function cm.synfilter(c,syncard,lv,g2,minc,ft,tp)
-	local tlv=cm.val(c,syncard)
-	if lv-tlv<=0 then return false end
-	local g=g2:Clone()
-	g:RemoveCard(c)
-	if ft>0 or (c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)) then
-		return g:CheckWithSumEqual(cm.val,lv-tlv,minc-1,63,syncard)
-	else
-		return g:IsExists(cm.ffilter,1,nil,syncard,lv-tlv,g,minc,tp)
-	end
+function cm.synfilter(c,syncard,lv,g2,minc,maxc,tp)
+	return Senya.CheckGroup(g2,cm.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard)
 end
-function cm.ffilter(c,syncard,rlv,g,minc,tp)
-	if c:IsControler(1-tp) or not c:IsLocation(LOCATION_MZONE) then return false end
-	Duel.SetSelectedCard(c)
-	return g:CheckWithSumEqual(cm.val,rlv,minc-2,63,syncard)
+function cm.goal(g,tp,lv,syncard)
+	if Duel.GetLocationCountFromEx(tp,tp,g,syncard)<=0 then return false end
+	local ct=g:GetCount()
+	return g:CheckWithSumEqual(cm.val,lv,ct,ct,syncard)
 end
 function cm.syncon(e,c,tuner,mg)
 	if c==nil then return true end
 	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local minc=math.max(-ft,2)
+	local minc=2
+	local maxc=c:GetLevel()
 	local g1=nil
 	local g2=nil
 	if mg then
 		g1=mg:Filter(cm.matfilter1,nil,c)
 		g2=mg:Filter(cm.matfilter2,nil,c)
 	else
-		g1=Duel.GetMatchingGroup(cm.matfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c)
-		g2=Duel.GetMatchingGroup(cm.matfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c)
+		g1=Duel.GetMatchingGroup(cm.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
+		g2=Duel.GetMatchingGroup(cm.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
+		local g3=Duel.GetMatchingGroup(cm.matfilter3,tp,LOCATION_PZONE,0,nil,c)
+		local g4=Duel.GetMatchingGroup(cm.matfilter4,tp,LOCATION_PZONE,0,nil,c)
+		g1:Merge(g3)
+		g2:Merge(g4)
 	end
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
+	local sg=nil
 	if tuner then
-		return cm.synfilter(tuner,c,lv,g2,minc,ft,tp)
+		return cm.synfilter(tuner,c,lv,g2,minc,maxc,tp)
 	end
 	if not pe then
-		return g1:IsExists(cm.synfilter,1,nil,c,lv,g2,minc,ft,tp)
+		return g1:IsExists(cm.synfilter,1,nil,c,lv,g2,minc,maxc,tp)
 	else
-		return cm.synfilter(pe:GetOwner(),c,lv,g2,minc,ft,tp)
+		return cm.synfilter(pe:GetOwner(),c,lv,g2,minc,maxc,tp)
 	end
 end
 function cm.syntg(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
-	local g=Group.CreateGroup()
 	local g1=nil
 	local g2=nil
+	local minc=2
+	local maxc=c:GetLevel()
 	if mg then
 		g1=mg:Filter(cm.matfilter1,nil,c)
 		g2=mg:Filter(cm.matfilter2,nil,c)
 	else
-		g1=Duel.GetMatchingGroup(cm.matfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c)
-		g2=Duel.GetMatchingGroup(cm.matfilter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c)
+		g1=Duel.GetMatchingGroup(cm.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
+		g2=Duel.GetMatchingGroup(cm.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
+		local g3=Duel.GetMatchingGroup(cm.matfilter3,tp,LOCATION_PZONE,0,nil,c)
+		local g4=Duel.GetMatchingGroup(cm.matfilter4,tp,LOCATION_PZONE,0,nil,c)
+		g1:Merge(g3)
+		g2:Merge(g4)
 	end
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local minc=math.max(-ft,2)
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
+	local tuc=nil
 	if tuner then
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=cm.val(tuner,c)
-		if ft<=0 and (tuner:IsControler(1-tp) or not tuner:IsLocation(LOCATION_MZONE)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local mf=g2:FilterSelect(tp,cm.ffilter,1,1,nil,c,lv-lv1,g2,minc,tp)
-			Duel.SetSelectedCard(mf)
-			g:Merge(mf)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-2,63,c)
-			g:Merge(m2)
-		else
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
-			g:Merge(m2)
-		end
+		tuner=tuc
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local tuner=nil
 		if not pe then
-			local t1=g1:FilterSelect(tp,cm.synfilter,1,1,nil,c,lv,g2,minc,ft,tp)
-			tuner=t1:GetFirst()
+			local t1=g1:FilterSelect(tp,cm.synfilter,1,1,nil,c,lv,g2,minc,maxc,tp)
+			tuc=t1:GetFirst()
 		else
-			tuner=pe:GetOwner()
-			Group.FromCards(tuner):Select(tp,1,1,nil)
-		end
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=cm.val(tuner,c)
-		if ft<=0 and (tuner:IsControler(1-tp) or not tuner:IsLocation(LOCATION_MZONE)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local mf=g2:FilterSelect(tp,cm.ffilter,1,1,nil,c,lv-lv1,g2,minc,tp)
-			Duel.SetSelectedCard(mf)
-			g:Merge(mf)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-2,63,c)
-			g:Merge(m2)
-		else
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-			local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
-			g:Merge(m2)
+			tuc=pe:GetOwner()
+			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
 	end
+	local g=Senya.SelectGroup(tp,HINTMSG_SMATERIAL,g2,cm.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)

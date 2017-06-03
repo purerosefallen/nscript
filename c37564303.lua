@@ -1,10 +1,10 @@
 --new utakat
 local m=37564303
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.rxyz1(c,nil,nil,3,3)
-	senya.mk(c,7,m,false,cm.dogcon)
+	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
+	Senya.MokouReborn(c,7,m,false,cm.dogcon)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
@@ -38,6 +38,6 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.Overlay(c,Group.FromCards(gc))
 	if c:GetOverlayGroup():IsContains(gc) then
-		senya.copy(e,nil,gc,true)
+		Senya.CopyStatusAndEffect(e,nil,gc,true)
 	end
 end

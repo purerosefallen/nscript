@@ -1,9 +1,10 @@
 --3L·黑暗的彼方
 local m=37564829
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -33,7 +34,7 @@ function cm.initial_effect(c)
 	e3:SetCode(EFFECT_MATERIAL_CHECK)
 	e3:SetValue(function(e,c)
 		local g=c:GetMaterial()
-		local fg=g:Filter(senya.lefffilter,nil,c)
+		local fg=g:Filter(Senya.EffectSourceFilter_3L,nil,c)
 		fg:KeepAlive()
 		e:GetLabelObject():SetLabelObject(fg)
 	end)
@@ -58,7 +59,7 @@ function cm.effect_operation_3L(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetCountLimit(1,m)
 	e3:SetCondition(cm.discon)
-	e3:SetCost(senya.desccost())
+	e3:SetCost(Senya.DescriptionCost())
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
 	e3:SetReset(RESET_EVENT+0x1fe0000)
@@ -71,7 +72,7 @@ function cm.effect_operation_3L(c)
 	e2:SetOperation(function(e,tp)
 		local c=e:GetHandler()
 		local ct=c:GetFlagEffectLabel(m)
-		local v=math.min(senya.kaguya_check_3L[1-tp],7)
+		local v=math.min(Senya.kaguya_check_3L[1-tp],7)
 		if not ct then
 			c:RegisterFlagEffect(m,0x1fe1000,EFFECT_FLAG_CLIENT_HINT,1,v,aux.Stringid(m,v+2))
 			return
@@ -94,12 +95,12 @@ function cm.spcon(e,c)
 	if c==nil then return true end
 	local ft=Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)
 	local ct=math.max(1,-ft)
-	return Duel.CheckReleaseGroup(c:GetControler(),senya.check_set_3L,ct,nil)
+	return Duel.CheckReleaseGroup(c:GetControler(),Senya.check_set_3L,ct,nil)
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local ft=Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)
 	local ct=math.max(1,-ft)
-	local g=Duel.SelectReleaseGroup(c:GetControler(),senya.check_set_3L,ct,63,nil)
+	local g=Duel.SelectReleaseGroup(c:GetControler(),Senya.check_set_3L,ct,63,nil)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_COST)
 end
@@ -109,13 +110,13 @@ function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 	if not g then return end
 	local tc=g:GetFirst()
 	while tc do
-		senya.lgeff(c,tc)
+		Senya.GainEffect_3L(c,tc)
 		tc=g:GetNext()
 	end
 	g:DeleteGroup()
 end
 function cm.atkval(e,c)
-	return senya.lgetct(c)*500
+	return Senya.GetGainedCount_3L(c)*500
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and ep~=tp

@@ -1,16 +1,16 @@
 --Sayuri & 3L
 local m=37564914
 local cm=_G["c"..m]
---
-cm.named_with_sayuri=true
+
+cm.Senya_name_with_sayuri=true
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_RITUAL_LEVEL)
 	e1:SetValue(function(e,c)
 		local lv=e:GetHandler():GetLevel()
-		if senya.check_set_sayuri(c) then
+		if Senya.check_set_sayuri(c) then
 			local clv=c:GetLevel()
 			return lv*65536+clv
 		else return lv end
@@ -39,7 +39,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetHintTiming(0,0x1c0)
 	e1:SetCountLimit(ctlm)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target1)
 	e1:SetOperation(cm.operation1)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
@@ -51,8 +51,8 @@ function cm.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	for rc in aux.Next(eg) do
-		if senya.check_set_sayuri(rc) and senya.lefffilter(e:GetHandler(),rc) then
-			senya.lgeff(rc,e:GetHandler())
+		if Senya.check_set_sayuri(rc) and Senya.EffectSourceFilter_3L(e:GetHandler(),rc) then
+			Senya.GainEffect_3L(rc,e:GetHandler())
 		end
 	end
 end

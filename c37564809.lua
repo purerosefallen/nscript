@@ -1,9 +1,9 @@
 --3L·Endless Night
 local m=37564809
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -28,7 +28,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetHintTiming(0,0x1c0)
 	e1:SetCountLimit(ctlm)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target1)
 	e1:SetOperation(cm.operation1)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
@@ -36,7 +36,7 @@ function cm.effect_operation_3L(c,ctlm)
 	return e1
 end
 function cm.filter(c)
-	return senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return Senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

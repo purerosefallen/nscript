@@ -1,9 +1,9 @@
---
+
 local m=37564527
 local cm=_G["c"..m]
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_ACTIVATE)
 	e0:SetCode(EVENT_FREE_CHAIN)

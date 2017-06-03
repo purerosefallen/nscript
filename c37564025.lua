@@ -1,7 +1,7 @@
 --Sweet Sweet Magic☆
 local m=37564025
 local cm=_G["c"..m]
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -13,7 +13,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37564025.filter1(c,e,tp)
-	return senya.check_set_elem(c) and c:GetOverlayCount()==0 and c:IsFaceup() and c:IsType(TYPE_XYZ)
+	return Senya.check_set_elem(c) and c:GetOverlayCount()==0 and c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function c37564025.filter3(c)
 	return c:IsAbleToChangeControler() and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL

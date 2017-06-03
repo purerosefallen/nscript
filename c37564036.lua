@@ -3,7 +3,7 @@ local m=37564036
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)

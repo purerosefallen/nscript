@@ -2,7 +2,7 @@
 local m=37564017
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	Duel.AddCustomActivityCounter(m,ACTIVITY_SPSUMMON,cm.counterfilter)
 end
 function cm.counterfilter(c)
-	return senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
+	return Senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
 end
 function cm.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
@@ -36,10 +36,10 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function cm.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
+	return not Senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

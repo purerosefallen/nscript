@@ -1,8 +1,8 @@
 --Inori
 local m=37564518
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	--Activate(summon)
 	local e4=Effect.CreateEffect(c)
@@ -31,14 +31,14 @@ function cm.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON)
 	c:RegisterEffect(e3)
-	senya.nntrap(c,e1,e2,e3,e4)
+	Senya.NanahiraTrap(c,e1,e2,e3,e4)
 end 
 function cm.rcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	e:GetHandler():RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_CHAIN,0,1)
 end
 function cm.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and senya.nncon(false)(e,tp)
+	return Duel.GetCurrentChain()==0 and Senya.NanahiraExistingCondition(false)(e,tp)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -52,7 +52,7 @@ end
 function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsChainNegatable(ev) then return false end
 	if not re:IsActiveType(TYPE_MONSTER) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
-	return re:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and senya.nncon(true)(e,tp)
+	return re:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Senya.NanahiraExistingCondition(true)(e,tp)
 end
 function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

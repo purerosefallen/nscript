@@ -3,7 +3,7 @@ local m=37564030
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,c37564030.ovfilter,aux.Stringid(37564030,0))
 	c:EnableReviveLimit()
@@ -56,7 +56,7 @@ function c37564030.exat(e,c)
 	return c:GetFlagEffect(375640302)
 end
 function c37564030.ovfilter(c)
-	return c:IsFaceup() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
 end
 function c37564030.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end
@@ -118,23 +118,13 @@ function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if dr:IsAttribute(ATTRIBUTE_WIND) then
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end
-	if dr:IsAttribute(ATTRIBUTE_EARTH) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c37564030.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) then
+	if dr:IsAttribute(ATTRIBUTE_EARTH) and Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(c37564030.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) then
 		if Duel.SelectYesNo(tp,aux.Stringid(37564030,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local g=Duel.SelectMatchingCard(tp,c37564030.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 			if g:GetCount()>0 then
 				local tc=g:GetFirst()
-				Duel.SpecialSummon(tc,0,tp,tp,false,true,POS_FACEUP)
-			   -- tc:RegisterFlagEffect(375640301,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
-				--local e1=Effect.CreateEffect(c)
-				--e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-				--e1:SetCode(EVENT_PHASE+PHASE_END)
-				--e1:SetCountLimit(1)
-				--e1:SetLabelObject(tc)
-				--e1:SetCondition(c37564030.retcon)
-				--e1:SetOperation(c37564030.retop)
-				--e1:SetReset(RESET_PHASE+PHASE_END)
-				--Duel.RegisterEffect(e1,tp)   
+				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 			end
 		end
 	end
@@ -151,13 +141,5 @@ function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564030.spfilter(c,e,tp)
-	return senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
-end
-function c37564030.retcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	return tc:GetFlagEffect(375640301)>0
-end
-function c37564030.retop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
+	return Senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

@@ -1,10 +1,10 @@
 --Nanahira & Senhane
 local m=37564539
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddSynchroProcedure2(c,nil,aux.FilterBoolFunction(Card.IsCode,37564765))
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,m)
-	e1:SetCondition(senya.stypecon(SUMMON_TYPE_SYNCHRO))
+	e1:SetCondition(Senya.SummonTypeCondition(SUMMON_TYPE_SYNCHRO))
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.operation)
 	c:RegisterEffect(e1)
@@ -26,13 +26,13 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCondition(aux.exccon)
 	e2:SetCountLimit(1,m-4000)
-	e2:SetCost(senya.setdcost)
+	e2:SetCost(Senya.SelfToDeckCost)
 	e2:SetTarget(cm.target1)
 	e2:SetOperation(cm.activate1)
 	c:RegisterEffect(e2)
 end
 function cm.filter(c)
-	return c.desc_with_nanahira and c:IsSSetable() and c:IsType(TYPE_TRAP) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c.Senya_desc_with_nanahira and c:IsSSetable() and c:IsType(TYPE_TRAP) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

@@ -2,12 +2,12 @@
 
 local m=37564422
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564422.sptg,c37564422.spop,false,CATEGORY_SPECIAL_SUMMON)
+	Senya.PrismCommonEffect(c,c37564422.sptg,c37564422.spop,false,CATEGORY_SPECIAL_SUMMON)
 end
 function c37564422.filter(c,e,tp)
-	return senya.bmchkfilter(c) and not c:IsCode(37564422) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==3 and Duel.GetFlagEffect(tp,c:GetCode())==0
+	return Senya.CheckPrism(c) and not c:IsCode(37564422) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==3 and Duel.GetFlagEffect(tp,c:GetCode())==0
 end
 function c37564422.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

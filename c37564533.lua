@@ -1,13 +1,13 @@
 --Nanahira & Hanekoi
 local m=37564533
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(senya.attf,ATTRIBUTE_LIGHT),true)
-	senya.fproc(c,LOCATION_MZONE,Duel.Release)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_LIGHT),true)
+	Senya.AddSelfFusionProcedure(c,LOCATION_MZONE,Duel.Release)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)

@@ -1,10 +1,10 @@
 --Nanahira & Kana
 local m=37564535
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	c:EnableReviveLimit()
 	local e22=Effect.CreateEffect(c)
 	e22:SetType(EFFECT_TYPE_SINGLE)
@@ -47,17 +47,19 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.operation1)
 	c:RegisterEffect(e1)
 end
-function cm.bmrlfilter(c)
-	return c:IsCode(37564765) and bit.band(c:GetType(),0x8020d0)~=0
+function cm.bmrlfilter(c,ft)
+	if ft==0 and c:GetSequence()>4 then return false end
+	return c:IsCode(37564765) and bit.band(c:GetType(),0x8020d0+TYPE_LINK)~=0
 end
 function cm.bmrlcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.CheckReleaseGroup(tp,cm.bmrlfilter,1,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.CheckReleaseGroup(tp,cm.bmrlfilter,1,nil,ft)
 end
 function cm.bmrlop(e,tp,eg,ep,ev,re,r,rp,c)
-	local tp=c:GetControler()
-	local g=Duel.SelectReleaseGroup(tp,cm.bmrlfilter,1,1,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local g=Duel.SelectReleaseGroup(tp,cm.bmrlfilter,1,1,nil,ft)
 	Duel.Release(g,REASON_COST)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

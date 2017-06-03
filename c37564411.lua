@@ -2,10 +2,10 @@
 local m=37564411
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bmrl(c)
-	senya.bmdamchk(c,false)
+	Senya.PrismAdvanceCommonEffect(c)
+	Senya.PrismDamageCheckRegister(c,false)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
@@ -13,9 +13,9 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetLabel(1)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e3:SetCondition(senya.bmdamchkcon)
+	e3:SetCondition(Senya.PrismDamageCheckCondition)
 	e3:SetCost(cm.cost1)
-	e3:SetOperation(senya.bmdamchkop)
+	e3:SetOperation(Senya.PrismDamageCheckOperation)
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
@@ -36,7 +36,7 @@ function cm.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function cm.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and senya.bmchkfilter(c)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Senya.CheckPrism(c)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHandAsCost() end

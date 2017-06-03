@@ -1,9 +1,10 @@
 --Nanahira & Sayuri
-local m,cm=senya.sayuri_ritual(37564552)
-cm.desc_with_nanahira=true
+
+local m,cm=Senya.SayuriRitualPreload(37564552)
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -35,7 +36,7 @@ function cm.mat_filter(c)
 	return c:GetLevel()~=8
 end
 function cm.matfilter(c,rc)
-	return c:IsCanBeRitualMaterial(rc) and (c.desc_with_nanahira or senya.check_set_sayuri(c)) and c:IsType(TYPE_MONSTER)
+	return c:IsCanBeRitualMaterial(rc) and (c.Senya_desc_with_nanahira or Senya.check_set_sayuri(c)) and c:IsType(TYPE_MONSTER)
 end
 function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -55,7 +56,7 @@ function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumGreater(Card.GetRitualLevel,rc:GetLevel(),rc)
 	else return false end

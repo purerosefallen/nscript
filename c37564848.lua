@@ -2,7 +2,7 @@
 local m=37564848
 local cm=_G["c"..m]
 
-cm.named_with_3L=true
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_REMOVE)
@@ -36,7 +36,7 @@ function cm.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(1,0)
 	e2:SetTarget(function(e,c)
-		return not senya.check_set_3L(c)
+		return not Senya.check_set_3L(c)
 	end)
 	c:RegisterEffect(e2)
 end
@@ -47,13 +47,13 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.filter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and senya.check_set_3L(c) and (not f or f(c)) and c:GetLevel()==7
+	return c:IsType(TYPE_FUSION) and Senya.check_set_3L(c) and (not f or f(c)) and c:GetLevel()==7
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil)
 		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -70,8 +70,8 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil,e)
 	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -108,7 +108,7 @@ function cm.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFirstCardTarget()
 end
 function cm.cfilter(c)
-	return senya.check_set_3L(c) and c:IsDiscardable()
+	return Senya.check_set_3L(c) and c:IsDiscardable()
 end
 function cm.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -117,7 +117,7 @@ end
 function cm.sfilter(c,tp,fc,e)
 	if not fc then return false end
 	if e and not c:IsCanBeEffectTarget(e) then return false end
-	return c:IsControler(tp) and c:IsLocation(LOCATION_REMOVED) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER) and senya.check_set_3L(c) and senya.lefffilter(c,fc) and bit.band(c:GetReason(),0x40008)==0x40008 and c:GetReasonCard()==fc
+	return c:IsControler(tp) and c:IsLocation(LOCATION_REMOVED) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER) and Senya.check_set_3L(c) and Senya.EffectSourceFilter_3L(c,fc) and bit.band(c:GetReason(),0x40008)==0x40008 and c:GetReasonCard()==fc
 end
 function cm.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local fc=e:GetHandler():GetFirstCardTarget()
@@ -134,7 +134,7 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local fc=e:GetHandler():GetFirstCardTarget()
 	if not fc or not tc or not tc:IsRelateToEffect(e) then return end
-	senya.lgeff(fc,tc)
+	Senya.GainEffect_3L(fc,tc)
 	Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)
 	if tc:IsLocation(LOCATION_DECK) then Duel.ShuffleDeck(tc:GetControler()) end
 end

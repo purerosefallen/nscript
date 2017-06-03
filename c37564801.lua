@@ -1,10 +1,10 @@
 --3L·梦幻泡影
 local m=37564801
 local cm=_G["c"..m]
---
+
 cm.fusion_att_3L=ATTRIBUTE_WATER
 function cm.initial_effect(c)
-	senya.lfus(c,m)
+	Senya.Fusion_3L_Attribute(c,cm)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)

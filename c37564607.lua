@@ -2,20 +2,20 @@
 local m=37564607
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	senya.prl4(c,m)
+	Senya.PrimLv4CommonEffect(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+senya.delay)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+Senya.delay)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,m)
-	--e1:SetCost(senya.discost(1))
+	--e1:SetCost(Senya.DiscardHandCost(1))
 	e1:SetCondition(cm.drcon)
-	e1:SetTarget(senya.drawtg(1))
-	e1:SetOperation(senya.drawop)
+	e1:SetTarget(Senya.DrawTarget(1))
+	e1:SetOperation(Senya.DrawOperation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,1))
@@ -35,7 +35,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(cm.thcon1)
 	e3:SetTarget(cm.sptg)
 	e3:SetOperation(cm.spop)
@@ -51,21 +51,21 @@ function cm.drtarg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,1)
 end
 function cm.cfilter(c)
-	return senya.check_set_prim(c) and c:IsLocation(LOCATION_GRAVE)
+	return Senya.check_set_prim(c) and c:IsLocation(LOCATION_GRAVE)
 end
-function cm.swwcostfilter(c,e,tp)
+function cm.SawawaRemoveCostFilter(c,e,tp)
 	local g=Duel.GetMatchingGroup(cm.filter,tp,LOCATION_GRAVE,0,c,e,tp)
-	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and g:CheckWithSumEqual(Card.GetLevel,4,1,ft)
+	return Senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and g:CheckWithSumEqual(Card.GetLevel,4,1,ft)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	 if chk==0 then return Duel.IsExistingMatchingCard(cm.swwcostfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) and e:GetHandler():IsAbleToRemoveAsCost() end
+	 if chk==0 then return Duel.IsExistingMatchingCard(cm.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) and e:GetHandler():IsAbleToRemoveAsCost() end
 	 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	 local g=Duel.SelectMatchingCard(tp,cm.swwcostfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
+	 local g=Duel.SelectMatchingCard(tp,cm.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e,tp)
 	 g:AddCard(e:GetHandler())
 	 Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_prim(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
+	return Senya.check_set_prim(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c~=e:GetHandler()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	--if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cm.filter(chkc,e,tp) end
@@ -90,7 +90,7 @@ function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function cm.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
 end
 function cm.spfilter(c,e,tp,m)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

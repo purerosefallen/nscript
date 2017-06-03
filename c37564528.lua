@@ -2,7 +2,7 @@
 local m=37564528
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -12,7 +12,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.nntrap(c,e1)
+	Senya.NanahiraTrap(c,e1)
 end
 function cm.filter1(c,tp)
 	return c:IsCode(37564765) and c:IsPosition(POS_FACEUP_ATTACK) and c:IsAttackable() and Duel.IsExistingTarget(cm.filter2,tp,0,LOCATION_MZONE,1,c,c)

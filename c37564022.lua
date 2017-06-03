@@ -3,7 +3,7 @@ local m=37564022
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)
@@ -39,10 +39,10 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(m,1))
 		local sg=c:GetOverlayGroup():FilterSelect(tp,cm.ovfilter,1,1,nil)
 		local tc=sg:GetFirst()
-		senya.copy(e,nil,tc,false)
+		Senya.CopyStatusAndEffect(e,nil,tc,false)
 end
 function cm.filter(c,e,tp)
-	return c:GetRank()==4 and senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetRank()==4 and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToExtra() end
@@ -50,7 +50,7 @@ function cm.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function cm.filter2(c)
-	return senya.check_set_elem(c) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return Senya.check_set_elem(c) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

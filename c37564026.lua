@@ -1,7 +1,8 @@
 --元素爆发·冰雪
 local m=37564026
 local cm=_G["c"..m]
-cm.named_with_elem=true
+
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,cm.ovfilter,aux.Stringid(m,0))
 	c:EnableReviveLimit()
@@ -31,7 +32,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.ovfilter(c)
-	return c:IsFaceup() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>=3
+	return c:IsFaceup() and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>=3
 end
 function cm.rmcon(e,c,og)
 	local tp=e:GetHandlerPlayer()

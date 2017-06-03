@@ -1,7 +1,8 @@
 --元灵的祈愿·梅娅
 local m=37564055
 local cm=_G["c"..m]
-cm.named_with_elem=true
+
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -94,32 +95,33 @@ function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.matfilter1(c,syncard)
-	if c:IsFacedown() then return false end
-	return ((c:IsType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)) or c:IsType(TYPE_XYZ))
-		and Duel.IsExistingMatchingCard(cm.matfilter2,0,LOCATION_MZONE,LOCATION_MZONE,1,c,syncard)
+	if c:IsFaceup() and c:IsType(TYPE_XYZ) then return true end 
+	return c:IsFaceup() and c:IsType(TYPE_TUNER) and c:IsCanBeSynchroMaterial(syncard)
 end
 function cm.matfilter2(c,syncard)
-	return c:IsNotTuner() and c:IsFaceup() and senya.check_set_elem(c) and c:IsCanBeSynchroMaterial(syncard)
+	return c:IsFaceup() and c:IsNotTuner() and Senya.check_set_elem(c) and c:IsCanBeSynchroMaterial(syncard)
 end
 function cm.val(c,syncard)
 	if c:IsType(TYPE_XYZ) then
 		return c:GetRank()
-	else return c:GetSynchroLevel(syncard) end
+	else
+		return c:GetSynchroLevel(syncard)
+	end
 end
-function cm.synfilter(c,syncard,lv,g2,minc)
-	local tlv=cm.val(c,syncard)
-	if lv-tlv<=0 then return false end
-	local g=g2:Clone()
-	g:RemoveCard(c)
-	return g:CheckWithSumEqual(cm.val,lv-tlv,minc-1,63,syncard)
+function cm.synfilter(c,syncard,lv,g2,minc,maxc,tp)
+	return Senya.CheckGroup(g2,cm.goal,Group.FromCards(c),minc,maxc,tp,lv,syncard)
+end
+function cm.goal(g,tp,lv,syncard)
+	if Duel.GetLocationCountFromEx(tp,tp,g,syncard)<=0 then return false end
+	local ct=g:GetCount()
+	return g:CheckWithSumEqual(cm.val,lv,ct,ct,syncard)
 end
 function cm.syncon(e,c,tuner,mg)
 	if c==nil then return true end
 	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	local tp=c:GetControler()
-	local ct=-Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local minc=3
-	if minc<ct then minc=ct end
+	local maxc=c:GetLevel()
 	local g1=nil
 	local g2=nil
 	if mg then
@@ -131,19 +133,21 @@ function cm.syncon(e,c,tuner,mg)
 	end
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
+	local sg=nil
 	if tuner then
-		return cm.synfilter(tuner,c,lv,g2,minc)
+		return cm.synfilter(tuner,c,lv,g2,minc,maxc,tp)
 	end
 	if not pe then
-		return g1:IsExists(cm.synfilter,1,nil,c,lv,g2,minc)
+		return g1:IsExists(cm.synfilter,1,nil,c,lv,g2,minc,maxc,tp)
 	else
-		return cm.synfilter(pe:GetOwner(),c,lv,g2,minc)
+		return cm.synfilter(pe:GetOwner(),c,lv,g2,minc,maxc,tp)
 	end
 end
 function cm.syntg(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
-	local g=Group.CreateGroup()
 	local g1=nil
 	local g2=nil
+	local minc=3
+	local maxc=c:GetLevel()
 	if mg then
 		g1=mg:Filter(cm.matfilter1,nil,c)
 		g2=mg:Filter(cm.matfilter2,nil,c)
@@ -151,36 +155,23 @@ function cm.syntg(e,tp,eg,ep,ev,re,r,rp,chk,c,tuner,mg)
 		g1=Duel.GetMatchingGroup(cm.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
 		g2=Duel.GetMatchingGroup(cm.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
 	end
-	local ct=-Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local minc=2
-	if minc<ct then minc=ct end
 	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 	local lv=c:GetLevel()
+	local tuc=nil
 	if tuner then
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=cm.val(tuner,c)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
-		g:Merge(m2)
+		tuner=tuc
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local tuner=nil
 		if not pe then
-			local t1=g1:FilterSelect(tp,cm.synfilter,1,1,nil,c,lv,g2,minc)
-			tuner=t1:GetFirst()
+			local t1=g1:FilterSelect(tp,cm.synfilter,1,1,nil,c,lv,g2,minc,maxc,tp)
+			tuc=t1:GetFirst()
 		else
-			tuner=pe:GetOwner()
-			Group.FromCards(tuner):Select(tp,1,1,nil)
+			tuc=pe:GetOwner()
+			Group.FromCards(tuc):Select(tp,1,1,nil)
 		end
-		tuner:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000,0,1)
-		g:AddCard(tuner)
-		g2:RemoveCard(tuner)
-		local lv1=cm.val(tuner,c)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-		local m2=g2:SelectWithSumEqual(tp,cm.val,lv-lv1,minc-1,63,c)
-		g:Merge(m2)
 	end
+	tuc:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000,0,1)
+	local g=Senya.SelectGroup(tp,HINTMSG_SMATERIAL,g2,cm.goal,Group.FromCards(tuc),minc,maxc,tp,lv,c)
 	if g then
 		g:KeepAlive()
 		e:SetLabelObject(g)
@@ -194,7 +185,7 @@ function cm.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
 	g:DeleteGroup()
 end
 function cm.mfilter(c)
-	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
+	return c:IsType(TYPE_XYZ) and Senya.check_set_elem(c)
 		and (c:IsType(TYPE_TUNER) or c:GetFlagEffect(m)~=0)
 end
 function cm.valcheck(e,c)

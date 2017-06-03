@@ -1,9 +1,11 @@
 --Nanahira & Firce777
 local m=37564515
 local cm=_G["c"..m]
-cm.desc_with_nanahira=true
+
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -18,8 +20,8 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,37560515)
 	e1:SetCost(cm.sesscost)
-	e1:SetTarget(senya.swwsstg)
-	e1:SetOperation(senya.swwssop)
+	e1:SetTarget(Senya.SelfSpsummonTarget)
+	e1:SetOperation(Senya.SelfSpsummonOperation)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
@@ -27,7 +29,7 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,37561515)
-	e2:SetCost(cm.sethcost)
+	e2:SetCost(cm.SelfToHandCost)
 	e2:SetTarget(prim.sethtg)
 	e2:SetOperation(prim.sethop)
 	c:RegisterEffect(e2)
@@ -35,8 +37,8 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,37562515)
-	e3:SetCost(senya.secost)
-	e3:SetOperation(senya.seop)
+	e3:SetCost(cm.secost)
+	e3:SetOperation(cm.seop)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(78651105,0))
@@ -58,7 +60,7 @@ function cm.sesscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,cm.sessfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function cm.sethcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.SelfToHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.sessfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler(),at) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,cm.sessfilter,tp,LOCATION_GRAVE,0,2,2,e:GetHandler(),at)

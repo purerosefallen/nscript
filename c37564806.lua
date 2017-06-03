@@ -1,10 +1,10 @@
 --3L·Look for the Truth
 local m=37564806
 local cm=_G["c"..m]
---
+
 cm.fusion_att_3L=ATTRIBUTE_EARTH
 function cm.initial_effect(c)
-	senya.lfus(c,m)
+	Senya.Fusion_3L_Attribute(c,cm)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)

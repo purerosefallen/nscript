@@ -9,13 +9,13 @@ local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564219+EFFECT_COUNT_CODE_OATH)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetTarget(c37564219.target)
 	e1:SetOperation(c37564219.activate)
 	c:RegisterEffect(e1)
 end
 function c37564219.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and senya.check_set_sawawa(c) and c:IsFaceup()
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and Senya.check_set_sawawa(c) and c:IsFaceup()
 end
 function c37564219.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and c37564219.filter(chkc) end

@@ -2,21 +2,21 @@
 local m=37564451
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c)
+	Senya.PrismCommonEffect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_TODECK+CATEGORY_SEARCH)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(senya.bmsscon)
+	e3:SetCondition(Senya.PrismSpsummonCheck)
 	e3:SetTarget(cm.target)
 	e3:SetOperation(cm.operation)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c)
-	return senya.bmchkfilter(c) and c:IsAbleToHand()
+	return Senya.CheckPrism(c) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) and e:GetHandler():IsAbleToDeck() end

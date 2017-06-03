@@ -3,7 +3,7 @@ local m=37564830
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetType(EFFECT_TYPE_IGNITION)
@@ -21,7 +21,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(ctlm)
-	e2:SetCost(senya.desccost())
+	e2:SetCost(Senya.DescriptionCost())
 	e2:SetCondition(function(e,tp)
 		return not Duel.IsExistingMatchingCard(cm.filter1,tp,LOCATION_MZONE,0,1,nil)
 	end)
@@ -38,7 +38,7 @@ function cm.filter2(c,tp)
 	return c:IsAbleToRemoveAsCost() and Duel.IsExistingTarget(cm.filter3,tp,LOCATION_MZONE,0,1,nil,c)
 end
 function cm.filter3(c,tc)
-	return c:IsFaceup() and senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and senya.lefffilter(tc,c)
+	return c:IsFaceup() and Senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and Senya.EffectSourceFilter_3L(tc,c)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter3(chkc,e:GetLabelObject()) end
@@ -57,7 +57,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local cd=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and cd then
-		senya.lgeff(tc,cd,2)
+		Senya.GainEffect_3L(tc,cd,2)
 	end
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -72,23 +72,23 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,m+1,0,0x4011,800,1000,1,RACE_FIEND,ATTRIBUTE_DARK) then return end
 	local token=Duel.CreateToken(tp,m+1)
 	if Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP) then
-		--[[local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(37564800)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e1,true)]]
-		local t=senya.lgetcd(c)
+		token:RegisterEffect(e1,true)
+		local t=Senya.GetGainedList_3L(c)
 		local chk=false
 		for i,cd in pairs(t) do
 			if cd~=m then
-				senya.lgeff(token,cd)
+				Senya.GainEffect_3L(token,cd)
 				chk=true
 			end
 		end
 		local copym=c:GetFlagEffectLabel(37564820)
 		if copym then
-			local copyt=senya.order_table[copym]
+			local copyt=Senya.order_table[copym]
 			for i,dt in pairs(copyt) do
 				token:CopyEffect(dt.ccode,RESET_EVENT+0x1fe0000)
 			end

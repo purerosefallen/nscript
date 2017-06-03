@@ -3,7 +3,7 @@ local m=37564012
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -28,7 +28,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(0,0x1e0)
-	e3:SetCost(senya.serlcost)
+	e3:SetCost(Senya.SelfReleaseCost)
 	e3:SetTarget(cm.destg)
 	e3:SetOperation(cm.desop)
 	c:RegisterEffect(e3)	
@@ -38,18 +38,19 @@ function cm.sprfilter1(c)
 	return c:GetSummonLocation()==LOCATION_EXTRA and not c:IsType(TYPE_PENDULUM) and c:IsReleasable()
 end
 function cm.spcfilter(c)
-	return senya.check_set_rose(c) and not c:IsPublic()
+	return Senya.check_set_rose(c) and not c:IsPublic()
 end
 function cm.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Duel.IsExistingMatchingCard(cm.sprfilter1,tp,0,LOCATION_MZONE,3,nil) and Duel.IsExistingMatchingCard(cm.spcfilter,tp,LOCATION_HAND,0,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetCustomActivityCount(m,tp,ACTIVITY_CHAIN)==0
+	local mg=Duel.GetMatchingGroup(cm.sprfilter1,tp,0,LOCATION_MZONE,nil)	
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0 and Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,3,63,tp,c) and Duel.IsExistingMatchingCard(cm.spcfilter,tp,LOCATION_HAND,0,1,nil) and Duel.GetCustomActivityCount(m,tp,ACTIVITY_CHAIN)==0
 end
 function cm.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 	local g=Duel.SelectMatchingCard(tp,cm.spcfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,cm.sprfilter1,tp,0,LOCATION_MZONE,3,99,nil)
+	local mg=Duel.GetMatchingGroup(cm.sprfilter1,tp,0,LOCATION_MZONE,nil)
+	local g1=Senya.SelectGroup(tp,HINTMSG_TOGRAVE,mg,Senya.CheckFieldFilter,nil,3,63,tp,c)
 	Duel.Hint(HINT_CARD,0,m)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.Release(g1,REASON_COST)

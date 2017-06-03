@@ -1,7 +1,7 @@
 --Keep the Faith -Sayuri Remix-
 
-local m,cm=senya.sayuri_ritual(37564910)
-cm.named_with_remix=true
+local m,cm=Senya.SayuriRitualPreload(37564910)
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -10,7 +10,7 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.sedescost)
+	e1:SetCost(Senya.SelfDiscardCost)
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return re:GetHandler():IsOnField() and re:IsActiveType(TYPE_MONSTER) and ep~=tp
 	end)
@@ -46,17 +46,17 @@ function cm.initial_effect(c)
 	e4:SetOperation(cm.disop)
 	c:RegisterEffect(e4)
 end
-cm.mat_filter=senya.sayuri_mat_filter_8
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel8
 function cm.filter(c,code,e)
 	if c:IsFacedown() then return false end
 	if e then
 		if not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return false end
 	else
-		if not senya.check_set_sayuri(c) then return false end
+		if not Senya.check_set_sayuri(c) then return false end
 	end
 	local l=c:GetFlagEffectLabel(m)
 	if not l then return true end
-	for i,v in pairs(senya.order_table[l]) do
+	for i,v in pairs(Senya.order_table[l]) do
 		if v==code then return false end
 	end
 	return true

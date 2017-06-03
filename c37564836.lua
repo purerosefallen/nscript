@@ -1,10 +1,10 @@
 --邪符『不祥之兆』
 local m=37564836
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	senya.lfusm(c,cm.mfilter,2,63)
+	Senya.Fusion_3L(c,cm.mfilter,nil,2,2)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -21,12 +21,12 @@ function cm.initial_effect(c)
 		local g=c:GetMaterial()
 		local t={}
 		g:ForEach(function(tc)
-			local et=senya.lgetcd(tc)
+			local et=Senya.GetGainedList_3L(tc)
 			for i,v in pairs(et) do
 				table.insert(t,v)
 			end
 		end)
-		e:GetLabelObject():SetLabel(senya.order_table_new(t))
+		e:GetLabelObject():SetLabel(Senya.order_table_new(t))
 	end)
 	e3:SetLabelObject(e0)
 	c:RegisterEffect(e3)
@@ -48,25 +48,25 @@ function cm.initial_effect(c)
 	e3:SetCode(EVENT_SUMMON)
 	e3:SetCountLimit(1)
 	e3:SetCondition(cm.discon)
-	e3:SetCost(senya.desccost(senya.lsermeffcost(1)))
+	e3:SetCost(Senya.DescriptionCost(Senya.RemoveEffectCost_3L(1)))
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
 end
 function cm.mfilter(c)
-	return senya.lgetct(c)>0 and not c:IsHasEffect(6205579)
+	return Senya.GetGainedCount_3L(c)>0 and not c:IsHasEffect(6205579)
 end
 function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tm=e:GetLabel()
 	if not tm then return end
-	local t=senya.order_table[tm]
+	local t=Senya.order_table[tm]
 	for i,code in pairs(t) do
-		senya.lgeff(c,code)
+		Senya.GainEffect_3L(c,code)
 	end
 end
 function cm.atkval(e,c)
-	return senya.lgetct(c)*1000
+	return Senya.GetGainedCount_3L(c)*1000
 end
 function cm.filter(c,tp)
 	return c:GetSummonPlayer()==tp

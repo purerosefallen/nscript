@@ -12,7 +12,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c)
-	return senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsReleasable()
+	return Senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsReleasable()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end

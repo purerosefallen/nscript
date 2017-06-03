@@ -1,15 +1,15 @@
 --3L·FM
 local m=37564822
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.sermcost)
+	e1:SetCost(Senya.SelfRemoveCost)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
 end
@@ -24,7 +24,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e3:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e3:SetCountLimit(ctlm)
 	e3:SetCondition(cm.condition)
-	e3:SetCost(senya.desccost())
+	e3:SetCost(Senya.DescriptionCost())
 	e3:SetTarget(cm.target)
 	e3:SetOperation(cm.operation)
 	e3:SetReset(RESET_EVENT+0x1fe0000)
@@ -45,13 +45,13 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function cm.f(c)
-	return senya.check_set_3L(c) and c:GetLevel()==7
+	return Senya.check_set_3L(c) and c:GetLevel()==7
 end
 function cm.cfilter(c,e)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
 function cm.chain_target(e,te,tp)
-	if not senya.check_set_3L(te:GetHandler()) then return Group.CreateGroup() end
+	if not Senya.check_set_3L(te:GetHandler()) then return Group.CreateGroup() end
 	return Duel.GetMatchingGroup(cm.cfilter,tp,0x17,0,nil,te)
 end
 function cm.chain_operation(e,te,tp,tc,mat,sumtype)

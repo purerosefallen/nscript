@@ -2,9 +2,9 @@
 
 local m=37564222
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-senya.sww(c,1,true,false,false)
+Senya.SawawaCommonEffect(c,1,true,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564222,0))
 	e1:SetCategory(CATEGORY_CONTROL)
@@ -12,7 +12,7 @@ senya.sww(c,1,true,false,false)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,37564222)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetCost(c37564222.cost)
 	e1:SetTarget(c37564222.tg)
 	e1:SetOperation(c37564222.op)

@@ -2,9 +2,9 @@
 local m=37564225
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564299)
+	--Senya.setreg(c,m,37564299)
 	c:EnableReviveLimit()
 --tg
 	local e1=Effect.CreateEffect(c)
@@ -33,7 +33,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler()~=e:GetHandler() and ep~=tp and senya.swwblex(e,tp)
+	return re:IsActiveType(TYPE_MONSTER) and re:GetHandler()~=e:GetHandler() and ep~=tp and Senya.CheckNoExtra(e,tp)
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,0,LOCATION_EXTRA,1,nil) end

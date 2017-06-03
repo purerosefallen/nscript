@@ -1,7 +1,8 @@
 --silver forest
-local m,cm=senya.sayuri_spell(37564901)
+
+local m,cm=Senya.SayuriSpellPreload(37564901)
 function cm.initial_effect(c)
-	senya.sayuri_return(c,m)
+	Senya.SayuriSelfReturnCommonEffect(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -11,7 +12,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e,tp,m1,m2,ft)
-	if not senya.check_set_sayuri(c) or bit.band(c:GetType(),0x81)~=0x81
+	if not Senya.check_set_sayuri(c) or bit.band(c:GetType(),0x81)~=0x81
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	local mg=m1:Filter(Card.IsCanBeRitualMaterial,c,c)
 	mg:Merge(m2)
@@ -26,13 +27,13 @@ function cm.filter(c,e,tp,m1,m2,ft)
 	end
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
 	else return false end
 end
 function cm.mfilter(c)
-	return c:GetLevel()>0 and senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return c:GetLevel()>0 and Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -56,7 +57,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsCode(21105106) then
 			tc:ritual_custom_operation(mg)
 			local mat=tc:GetMaterial()
-			senya.sayuri_check_trigger(tc,e,tp,eg,ep,ev,re,r,rp)
+			Senya.SayuriCheckTrigger(tc,e,tp,eg,ep,ev,re,r,rp)
 			Duel.ReleaseRitualMaterial(mat)
 		else
 			if tc.mat_filter then
@@ -75,7 +76,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 				mat:Merge(mat2)
 			end
 			tc:SetMaterial(mat)
-			senya.sayuri_check_trigger(tc,e,tp,eg,ep,ev,re,r,rp)
+			Senya.SayuriCheckTrigger(tc,e,tp,eg,ep,ev,re,r,rp)
 			Duel.ReleaseRitualMaterial(mat)
 		end
 		Duel.BreakEffect()

@@ -3,7 +3,7 @@ local m=37564024
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 --ss
 	local e4=Effect.CreateEffect(c)
@@ -23,20 +23,20 @@ function cm.initial_effect(c)
 	e1:SetCondition(function(e)
 		return bit.band(e:GetHandler():GetSummonType(),0x24)~=0x24
 	end)
-	e1:SetCost(senya.serlcost)
+	e1:SetCost(Senya.SelfReleaseCost)
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.operation)
 	c:RegisterEffect(e1)
 end
 function cm.ssfilter(c)
-	return c:IsFaceup() and senya.check_set_elem(c)
+	return c:IsFaceup() and Senya.check_set_elem(c)
 end
 function cm.hcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(cm.ssfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_elem(c) and c:GetLevel()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(m) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return Senya.check_set_elem(c) and c:GetLevel()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(m) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end

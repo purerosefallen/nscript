@@ -1,7 +1,7 @@
 --恋爱Circulation
 local m=37564045
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,3)
 	c:EnableReviveLimit()
@@ -11,7 +11,7 @@ function cm.initial_effect(c)
 	e7:SetCategory(CATEGORY_DESTROY)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCountLimit(1)
-	e7:SetCost(senya.rmovcost(1))
+	e7:SetCost(Senya.RemoveOverlayCost(1))
 	e7:SetTarget(cm.destg)
 	e7:SetOperation(cm.desop)
 	c:RegisterEffect(e7)

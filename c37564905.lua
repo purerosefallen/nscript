@@ -1,6 +1,6 @@
 --phantasm
---
-local m,cm=senya.sayuri_ritual(37564905)
+
+local m,cm=Senya.SayuriRitualPreload(37564905)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -9,8 +9,8 @@ function cm.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetValue(aux.ritlimit)
 	c:RegisterEffect(e1)
-	senya.neg(c,1,m,cm.discost,cm.negcon,nil,LOCATION_HAND)
-	local e2=senya.neg(c,1,nil,nil,cm.negcon)
+	Senya.NegateEffectModule(c,1,m,cm.DiscardHandCost,cm.negcon,nil,LOCATION_HAND)
+	local e2=Senya.NegateEffectModule(c,1,nil,nil,cm.negcon)
 	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 		local rc=re:GetHandler()
 		if not Duel.NegateActivation(ev) then return end
@@ -43,7 +43,7 @@ function cm.initial_effect(c)
 		end
 	end)
 end
-cm.mat_filter=senya.sayuri_mat_filter_12
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel12
 cm.sayuri_trigger_forced=true
 function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(c)
@@ -67,9 +67,9 @@ function cm.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function cm.costfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and senya.check_set_sayuri(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and Senya.check_set_sayuri(c)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToGraveAsCost() and 
 		Duel.IsExistingMatchingCard(cm.costfilter,tp,LOCATION_HAND,0,1,c) end

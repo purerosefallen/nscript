@@ -1,9 +1,9 @@
 --3L·束缚的银莲花
 local m=37564815
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -28,7 +28,7 @@ function cm.effect_operation_3L(c)
 	e2:SetTarget(cm.distg)
 	e2:SetOperation(cm.disop)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
-	e2:SetCost(senya.desccost())
+	e2:SetCost(Senya.DescriptionCost())
 	c:RegisterEffect(e2,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,2))
@@ -49,7 +49,7 @@ end
 cm.single_effect_3L=true
 cm.custom_effect_count_3L=2
 function cm.filter(c,e,tp)
-	return senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc,e,tp) end

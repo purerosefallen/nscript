@@ -2,9 +2,9 @@
 local m=37564609
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
+	--Senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564609,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -23,7 +23,7 @@ function cm.initial_effect(c)
 	e6:SetRange(LOCATION_GRAVE)
 	e6:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e6:SetCountLimit(1,37564699)
-	e6:SetCost(senya.discost(1))
+	e6:SetCost(Senya.DiscardHandCost(1))
 	e6:SetCondition(c37564609.thcon)
 	e6:SetTarget(c37564609.sptg)
 	e6:SetOperation(c37564609.spop)
@@ -34,7 +34,7 @@ function c37564609.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c37564609.thfilter(c)
-	return senya.check_set_prim(c) and c:IsAbleToHand() and (not c:IsCode(37564609))
+	return Senya.check_set_prim(c) and c:IsAbleToHand() and (not c:IsCode(37564609))
 end
 function c37564609.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564609.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -52,7 +52,7 @@ function c37564609.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564609.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564609)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564609)
 end
 function c37564609.spfilter(c,e,tp,m)
 	return c:IsCode(37564609) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

@@ -2,10 +2,10 @@
 local m=37564604
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
-	aux.AddSynchroProcedure(c,nil,aux.NonTuner(senya.prsyfilter),1)
+	--Senya.setreg(c,m,37564600)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Senya.PrimSynchroFilter),1)
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
@@ -28,7 +28,7 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetCountLimit(1,37564699)
-	e1:SetCost(senya.discost(1))
+	e1:SetCost(Senya.DiscardHandCost(1))
 	e1:SetCondition(c37564604.thcon1)
 	e1:SetTarget(c37564604.sptg)
 	e1:SetOperation(c37564604.spop)
@@ -38,7 +38,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
 	Duel.DiscardDeck(tp,1,REASON_COST)
 	local tc=Duel.GetOperatedGroup():GetFirst()
-	if tc and senya.check_set_prim(tc) then
+	if tc and Senya.check_set_prim(tc) then
 		e:SetLabel(1)
 	else e:SetLabel(0) end
 end
@@ -90,7 +90,7 @@ function c37564604.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564604.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564604)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564604)
 end
 function c37564604.spfilter(c,e,tp,m)
 	return c:IsCode(37564604) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

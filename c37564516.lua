@@ -1,10 +1,10 @@
 --Imagery
 local m=37564516
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddXyzProcedure(c,cm.mfilter,7,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -15,11 +15,11 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,0x1e0)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target0)
 	e1:SetOperation(cm.operation0)
 	c:RegisterEffect(e1)
-	senya.scopy(c,0,0,nil,nil,senya.desccost(),1,m,nil,true)
+	Senya.CopySpellModule(c,0,0,nil,nil,Senya.DescriptionCost(),1,m,nil,true)
 end
 function cm.mfilter(c)
 	return c:IsRace(RACE_FAIRY)
@@ -28,7 +28,7 @@ function cm.filter(c,tp)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and (c:IsControler(tp) or c:IsAbleToChangeControler())
 end
 function cm.target0(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) and cm.filter(chkc,tp) and chkc~=e:GetHandler() end
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE) and cm.filter(chkc,tp) and chkc~=e:GetHandler() and chkc:IsControler(1-tp) end
 	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ)
 		and Duel.IsExistingTarget(cm.filter,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,e:GetHandler(),tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
@@ -42,6 +42,6 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		senya.overlaycard(c,tc)
+		Senya.OverlayCard(c,tc)
 	end
 end

@@ -2,10 +2,10 @@
 local m=37564807
 local cm=_G["c"..m]
 
-cm.named_with_myon=4
+cm.Senya_name_with_myon=4
 function cm.initial_effect(c)
-	senya.lfusm(c,nil,2,2)
-	senya.leff(c,m)
+	Senya.Fusion_3L(c,Senya.check_fusion_set_3L,nil,2,2)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)

@@ -1,19 +1,19 @@
 --Nanahira Another
 local m=37564542
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(senya.desc(8))
+	e1:SetDescription(Senya.DescriptionInNanahira(8))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC_G)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1,10000000)
-	e1:SetCondition(senya.PendConditionNanahira())
-	e1:SetOperation(senya.PendOperationNanahira())
+	e1:SetCondition(Senya.PendConditionNanahira())
+	e1:SetOperation(Senya.PendOperationNanahira())
 	e1:SetValue(SUMMON_TYPE_PENDULUM)
 	c:RegisterEffect(e1)
 	--register by default
@@ -30,12 +30,12 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1,m)
 	e3:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
-		local g=Duel.GetMatchingGroup(cm.f,tp,LOCATION_SZONE,0,nil)
+		local g=Duel.GetMatchingGroup(cm.f,tp,LOCATION_PZONE,0,nil)
 		if chk==0 then return g:GetCount()>=2 end
 		Duel.Release(g,REASON_COST)
 	end)
-	e3:SetTarget(senya.drawtg(1))
-	e3:SetOperation(senya.drawop)
+	e3:SetTarget(Senya.DrawTarget(1))
+	e3:SetOperation(Senya.DrawOperation)
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
@@ -49,10 +49,10 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.f(c)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsReleasable()
+	return c:IsReleasable()
 end
 function cm.thfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c.desc_with_nanahira and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM) and c.Senya_desc_with_nanahira and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_EXTRA,0,1,nil) end

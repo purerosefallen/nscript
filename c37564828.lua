@@ -1,8 +1,9 @@
 --3L·花开艳丽终将凋落
 local m=37564828
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

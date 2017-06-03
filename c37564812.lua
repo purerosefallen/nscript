@@ -2,9 +2,9 @@
 local m=37564812
 local cm=_G["c"..m]
 
-cm.named_with_remix=true
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -20,13 +20,13 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)  
 end
 function cm.effect_operation_3L(c,ctlm)
-	local e1,e2=senya.scopy(c,0,LOCATION_GRAVE,nil,nil,nil,ctlm)
+	local e1,e2=Senya.CopySpellModule(c,0,LOCATION_GRAVE,nil,nil,nil,ctlm)
 	e1:SetDescription(m*16+1)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
-	e1:SetCost(senya.desccost(e1:GetCost()))
+	e1:SetCost(Senya.DescriptionCost(e1:GetCost()))
 	e2:SetDescription(m*16+1)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
-	e2:SetCost(senya.desccost(e2:GetCost()))
+	e2:SetCost(Senya.DescriptionCost(e2:GetCost()))
 	c:RegisterEffect(e1,true)
 	c:RegisterEffect(e2,true)
 	return e1,e2

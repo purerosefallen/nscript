@@ -1,6 +1,6 @@
 --Sayuri·Desire Awake
---
-local m,cm=senya.sayuri_ritual(37564907)
+
+local m,cm=Senya.SayuriRitualPreload(37564907)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -41,7 +41,7 @@ function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function cm.thfilter(c)
-	return senya.check_set_sayuri(c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return Senya.check_set_sayuri(c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -107,7 +107,7 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 			if chk==0 then
 				if e:GetLabel()==0 then return false end
 				e:SetLabel(0)
-				return cm.scopyf1(sc)
+				return cm.CopySpellNormalFilter(sc)
 			end
 			e:SetLabel(0)
 			local te,ceg,cep,cev,cre,cr,crp=sc:CheckActivateEffect(true,true,true)
@@ -118,7 +118,7 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 			te:SetLabelObject(e:GetLabelObject())
 			e:SetLabelObject(te)
 		end)
-		e2:SetOperation(senya.scopyop)
+		e2:SetOperation(Senya.CopyOperation)
 		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
 		c:RegisterEffect(e2,true)
 		local e3=Effect.CreateEffect(c)
@@ -148,11 +148,11 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 			if chk==0 then
 				if e:GetLabel()==0 then return false end
 				e:SetLabel(0)
-				return cm.scopyf2(sc,e,tp,eg,ep,ev,re,r,rp)
+				return cm.CopySpellChainingFilter(sc,e,tp,eg,ep,ev,re,r,rp)
 			end
 			e:SetLabel(0)
 			local te,ceg,cep,cev,cre,cr,crp
-			local fchain=cm.scopyf1(sc)
+			local fchain=cm.CopySpellNormalFilter(sc)
 			if fchain then
 				te,ceg,cep,cev,cre,cr,crp=sc:CheckActivateEffect(true,true,true)
 			else
@@ -171,15 +171,15 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 			te:SetLabelObject(e:GetLabelObject())
 			e:SetLabelObject(te)
 		end)
-		e3:SetOperation(senya.scopyop)
+		e3:SetOperation(Senya.CopyOperation)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
 		c:RegisterEffect(e3,true)
 	end
 end
-function cm.scopyf1(c)
+function cm.CopySpellNormalFilter(c)
 	return c:CheckActivateEffect(true,true,false)
 end
-function cm.scopyf2(c,e,tp,eg,ep,ev,re,r,rp)
+function cm.CopySpellChainingFilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if c:CheckActivateEffect(true,true,false) then return true end
 	local te=c:GetActivateEffect()
 	if te:GetCode()~=EVENT_CHAINING then return false end

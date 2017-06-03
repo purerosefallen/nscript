@@ -2,7 +2,7 @@
 local m=37564018
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
@@ -33,7 +33,7 @@ function cm.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function cm.filter(c)
-	return senya.check_set_elem(c) and c:IsType(TYPE_MONSTER) and c:GetLevel()==4 and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return Senya.check_set_elem(c) and c:IsType(TYPE_MONSTER) and c:GetLevel()==4 and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil) end
@@ -48,10 +48,10 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.filter1(c)
-	return senya.check_set_rose(c) 
+	return Senya.check_set_rose(c) 
 end
 function cm.filter2(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and senya.check_set_elem(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and Senya.check_set_elem(c)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(cm.filter2,tp,LOCATION_MZONE,0,1,nil) 

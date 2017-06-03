@@ -1,10 +1,10 @@
 --3L·FLASHBACK
 local m=37564837
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564800)
+	--Senya.setreg(c,m,37564800)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.desfilter(c,tp)
-	return senya.lrmeff(tp,c,1,1,true)
+	return Senya.RemoveEffect_3L(tp,c,1,1,true)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cm.desfilter(chkc) end
@@ -29,7 +29,7 @@ function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and senya.lrmeff(tp,tc,1,1)>0 then
+	if tc:IsRelateToEffect(e) and Senya.RemoveEffect_3L(tp,tc,1,1)>0 then
 		local b1=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil)
 		local b2=Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,1,nil)
 		local op=0

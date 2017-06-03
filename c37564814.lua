@@ -1,8 +1,9 @@
 --3L·月时针
 local m=37564814
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(m,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -32,8 +33,7 @@ function cm.effect_operation_3L(c)
 end
 function cm.filter2(c,e,tp,bc)
 	local mg=Group.FromCards(e:GetHandler(),bc)
-	return senya.check_set_3L(c) and c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(mg,e:GetHandler(),PLAYER_NONE+0x100) and c:CheckFusionMaterial(mg,bc,PLAYER_NONE+0x100)
-	--0x100 will not check extra materials by suika and 3myon
+	return Senya.check_set_3L(c) and c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and Senya.CheckFusionMaterialExact(c,mg,tp)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

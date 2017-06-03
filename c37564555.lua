@@ -2,9 +2,9 @@
 local m=37564555
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrp(c)
+	Senya.NanahiraPendulum(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -91,10 +91,10 @@ function cm.f(c,pend)
 	return c:IsCode(37564765) and c:IsReleasable()
 end
 function cm.pcfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c.desc_with_nanahira and not c:IsForbidden()
+	return c:IsType(TYPE_PENDULUM) and c.Senya_desc_with_nanahira and not c:IsForbidden()
 end
 function cm.filter(c)
-	return c.desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsSSetable()
+	return c.Senya_desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

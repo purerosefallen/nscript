@@ -1,14 +1,15 @@
 --3L·花在幻想的尽头
 local m=37564816
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(senya.fuscate())
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND+LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(senya.serlcost)
+	e1:SetCost(Senya.ForbiddenCost(Senya.SelfReleaseCost))
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
@@ -22,7 +23,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e3:SetCode(EVENT_TO_HAND)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(ctlm)
-	e3:SetCost(senya.desccost())
+	e3:SetCost(Senya.DescriptionCost())
 	e3:SetCondition(cm.hdcon)
 	e3:SetTarget(cm.hdtg)
 	e3:SetOperation(cm.hdop)
@@ -33,22 +34,40 @@ end
 function cm.filter0(c)
 	return c:IsFaceup() and c:IsAbleToDeck()
 end
-function cm.filter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf) and senya.check_set_3L(c)
+function cm.filter2(c,e,tp,m,f,chkf,l)
+	if not (c:IsType(TYPE_FUSION) and (not f or f(c))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and Senya.check_set_3L(c)) then return false end
+	local f=Duel.GetLocationCountFromEx
+	if l==1 then
+		Duel.GetLocationCountFromEx=cm.ReplaceLocationCount(f,e:GetHandler())		
+	end
+	local res=c:CheckFusionMaterial(m,nil,chkf)
+	Duel.GetLocationCountFromEx=f
+	return res
+end
+function cm.ReplaceLocationCount(f,ec)
+	return function(tp,p,g,fc)
+		if g:IsContains(ec) then return f(tp,p,g,fc) end
+		g:AddCard(ec)
+		local res=f(tp,p,g,fc)
+		g:RemoveCard(ec)
+		return res
+	end
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local l=e:GetLabel()
+	e:SetLabel(0)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp,LOCATION_REMOVED,nil,cm.filter0,nil)
-		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp,LOCATION_REMOVED,nil,cm.filter0,nil)
+		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf,l)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
 				local mg2=fgroup(ce,e,tp)
 				local mf=ce:GetValue()
-				res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf)
+				res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf,l)
 			end
 		end
 		return res
@@ -56,8 +75,8 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,LOCATION_REMOVED,nil,cm.filter0,nil,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,LOCATION_REMOVED,nil,cm.filter0,nil,e)
 	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -80,7 +99,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(mat1,nil,0,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			for p=0,1 do
 				if mat1:IsExists(cm.shfilter,1,nil,p) then Duel.ShuffleDeck(p) end
-			end		 
+			end   
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		else

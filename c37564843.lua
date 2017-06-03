@@ -2,9 +2,9 @@
 local m=37564843
 local cm=_G["c"..m]
 
-cm.named_with_myon=5
+cm.Senya_name_with_myon=5
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,3,cm.xfilter,m*16)
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)
@@ -12,7 +12,7 @@ function cm.initial_effect(c)
 	e3:SetCode(37564827)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetValue(senya.order_table_new(cm.omit_group_3L))
+	e3:SetValue(Senya.order_table_new(cm.omit_group_3L))
 	c:RegisterEffect(e3)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -43,19 +43,19 @@ function cm.omit_group_3L(c)
 	return Duel.GetMatchingGroup(Card.IsPublic,c:GetControler(),LOCATION_HAND,0,nil)
 end
 function cm.mfilter(c)
-	return senya.check_set_3L(c)
+	return Senya.check_set_3L(c)
 end
 function cm.xfilter(c)
-	return senya.check_set(c,"myon") and c:IsType(TYPE_FUSION) and c:IsFaceup() and senya.lgetct(c)>1
+	return Senya.check_set(c,"myon") and c:IsType(TYPE_FUSION) and c:IsFaceup() and Senya.GetGainedCount_3L(c)>1
 end
 function cm.hfilter(c,ec)
-	return senya.lefffilter(c,ec) and c:IsPublic()
+	return Senya.EffectSourceFilter_3L(c,ec) and c:IsPublic()
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local og=Duel.GetMatchingGroup(cm.hfilter,tp,LOCATION_HAND,0,nil,c)
 	og:ForEach(function(tc)  
-		local t=senya.lgeff(c,tc,false,63)
+		local t=Senya.GainEffect_3L(c,tc,false,63)
 		if not t then return end
 		for i,te in pairs(t) do
 			te:SetCondition(cm.ccon(te:GetCondition(),tc:GetOriginalCode()))
@@ -74,7 +74,7 @@ function cm.ccon(con,cd)
 		if Duel.IsExistingMatchingCard(cm.kfilter,p,LOCATION_HAND,0,1,nil,cd) and e:GetHandler():IsHasEffect(37564827) then
 			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
 		else
-			senya.lreseff(e:GetHandler(),cd)
+			Senya.RemoveCertainEffect_3L(e:GetHandler(),cd)
 			return false
 		end
 	end
@@ -82,7 +82,7 @@ end
 function cm.ccost(costf,cd)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
-		local ctlm=senya.lkoishicount(c)
+		local ctlm=Senya.CheckKoishiCount(c)
 		if chk==0 then return c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 		if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 		c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)

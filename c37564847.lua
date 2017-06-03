@@ -3,7 +3,7 @@ local m=37564847
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(m*16)
 	e6:SetType(EFFECT_TYPE_QUICK_O)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	end)
 	e6:SetCost(cm.cost)
 	e6:SetTarget(cm.scopytg)
-	e6:SetOperation(cm.scopyop)
+	e6:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e6)
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(m*16)
@@ -30,8 +30,8 @@ function cm.initial_effect(c)
 		return Duel.IsExistingMatchingCard(cm.filter3L,tp,LOCATION_MZONE,0,1,nil)
 	end)
 	e7:SetCost(cm.cost)
-	e7:SetTarget(cm.scopytg2)
-	e7:SetOperation(cm.scopyop)
+	e7:SetTarget(cm.CopySpellChainingTarget)
+	e7:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e7)
 	if not cm.last_spell then
 		cm.last_spell={}
@@ -72,7 +72,7 @@ function cm.effect_operation_3L(c)
 	return e2
 end
 function cm.filter3L(c)
-	return senya.check_set_3L(c) and c:IsFaceup()
+	return Senya.check_set_3L(c) and c:IsFaceup()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
@@ -90,7 +90,7 @@ function cm.scopytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
 		if not tc then return false end
-		return cm.scopyf1(tc)
+		return cm.CopySpellNormalFilter(tc)
 	end
 	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
@@ -101,7 +101,7 @@ function cm.scopytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
 end
-function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cm.CopySpellChainingTarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc=cm.last_spell[Duel.GetTurnCount()-1]
 	if chkc then
 		local te=e:GetLabelObject()
@@ -112,11 +112,11 @@ function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
 		if not tc then return false end
-		return cm.scopyf2(tc,e,tp,eg,ep,ev,re,r,rp)
+		return cm.CopySpellChainingFilter(tc,e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp
-	local fchain=cm.scopyf1(tc)
+	local fchain=cm.CopySpellNormalFilter(tc)
 	if fchain then
 		te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(true,true,true)
 	else
@@ -135,7 +135,7 @@ function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
 end
-function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
+function cm.CopyOperation(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
 	if not te then return end
 	e:SetLabelObject(te:GetLabelObject())
@@ -145,10 +145,10 @@ function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
-function cm.scopyf1(c)
+function cm.CopySpellNormalFilter(c)
 	return c:CheckActivateEffect(true,true,false)
 end
-function cm.scopyf2(c,e,tp,eg,ep,ev,re,r,rp)
+function cm.CopySpellChainingFilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if c:CheckActivateEffect(true,true,false) then return true end
 	local te=c:GetActivateEffect()
 	if te:GetCode()~=EVENT_CHAINING then return false end
@@ -167,7 +167,7 @@ end
 	if not tg then return true end
 	if code==EVENT_CHAINING then
 		local cid=Duel.GetChainInfo(ev-1,CHAININFO_CHAIN_ID)
-		local ceg,cep,cev,cre,cr,crp=table.unpack(senya.previous_chain_info[cid])
+		local ceg,cep,cev,cre,cr,crp=table.unpack(Senya.previous_chain_info[cid])
 		return tg(re,rp,ceg,cep,cev,cre,cr,crp,0)
 	else
 		local ex,ceg,cep,cev,cre,cr,crp=Duel.CheckEvent(code,true)
@@ -187,7 +187,7 @@ function cm.cop(te)
 		if code==EVENT_CHAINING and Duel.GetCurrentChain()>1 then
 			local chainc=Duel.GetCurrentChain()-1
 			local cid=Duel.GetChainInfo(chainc,CHAININFO_CHAIN_ID)
-			ceg,cep,cev,cre,cr,crp=table.unpack(senya.previous_chain_info[cid])
+			ceg,cep,cev,cre,cr,crp=table.unpack(Senya.previous_chain_info[cid])
 		elseif code~=EVENT_FREE_CHAIN and Duel.CheckEvent(code) then
 			_,ceg,cep,cev,cre,cr,crp=Duel.CheckEvent(code,true)
 		else

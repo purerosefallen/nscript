@@ -1,9 +1,9 @@
 local m=37564520
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsCode,37564765),aux.NonTuner(Card.IsRace,RACE_FAIRY),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

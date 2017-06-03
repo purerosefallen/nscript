@@ -2,22 +2,22 @@
 local m=37564452
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c)
+	Senya.PrismCommonEffect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TODECK)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(senya.bmsscon)
+	e3:SetCondition(Senya.PrismSpsummonCheck)
 	e3:SetTarget(cm.target)
 	e3:SetOperation(cm.operation)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c,e,tp)
-	return senya.bmchkfilter(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.CheckPrism(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and cm.filter(chkc,e,tp) end

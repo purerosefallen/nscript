@@ -2,9 +2,9 @@
 
 local m=37564202
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-senya.sww(c,2,true,true,false)
+Senya.SawawaCommonEffect(c,2,true,true,false)
 local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564202,1))
 	e1:SetCategory(CATEGORY_REMOVE)
@@ -13,7 +13,7 @@ local e1=Effect.CreateEffect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564202)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetTarget(c37564202.rmtg)
 	e1:SetOperation(c37564202.rmop)
 	c:RegisterEffect(e1)

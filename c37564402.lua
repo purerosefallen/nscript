@@ -2,9 +2,9 @@
 
 local m=37564402
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564402.target,c37564402.operation,false,CATEGORY_RECOVER+CATEGORY_DAMAGE)
+	Senya.PrismCommonEffect(c,c37564402.target,c37564402.operation,false,CATEGORY_RECOVER+CATEGORY_DAMAGE)
 end
 function c37564402.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

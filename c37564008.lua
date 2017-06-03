@@ -2,9 +2,9 @@
 local m=37564008
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
-	senya.sgreg(c,m)
+	Senya.RegisterSingleEffect(c,m)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -21,7 +21,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc,e,tp) end

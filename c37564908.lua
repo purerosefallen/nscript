@@ -1,6 +1,6 @@
 --Sayuri·风之诗
---
-local m,cm=senya.sayuri_ritual(37564908)
+
+local m,cm=Senya.SayuriRitualPreload(37564908)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -10,7 +10,7 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,m)
-	e2:SetCost(senya.sedescost)
+	e2:SetCost(Senya.SelfDiscardCost)
 	e2:SetTarget(cm.target)
 	e2:SetOperation(cm.operation)
 	c:RegisterEffect(e2)
@@ -24,14 +24,14 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetCountLimit(1,m-4000)
-	e2:SetCost(senya.sethcost)
+	e2:SetCost(Senya.SelfToHandCost)
 	e2:SetCondition(cm.descon)
 	e2:SetTarget(cm.sptg)
 	e2:SetOperation(cm.spop)
 	c:RegisterEffect(e2)
 end
 function cm.filter(c)
-	return senya.check_set_sayuri(c) and not c:IsCode(m) and c:IsAbleToHand()
+	return Senya.check_set_sayuri(c) and not c:IsCode(m) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end
@@ -50,7 +50,7 @@ function cm.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function cm.sfilter(c,e,tp)
-	return senya.check_set_sayuri(c) and not c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsLevelBelow(8)
+	return Senya.check_set_sayuri(c) and not c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsLevelBelow(8)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

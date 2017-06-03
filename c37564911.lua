@@ -1,5 +1,6 @@
 --Sayuri·Sweet Little Sister
-local m,cm=senya.sayuri_ritual(37564911)
+
+local m,cm=Senya.SayuriRitualPreload(37564911)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -8,7 +9,7 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,m)
-	e2:SetCost(senya.sedescost)
+	e2:SetCost(Senya.SelfDiscardCost)
 	e2:SetTarget(cm.thtg)
 	e2:SetOperation(cm.thop)
 	c:RegisterEffect(e2)
@@ -40,7 +41,7 @@ function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.thfilter(c)
-	return senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(m)
+	return Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(m)
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end

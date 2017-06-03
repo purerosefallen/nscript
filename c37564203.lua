@@ -2,7 +2,7 @@
 local m=37564203
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
@@ -14,11 +14,11 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,m)
 	e1:SetCondition(cm.condition)
-	e1:SetCost(senya.swwrmcost(1))
+	e1:SetCost(Senya.SawawaRemoveCost(1))
 	e1:SetTarget(cm.tg)
 	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
 end
 function cm.filter(c)
 	return c:IsFaceup() and not (c:GetAttack()==0 and c:IsDisabled())
@@ -31,7 +31,7 @@ function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g1,1,0,0)
 end
 function cm.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated() and senya.swwblex(e,tp)
+	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated() and Senya.CheckNoExtra(e,tp)
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

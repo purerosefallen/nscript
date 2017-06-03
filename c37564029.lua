@@ -3,7 +3,7 @@ local m=37564029
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,6,4,nil,nil,5)
@@ -67,7 +67,7 @@ function c37564029.xcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(c37564029.xfilter,1,nil,4) and e:GetHandler():GetOverlayGroup():IsExists(c37564029.xfilter,1,nil,5)
 end
 function c37564029.xfilter(c,rr)
-	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c) and c:GetRank()==rr
+	return c:IsType(TYPE_XYZ) and Senya.check_set_elem(c) and c:GetRank()==rr
 end
 function c37564029.distg(e,c)
 	return c:GetSummonLocation()==LOCATION_EXTRA

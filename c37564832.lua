@@ -1,12 +1,12 @@
 --3L·MAZE
 local m=37564832
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564800)
+	--Senya.setreg(c,m,37564800)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(senya.fuscate())
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -16,28 +16,26 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.tgfilter0(c,e,tp)
-	return c:IsFaceup() and senya.check_set_3L(c)
+	return c:IsFaceup() and Senya.check_set_3L(c)
 		and c:IsCanBeFusionMaterial() and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 end
 function cm.tgfilter(c,e,tp)
-	return c:IsFaceup() and senya.check_set_3L(c)
+	return c:IsFaceup() and Senya.check_set_3L(c)
 		and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
 		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
 end
 function cm.spfilter(c,e,tp,tc)
 	if not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) then return false end
-	return senya.check_set_3L(c) and c.fusion_att_3L and senya.lattf(c.fusion_att_3L)(tc)
+	return Senya.check_set_3L(c) and c.fusion_att_3L and tc:IsFusionAttribute(c.fusion_att_3L) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(tc),c)>0
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc==0 then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and cm.tgfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingTarget(cm.tgfilter0,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(cm.tgfilter0,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,cm.tgfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsCanBeFusionMaterial() and not tc:IsImmuneToEffect(e) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

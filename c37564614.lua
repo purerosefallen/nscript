@@ -13,7 +13,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37564614.filter(c)
-	return senya.check_set_prim(c) and c:IsDiscardable()
+	return Senya.check_set_prim(c) and c:IsDiscardable()
 end
 function c37564614.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564614.filter,tp,LOCATION_HAND,0,1,nil) end

@@ -1,11 +1,12 @@
 --樱华月想 -SDVX Remix-
 local m=37564316
 local cm=_G["c"..m]
-cm.named_with_remix=true
+
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
-	senya.enable_kaguya_check_3L()
+	Senya.enable_kaguya_check_3L()
 	c:SetUniqueOnField(1,0,m)
-	aux.AddXyzProcedure(c,aux.FALSE,1,5,senya.RemainFilter(3),aux.Stringid(m,0))
+	aux.AddXyzProcedure(c,aux.FALSE,1,5,Senya.RemainFilter(3),aux.Stringid(m,0))
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -23,7 +24,7 @@ function cm.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target0)
 	e1:SetOperation(cm.operation0)
 	c:RegisterEffect(e1)
@@ -41,16 +42,16 @@ function cm.get_announce(t)
 	return table.unpack(rt)
 end
 function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
-	local effect_list=senya.codelist_3L
+	local effect_list=Senya.codelist_3L
 	local avaliable_list={}
 	for i,code in pairs(effect_list) do
-		local mt=senya.load_metatable(code)
+		local mt=Senya.LoadMetatable(code)
 		if e:GetHandler():GetFlagEffect(code-4000)==0 and mt and mt.effect_operation_3L and not mt.announce_forbidden_3L then table.insert(avaliable_list,code) end  
 	end
 	if #avaliable_list>0 then
 		Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
 		local rcode=Duel.AnnounceCardFilter(tp,cm.get_announce(avaliable_list))
-		local et=senya.lgeff(e:GetHandler(),rcode)
+		local et=Senya.GainEffect_3L(e:GetHandler(),rcode)
 		if et then
 			for i,te in pairs(et) do
 				if te:IsHasType(0x7e0) then
@@ -81,6 +82,6 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		senya.overlaycard(c,tc,false)
+		Senya.OverlayCard(c,tc,false)
 	end
 end

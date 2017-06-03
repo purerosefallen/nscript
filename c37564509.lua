@@ -1,10 +1,10 @@
 --Harunohi
 local m=37564509
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c)
-	return (c:IsCode(37564765) or c.desc_with_nanahira) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER)
+	return (c:IsCode(37564765) or c.Senya_desc_with_nanahira) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

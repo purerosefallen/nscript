@@ -1,16 +1,17 @@
 --四季的流转者·Kana
 local m=37564327
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.AddFusionProcFunMulti(c,false,table.unpack(cm.filters))
+	c:EnableReviveLimit()
+	aux.AddFusionProcMix(c,false,false,table.unpack(cm.filters))
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetValue(aux.fuslimit)
 	c:RegisterEffect(e1)
-	senya.neg(c,63,nil,senya.desccost(cm.cost(c)))
+	Senya.NegateEffectModule(c,63,nil,Senya.DescriptionCost(cm.cost(c)))
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564765,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -18,7 +19,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetHintTiming(0,0x1e0)
-	e2:SetCost(senya.desccost(cm.cost(c)))
+	e2:SetCost(Senya.DescriptionCost(cm.cost(c)))
 	e2:SetTarget(cm.sptg)
 	e2:SetOperation(cm.spop)
 	c:RegisterEffect(e2)
@@ -30,7 +31,7 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetHintTiming(0,0x1e0)
-	e2:SetCost(senya.desccost(cm.cost(c)))
+	e2:SetCost(Senya.DescriptionCost(cm.cost(c)))
 	e2:SetTarget(cm.destg)
 	e2:SetOperation(cm.desop)
 	c:RegisterEffect(e2)
@@ -41,11 +42,11 @@ cm.filters={
 	aux.FilterBoolFunction(Card.IsFusionSetCard,0xc330),
 	aux.FilterBoolFunction(Card.IsFusionSetCard,0x65b),
 }
-function cm.swwcostfilter(c)
+function cm.SawawaRemoveCostFilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsReleasable()
 end
 function cm.spfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SPECIAL,tp,true,true) and ((c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_WIND)) or (c:IsRace(RACE_AQUA) and c:IsAttribute(ATTRIBUTE_WATER))) and math.max(c:GetLevel(),c:GetRank())<=8
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and ((c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_WIND)) or (c:IsRace(RACE_AQUA) and c:IsAttribute(ATTRIBUTE_WATER))) and math.max(c:GetLevel(),c:GetRank())<=8 and Senya.CheckSummonLocation(c,tp)
 end
 function cm.cost(c)
 	local dchk=c:IsStatus(STATUS_COPYING_EFFECT) and c:GetFlagEffectLabel(37564768) or 0
@@ -56,12 +57,10 @@ function cm.cost(c)
 	end
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA+LOCATION_DECK)
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
@@ -115,9 +114,9 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
 	if ct>0 and ct<=fg:GetCount() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local sg=fg:Select(tp,1,ct,nil):Filter(senya.NonImmuneFilter,nil,e)
+		local sg=fg:Select(tp,1,ct,nil):Filter(Senya.NonImmuneFilter,nil,e)
 		Duel.HintSelection(sg)
-		senya.ExileGroup(sg)
+		Senya.ExileGroup(sg)
 		Duel.SendtoGrave(sg,REASON_RULE+REASON_RETURN)
 	end
 end

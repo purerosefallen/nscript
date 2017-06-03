@@ -2,11 +2,11 @@
 local m=37564423
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	senya.bmdamchk(c,false)
-	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2)
+	--Senya.setreg(c,m,37564573)
+	Senya.PrismDamageCheckRegister(c,false)
+	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,m)
-	e2:SetCost(senya.rmovcost(1))
+	e2:SetCost(Senya.RemoveOverlayCost(1))
 	e2:SetTarget(cm.tdtg)
 	e2:SetOperation(cm.tdop)
 	c:RegisterEffect(e2)
@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1,m)
-	e3:SetCost(senya.rmovcost(1))
+	e3:SetCost(Senya.RemoveOverlayCost(1))
 	e3:SetTarget(cm.sptg)
 	e3:SetOperation(cm.spop)
 	c:RegisterEffect(e3)
@@ -42,7 +42,7 @@ function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 			tc.bm_check_operation(e,tp,eg,ep,ev,re,r,rp,val)
 		end
-		if senya.bmchkfilter(tc) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and tc:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		if Senya.CheckPrism(tc) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and tc:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 			if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
 				local cval=math.floor(val[1]/2)
 				Duel.BreakEffect()
@@ -53,7 +53,7 @@ function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ShuffleDeck(tp)
 end
 function cm.filter(c,e,tp)
-	return senya.bmchkfilter(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==3 and Duel.GetFlagEffect(tp,c:GetCode())==0
+	return Senya.CheckPrism(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==3 and Duel.GetFlagEffect(tp,c:GetCode())==0
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

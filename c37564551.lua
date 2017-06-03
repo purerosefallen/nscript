@@ -1,10 +1,10 @@
 --Hardcore Forte
 local m=37564551
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	--spell
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_ACTIVATE)
@@ -13,24 +13,24 @@ function cm.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e6:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
 	e6:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return not Duel.CheckEvent(EVENT_CHAINING) and senya.nncon(false)(e,tp)
+		return not Duel.CheckEvent(EVENT_CHAINING) and Senya.NanahiraExistingCondition(false)(e,tp)
 	end)
 	e6:SetTarget(cm.scopytg)
-	e6:SetOperation(cm.scopyop)
+	e6:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e6)
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_ACTIVATE)
 	e7:SetCode(EVENT_CHAINING)
 	e7:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e7:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
-	e7:SetCondition(senya.nncon(false))
-	e7:SetTarget(cm.scopytg2)
-	e7:SetOperation(cm.scopyop)
+	e7:SetCondition(Senya.NanahiraExistingCondition(false))
+	e7:SetTarget(cm.CopySpellChainingTarget)
+	e7:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e7)
-	senya.nntrap(c,e6,e7)
+	Senya.NanahiraTrap(c,e6,e7)
 	--monster
 	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(senya.desc(6))
+	e8:SetDescription(Senya.DescriptionInNanahira(6))
 	e8:SetType(EFFECT_TYPE_QUICK_O)
 	e8:SetCode(EVENT_FREE_CHAIN)
 	e8:SetRange(LOCATION_MZONE)
@@ -40,24 +40,24 @@ function cm.initial_effect(c)
 	e8:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return not Duel.CheckEvent(EVENT_CHAINING)
 	end)
-	e8:SetCost(senya.fbdcost())
+	e8:SetCost(Senya.ForbiddenCost())
 	e8:SetTarget(cm.scopytg3)
-	e8:SetOperation(cm.scopyop)
+	e8:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e8)
 	local e9=Effect.CreateEffect(c)
-	e9:SetDescription(senya.desc(6))
+	e9:SetDescription(Senya.DescriptionInNanahira(6))
 	e9:SetType(EFFECT_TYPE_QUICK_O)
 	e9:SetCode(EVENT_CHAINING)
 	e9:SetRange(LOCATION_MZONE)
 	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e9:SetCountLimit(1,1)
-	e9:SetCost(senya.fbdcost())
+	e9:SetCost(Senya.ForbiddenCost())
 	e9:SetTarget(cm.scopytg4)
-	e9:SetOperation(cm.scopyop)
+	e9:SetOperation(cm.CopyOperation)
 	c:RegisterEffect(e9)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetDescription(senya.desc(0))
+	e2:SetDescription(Senya.DescriptionInNanahira(0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_GRAVE)
@@ -103,7 +103,7 @@ function cm.scopytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	if chk==0 then
 		if not tc then return false end
-		return cm.scopyf1(tc)
+		return cm.CopySpellNormalFilter(tc)
 	end
 	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
 	e:SetCategory(te:GetCategory())
@@ -113,7 +113,7 @@ function cm.scopytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
 end
-function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cm.CopySpellChainingTarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tc=cm.last_spell
 	if chkc then
 		local te=e:GetLabelObject()
@@ -122,10 +122,10 @@ function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	if chk==0 then
 		if not tc then return false end
-		return cm.scopyf2(tc,e,tp,eg,ep,ev,re,r,rp)
+		return cm.CopySpellChainingFilter(tc,e,tp,eg,ep,ev,re,r,rp)
 	end
 	local te,ceg,cep,cev,cre,cr,crp
-	local fchain=cm.scopyf1(tc)
+	local fchain=cm.CopySpellNormalFilter(tc)
 	if fchain then
 		te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(true,true,true)
 	else
@@ -146,7 +146,7 @@ function cm.scopytg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cm.scopytg3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local l=e:GetHandler():GetFlagEffectLabel(m)
-	local tc=l and senya.order_table[l]
+	local tc=l and Senya.order_table[l]
 	if chkc then
 		local te=e:GetLabelObject()
 		local tg=te:GetTarget()
@@ -156,7 +156,7 @@ function cm.scopytg3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if not tc then return false end
 		if e:GetLabel()==0 then return false end
 		e:SetLabel(0)
-		return cm.scopyf1(tc)
+		return cm.CopySpellNormalFilter(tc)
 	end
 	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(false,true,true)
@@ -169,7 +169,7 @@ function cm.scopytg3(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cm.scopytg4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local l=e:GetHandler():GetFlagEffectLabel(m)
-	local tc=l and senya.order_table[l]
+	local tc=l and Senya.order_table[l]
 	if chkc then
 		local te=e:GetLabelObject()
 		local tg=te:GetTarget()
@@ -179,11 +179,11 @@ function cm.scopytg4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if not tc then return false end
 		if e:GetLabel()==0 then return false end
 		e:SetLabel(0)
-		return cm.scopyf2(tc,e,tp,eg,ep,ev,re,r,rp)
+		return cm.CopySpellChainingFilter(tc,e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:SetLabel(0)
 	local te,ceg,cep,cev,cre,cr,crp
-	local fchain=cm.scopyf1(tc)
+	local fchain=cm.CopySpellNormalFilter(tc)
 	if fchain then
 		te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(true,true,true)
 	else
@@ -202,7 +202,7 @@ function cm.scopytg4(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
 end
-function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
+function cm.CopyOperation(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
 	if not te then return end
 	e:SetLabelObject(te:GetLabelObject())
@@ -212,10 +212,10 @@ function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
-function cm.scopyf1(c)
+function cm.CopySpellNormalFilter(c)
 	return c:CheckActivateEffect(true,true,false)
 end
-function cm.scopyf2(c,e,tp,eg,ep,ev,re,r,rp)
+function cm.CopySpellChainingFilter(c,e,tp,eg,ep,ev,re,r,rp)
 	if c:CheckActivateEffect(true,true,false) then return true end
 	local te=c:GetActivateEffect()
 	if te:GetCode()~=EVENT_CHAINING then return false end
@@ -242,7 +242,7 @@ function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(37564765)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			c:RegisterEffect(e1,true)
-			c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000,0,1,senya.order_table_new(re:GetHandler()))
+			c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000,0,1,Senya.order_table_new(re:GetHandler()))
 		Duel.SpecialSummonComplete()
 	end
 end

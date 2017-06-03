@@ -1,10 +1,10 @@
 --Nanahira & Ayane
 local m=37564553
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddXyzProcedure(c,nil,7,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -46,17 +46,17 @@ function cm.cnegcon(e,tp,eg,ep,ev,re,r,rp)
 	local te=Duel.IsPlayerAffectedByEffect(tp,m)
 	if not te or te:GetHandler()~=e:GetHandler() then return false end
 	local rc=re:GetHandler()
-	return rp==tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and rc.desc_with_nanahira and rc:IsRelateToEffect(re)
+	return rp==tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_TRAP) and rc.Senya_desc_with_nanahira and rc:IsRelateToEffect(re)
 end
-function cm.cnegop(e,tp,eg,ep,ev,re,r,rp)
+function cm.cnegcon(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
-	senya.overlaycard(e:GetHandler(),re:GetHandler())
+	Senya.OverlayCard(e:GetHandler(),re:GetHandler())
 end
 function cm.sfilter(c,tp)
 	return c:GetSummonPlayer()~=tp
 end
 function cm.ssfilter(c,e,tp)
-	return c:IsType(TYPE_TRAP) and c.desc_with_nanahira and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetOriginalCode(),0,0x21,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT)
+	return c:IsType(TYPE_TRAP) and c.Senya_desc_with_nanahira and Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetOriginalCode(),0,0x21,7,2850,2100,RACE_FAIRY,ATTRIBUTE_LIGHT)
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():GetOverlayGroup():IsExists(cm.ssfilter,1,nil,e,tp) and e:GetHandler():IsType(TYPE_XYZ) end

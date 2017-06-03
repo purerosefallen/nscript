@@ -1,10 +1,10 @@
 --Nanahira Return
 local m=37564531
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_SYNCHRO_LEVEL)
@@ -19,15 +19,15 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,m)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCost(cm.discost)
+	e1:SetCost(cm.DiscardHandCost)
 	e1:SetTarget(cm.sptg)
 	e1:SetOperation(cm.spop)
 	c:RegisterEffect(e1)
 end
 function cm.costfilter(c)
-	return c.desc_with_nanahira and c:IsType(TYPE_MONSTER) and c:IsReleasable() 
+	return c.Senya_desc_with_nanahira and c:IsType(TYPE_MONSTER) and c:IsReleasable() 
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsReleasable() and 
 		Duel.IsExistingMatchingCard(cm.costfilter,tp,LOCATION_HAND,0,1,c) end

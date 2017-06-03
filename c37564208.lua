@@ -2,9 +2,9 @@
 
 local m=37564208
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
    local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564208,1))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -12,14 +12,14 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564208)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetTarget(c37564208.tg)
-	e1:SetCost(senya.swwrmcost(1))
+	e1:SetCost(Senya.SawawaRemoveCost(1))
 	e1:SetOperation(c37564208.op)
 	c:RegisterEffect(e1)
 end
 function c37564208.filter(c)
-	return c:IsFaceup() and senya.check_set_sawawa(c)
+	return c:IsFaceup() and Senya.check_set_sawawa(c)
 end
 function c37564208.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c37564208.filter(chkc) end

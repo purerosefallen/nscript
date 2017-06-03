@@ -2,9 +2,9 @@
 local m=37564616
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	senya.prl4(c,m)
+	Senya.PrimLv4CommonEffect(c,m)
 	--discard deck & draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -23,7 +23,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(cm.thcon1)
 	e3:SetTarget(cm.sptg)
 	e3:SetOperation(cm.spop)
@@ -39,7 +39,7 @@ function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,2)
 end
 function cm.cfilter(c)
-	return senya.check_set_prim(c) and c:IsLocation(LOCATION_GRAVE)
+	return Senya.check_set_prim(c) and c:IsLocation(LOCATION_GRAVE)
 end
 function cm.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
@@ -55,7 +55,7 @@ function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function cm.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(m)
 end
 function cm.spfilter(c,e,tp,m)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

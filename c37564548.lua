@@ -1,11 +1,11 @@
 --Lucky 7
 local m=37564548
 local cm=_G["c"..m]
---
+
 cm.pendulum_level=7
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrexp(c)
+	Senya.NanahiraExtraPendulum(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e2:SetOperation(cm.xyzop)
 	e2:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e2)
-	local e3=senya.neg(c,1,nil,nil,cm.condition,cm.rop)
+	local e3=Senya.NegateEffectModule(c,1,nil,nil,cm.condition,cm.rop)
 	e3:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():IsType(TYPE_PENDULUM) end
 		Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
@@ -52,36 +52,28 @@ function cm.xyzfilter(c,xyzcard)
 	return c:IsCanBeXyzMaterial(xyzcard) and c:IsType(TYPE_PENDULUM) and c:IsXyzLevel(xyzcard,7)
 end
 function cm.xyzfilter1(c)
-	return c:IsLocation(LOCATION_SZONE) and c:GetSequence()>5 and c:GetOriginalLevel()==7 and c:IsCode(37564765)
+	return c:GetOriginalLevel()==7 and c:IsCode(37564765)
 end
 function cm.xyzcon(e,c,og,min,max)
 		if c==nil then return true end
 		if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 		local tp=c:GetControler()
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local minc=2
 		local maxc=2
-		local minfc=-ft+1
 		if min then
 			minc=math.max(minc,min)
 			maxc=math.min(maxc,max)
 		end
-		minc=math.max(minc,minfc)
 		local mg=nil
 		local exg=nil
 		if og then
 			mg=og:Filter(cm.xyzfilter,nil,c)
 		else
 			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-			exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_SZONE,0,nil)
+			exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+			mg:Merge(exg)
 		end
-		if maxc<minc then return false end
-		if exg and exg:GetCount()>0 then
-			local mct=mg:GetCount()
-			local ect=exg:GetCount()
-			return mct>=minfc and mct+ect>=minc
-		end
-		return mg:GetCount()>=minc
+		return Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 end
 function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 		local g=nil
@@ -94,44 +86,19 @@ function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 				mg=og:Filter(cm.xyzfilter,nil,c)
 			else
 				mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-				exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_SZONE,0,nil)
+				exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+				mg:Merge(exg)
 			end
-			local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 			local minc=2
 			local maxc=2
-			local minfc=-ft+1
 			if min then
 				minc=math.max(minc,min)
 				maxc=math.min(maxc,max)
 			end
-			minc=math.max(minc,minfc)
-			if exg and exg:GetCount()>0 then
-				if minfc>0 then
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-					g=mg:Select(tp,minfc,minfc,nil)
-					minc=minc-minfc
-					maxc=maxc-minfc
-					if maxc>0 and (minc>0 or Duel.SelectYesNo(tp,93)) then
-						local sg=mg:Clone()
-						sg:Merge(exg)
-						sg:Sub(g)
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-						local g1=sg:Select(tp,minc,maxc,nil)
-						g:Merge(g1)
-					end
-				else
-					local sg=mg:Clone()
-					sg:Merge(exg)
-					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-					g=sg:Select(tp,minc,maxc,nil)
-				end
-			else
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-				g=mg:Select(tp,minc,maxc,nil)
-			end
+			g=Senya.SelectGroup(tp,HINTMSG_XMATERIAL,mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 		end
 		c:SetMaterial(g)
-		senya.overlaygroup(c,g,false,true)
+		Senya.OverlayGroup(c,g,false,true)
 end
 function cm.rop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

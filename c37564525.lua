@@ -1,20 +1,20 @@
 --Kyami Kyami
 local m=37564525
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeFun(c,37564765,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),1,true,true)
-	senya.fproc(c,LOCATION_MZONE,Duel.Release)
+	Senya.AddSelfFusionProcedure(c,LOCATION_MZONE,Duel.Release)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_BATTLE_START)
 	e4:SetCondition(cm.descon)
 	e4:SetOperation(cm.desop)
 	c:RegisterEffect(e4)
-	senya.cneg(c,cm.discon,cm.discost,nil,m*16,true,nil)
+	Senya.NegateEffectWithoutChainingModule(c,cm.discon,cm.DiscardHandCost,nil,m*16,true,nil)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -25,7 +25,7 @@ function cm.cf(c,rc)
 	if c:IsCode(37564517) then return true end
 	return bit.band(c:GetAttribute(),rc:GetAttribute())~=0 or bit.band(c:GetRace(),rc:GetRace())~=0
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=c:GetEquipGroup():FilterSelect(tp,cm.cf,1,1,nil,re:GetHandler())

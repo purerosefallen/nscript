@@ -1,10 +1,10 @@
 --Dokkin
 local m=37564501
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddXyzProcedure(c,cm.mfilter,7,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -42,7 +42,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or c:IsFacedown() or c:IsControler(1-tp) then return end
 	local g=eg:Filter(cm.filter,nil,e,tp)
-	senya.overlaygroup(c,g)
+	Senya.OverlayGroup(c,g)
 end
 function cm.ssfilter(c,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:GetOwner()==1-tp

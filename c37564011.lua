@@ -3,10 +3,10 @@ local m=37564011
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
-	senya.rxyz1(c,4,nil,2,63)
+	Senya.AddXyzProcedureRank(c,4,nil,2,63)
 	--不会成为攻击效果对象
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -71,7 +71,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		senya.overlaycard(c,tc)
+		Senya.OverlayCard(c,tc)
 	end
 end
 function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
@@ -134,7 +134,7 @@ function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	c:ResetFlagEffect(m-4000)
 	local g=e:GetLabelObject()
 	local tg=g:Filter(cm.retfilter,nil,e:GetLabel())
-	senya.overlaygroup(c,tg)
+	Senya.OverlayGroup(c,tg)
 end
 function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

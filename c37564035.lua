@@ -3,7 +3,7 @@ local m=37564035
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,4,3,nil,nil,63)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	e3:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e3:SetCountLimit(1,m)
 	e3:SetCondition(cm.condition)
-	e3:SetCost(senya.rmovcost(1))
+	e3:SetCost(Senya.RemoveOverlayCost(1))
 	e3:SetTarget(cm.target)
 	e3:SetOperation(cm.operation)
 	c:RegisterEffect(e3)

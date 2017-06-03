@@ -2,9 +2,9 @@
 
 local m=37564408
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564408.target,c37564408.activate,true,CATEGORY_TOHAND)
+	Senya.PrismCommonEffect(c,c37564408.target,c37564408.activate,true,CATEGORY_TOHAND)
 end
 function c37564408.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToHand() end

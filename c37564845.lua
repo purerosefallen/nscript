@@ -1,10 +1,10 @@
 --3L·梦色世界
 local m=37564845
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564800)
+	--Senya.setreg(c,m,37564800)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -12,7 +12,7 @@ function cm.initial_effect(c)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
-		e2:SetDescription(senya.desc(0))
+		e2:SetDescription(Senya.DescriptionInNanahira(0))
 		e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		e2:SetType(EFFECT_TYPE_QUICK_O)
 		e2:SetCode(EVENT_FREE_CHAIN)
@@ -45,15 +45,15 @@ function cm.initial_effect(c)
 				e1:SetCondition(cm.thcon)
 				e1:SetOperation(cm.thop)
 				Duel.RegisterEffect(e1,tp)
-				if senya.lefffilter(tc,tc) then
-					senya.lgeff(tc,tc)
+				if Senya.EffectSourceFilter_3L(tc,tc) then
+					Senya.GainEffect_3L(tc,tc)
 				end
 			end
 		end)
 		c:RegisterEffect(e2)
 end
 function cm.filter1(c,e,tp)
-	return senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
@@ -66,7 +66,7 @@ function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoHand(e:GetLabelObject(),nil,REASON_EFFECT)
 end
 function cm.filter(c)
-	return senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
+	return Senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
@@ -89,7 +89,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fc0000)
 		e1:SetValue(function(e,c)
 			if e:GetHandler():IsFacedown() then return false end
-			return not c or senya.check_set_3L(c)
+			return not c or Senya.check_set_3L(c)
 		end)
 		tc:RegisterEffect(e1,true)
 	end

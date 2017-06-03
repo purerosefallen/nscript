@@ -2,7 +2,7 @@
 local m=37564015
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	--特招
 	local e1=Effect.CreateEffect(c)
@@ -17,10 +17,10 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)	
 end
 function cm.filter(c,e,tp)
-	return senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_XYZ)
+	return Senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_XYZ)
 end
 function cm.filter1(c,e,tp)
-	return senya.check_set_elem(c) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return Senya.check_set_elem(c) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_GRAVE and chkc:GetControler()==tp

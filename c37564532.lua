@@ -1,12 +1,12 @@
 --SUPER SONIC
 local m=37564532
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	aux.AddSynchroProcedure(c,cm.synfilter,aux.NonTuner(cm.synfilter),1)
 	c:EnableReviveLimit()
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetType(EFFECT_TYPE_IGNITION)

@@ -2,7 +2,7 @@
 local m=37564207
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
@@ -12,16 +12,16 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return senya.swwblex(e,tp) and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) and Duel.GetTurnPlayer()~=tp
+		return Senya.CheckNoExtra(e,tp) and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) and Duel.GetTurnPlayer()~=tp
 	end)
-	e1:SetCost(senya.swwrmcost(1))
+	e1:SetCost(Senya.SawawaRemoveCost(1))
 	e1:SetTarget(cm.tg)
 	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
-senya.sww(c,2,true,false,false)
+Senya.SawawaCommonEffect(c,2,true,false,false)
 end
 function cm.effilter(c)
-	return senya.check_set_sawawa(c)
+	return Senya.check_set_sawawa(c)
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)~=0 end

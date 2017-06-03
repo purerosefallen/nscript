@@ -1,5 +1,6 @@
 --amazing
-local m,cm=senya.sayuri_ritual(37564906)
+
+local m,cm=Senya.SayuriRitualPreload(37564906)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e4=Effect.CreateEffect(c)
@@ -23,14 +24,14 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.mk(c,2,m-4000,false,cm.dogcon,nil,nil,true)
+	Senya.MokouReborn(c,2,m-4000,false,cm.dogcon,nil,nil,true)
 end
-cm.mat_filter=senya.sayuri_mat_filter_8
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel8
 function cm.dogcon(e,tp,eg,ep,ev,re,r,rp)
 	return true
 end
 function cm.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and (senya.check_set_sayuri(c) or (c:IsAttribute(ATTRIBUTE_FIRE) and c:IsRace(RACE_ZOMBIE))) and c:IsAbleToGraveAsCost()
+	return c:IsType(TYPE_MONSTER) and (Senya.check_set_sayuri(c) or (c:IsAttribute(ATTRIBUTE_FIRE) and c:IsRace(RACE_ZOMBIE))) and c:IsAbleToGraveAsCost()
 end
 function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,2,e:GetHandler()) end

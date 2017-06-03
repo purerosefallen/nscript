@@ -2,9 +2,9 @@
 local m=37564613
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
+	--Senya.setreg(c,m,37564600)
 	--atk def
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -29,7 +29,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(c37564613.thcon)
 	e3:SetTarget(c37564613.sptg)
 	e3:SetOperation(c37564613.spop)
@@ -41,7 +41,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c37564613.filter(c)
-	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER)
+	return Senya.check_set_prim(c) and c:IsType(TYPE_MONSTER)
 end
 function c37564613.value(e,c)
 	local g=Duel.GetMatchingGroup(c37564613.filter,c:GetControler(),LOCATION_GRAVE,0,nil)
@@ -62,7 +62,7 @@ function c37564613.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564613.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564613)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564613)
 end
 function c37564613.spfilter(c,e,tp,m)
 	return c:IsCode(37564613) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

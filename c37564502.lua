@@ -1,10 +1,10 @@
 --Harukoi
 local m=37564502
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddSynchroProcedure2(c,nil,aux.FilterBoolFunction(Card.IsCode,37564765))
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)

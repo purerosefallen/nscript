@@ -1,10 +1,10 @@
 --Nanahira Phantom
 local m=37564540
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.FilterBoolFunction(Card.IsCode,37564765))
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -18,7 +18,7 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(cm.discon)
-	e3:SetCost(cm.discost)
+	e3:SetCost(cm.DiscardHandCost)
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
@@ -28,14 +28,14 @@ function cm.initial_effect(c)
 	e1:SetTargetRange(LOCATION_HAND,0)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTarget(function(e,c)
-		return c.desc_with_nanahira
+		return c.Senya_desc_with_nanahira
 	end)
 	c:RegisterEffect(e1)
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST+REASON_TEMPORARY)
 		local e1=Effect.CreateEffect(e:GetHandler())

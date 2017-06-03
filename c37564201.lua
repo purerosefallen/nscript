@@ -2,9 +2,9 @@
 local m=37564201
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,2,true,false,cm.sfilter)
+	Senya.SawawaCommonEffect(c,2,true,false,cm.sfilter)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.mk(c,2,m-4000,false,senya.swwblex)
+	Senya.MokouReborn(c,2,m-4000,false,Senya.CheckNoExtra)
 end
 function cm.sfilter(c)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsRace(RACE_ZOMBIE)

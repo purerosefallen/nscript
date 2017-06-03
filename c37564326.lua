@@ -1,7 +1,7 @@
 --樱之舞
 local m=37564326
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	aux.AddRitualProcGreaterCode(c,m-1)
 	local e1=Effect.CreateEffect(c)

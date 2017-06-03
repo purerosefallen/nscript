@@ -9,7 +9,6 @@ function cm.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e0:SetRange(LOCATION_EXTRA)
 	e0:SetCondition(cm.xyzcon)
-	e0:SetTarget(cm.xyztg)
 	e0:SetOperation(cm.xyzop)
 	e0:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e0)
@@ -47,96 +46,59 @@ function cm.initial_effect(c)
 	e14:SetOperation(cm.activate2)
 	c:RegisterEffect(e14)
 end
-function cm.mfilter(c)
-	return true
+function cm.xyzfilter(c,xyzc)
+	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzc) and c:IsXyzLevel(xyzc,1)
 end
-function cm.exfilter(c,xc)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsFaceup()
+function cm.xyzfilter1(c)
+	return c:IsFaceup()
 end
 function cm.xyzcon(e,c,og,min,max)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ct=-ft
-	local mg=nil
-	if og then
-		mg=og
-	else
-		mg=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
-	end 
-	local exg=Duel.GetMatchingGroup(cm.exfilter,tp,LOCATION_SZONE,0,nil,c)
-	if ct<0 and (not min or min<=2) and (not max or max>=2) and not og and exg:GetCount()==2 and Duel.GetFlagEffect(tp,m)==0 then
-		return true
-	end
-	local minc=4
-	local maxc=4
-	if min then
-		if min>minc then minc=min end
-		if max<maxc then maxc=max end
-		if minc>maxc then return false end
-	end
-	return ct<minc and Duel.CheckXyzMaterial(c,cm.mfilter,1,minc,maxc,og)
-end
-function cm.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,c,og,min,max)
-	if og and not min then
-		return true
-	end
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ct=-ft
-	local minc=4
-	local maxc=4
-	if min then
-		if min>minc then minc=min end
-		if max<maxc then maxc=max end
-	end
-	local mg=nil
-	if og then
-		mg=og
-	else
-		mg=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
-	end
-	local exg=Duel.GetMatchingGroup(cm.exfilter,tp,LOCATION_SZONE,0,nil,c)
-	local b1=ct<minc and Duel.CheckXyzMaterial(c,cm.mfilter,1,minc,maxc,og)
-	local b2=ct<0 and (not min or min<=2) and (not max or max>=2) and not og and exg:GetCount()==2 and Duel.GetFlagEffect(tp,m)==0
-	local g=nil
-	if b2 and (not b1 or Duel.SelectYesNo(tp,aux.Stringid(m,0))) then
-		g=exg:Clone()
-		Duel.RegisterFlagEffect(tp,m,RESET_PHASE+PHASE_END,0,1)
-	else
-		g=Duel.SelectXyzMaterial(tp,c,cm.mfilter,1,minc,maxc,og)
-	end
-	if g then
-		g:KeepAlive()
-		e:SetLabelObject(g)
-		return true
-	else return false end
+		if c==nil then return true end
+		if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+		local tp=c:GetControler()
+		local minc=4
+		local maxc=4
+		if min then
+			minc=math.max(minc,min)
+			maxc=math.min(maxc,max)
+		end
+		local mg=nil
+		if og then
+			mg=og:Filter(cm.xyzfilter,nil,c)
+		else
+			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
+			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 then return true end
+		end
+		return Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 end
 function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local g=nil
 	if og and not min then
-		local sg=Group.CreateGroup()
-		local tc=og:GetFirst()
-		while tc do
-			local sg1=tc:GetOverlayGroup()
-			sg:Merge(sg1)
-			tc=og:GetNext()
-		end
-		Duel.SendtoGrave(sg,REASON_RULE)
-		c:SetMaterial(og)
-		Duel.Overlay(c,og)
+		g=og
 	else
-		local mg=e:GetLabelObject()
-		local sg=Group.CreateGroup()
-		local tc=mg:GetFirst()
-		while tc do
-			local sg1=tc:GetOverlayGroup()
-			sg:Merge(sg1)
-			tc=mg:GetNext()
+		local minc=2
+		local maxc=2
+		if min then
+			minc=math.max(minc,min)
+			maxc=math.min(maxc,max)
 		end
-		Duel.SendtoGrave(sg,REASON_RULE)
-		c:SetMaterial(mg)
-		Duel.Overlay(c,mg)
-		mg:DeleteGroup()
+		local mg=nil
+		if og then
+			mg=og:Filter(cm.xyzfilter,nil,c)
+		else
+			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and Duel.SelectYesNo(tp,m*16) then
+				c:SetMaterial(exg)
+				Senya.OverlayGroup(c,exg,false,true)
+				return
+			end
+			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
+		end
+		g=Senya.SelectGroup(tp,HINTMSG_XMATERIAL,mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 	end
+	c:SetMaterial(g)
+	Senya.OverlayGroup(c,g,false,true)
 end
 function cm.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ

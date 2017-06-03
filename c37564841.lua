@@ -1,16 +1,16 @@
 --3L·破月
 local m=37564841
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(m,0))
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e6:SetRange(LOCATION_HAND)
 	e6:SetCountLimit(1,m)
-	e6:SetCost(senya.setgcost)
+	e6:SetCost(Senya.SelfToGraveCost)
 	e6:SetTarget(cm.target)
 	e6:SetOperation(cm.activate)
 	c:RegisterEffect(e6)
@@ -23,7 +23,30 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetTargetRange(0,LOCATION_ONFIELD)
 	e1:SetTarget(function(e,c)
-		return not c:IsImmuneToEffect(e) and c:GetSequence()+e:GetHandler():GetSequence()==4
+		if c:IsImmuneToEffect(e) then return false end
+		local s1=e:GetHandler():GetSequence()
+		local s2=c:GetSequence()
+		if c:IsLocation(LOCATION_SZONE) then
+			if s2>=5 then return false end
+			if s1<5 then
+				return s1+s2==4
+			else
+				return (s1==5 and s2==3) or (s1==6 and s2==1)
+			end
+		end
+		if s1<5 then
+			if s2<5 then
+				return s1+s2==4
+			else
+				return (s2==5 and s1==3) or (s2==6 and s1==1)
+			end
+		else
+			if s2<5 then
+				return (s1==5 and s2==3) or (s1==6 and s2==1)
+			else
+				return false
+			end
+		end
 	end)
 	e1:SetValue(aux.TRUE)
 	e1:SetReset(RESET_EVENT+0x1fe0000)

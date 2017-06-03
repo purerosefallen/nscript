@@ -1,11 +1,11 @@
 --Nanahira & Koishi
 local m=37564537
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
-	aux.AddXyzProcedure(c,senya.nnfilter,7,2)
+	Senya.Nanahira(c)
+	aux.AddXyzProcedure(c,Senya.NanahiraFilter,7,2)
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(cm.discon)
-	e3:SetCost(cm.discost)
+	e3:SetCost(cm.DiscardHandCost)
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
@@ -36,7 +36,7 @@ function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or ep==tp then return false end
 	return re:IsHasCategory(CATEGORY_DRAW) or re:IsHasCategory(CATEGORY_SEARCH) or re:IsHasCategory(CATEGORY_TOHAND)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
@@ -81,7 +81,7 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
 			Duel.ConfirmCards(tp,g)
 			local tg=g:Filter(Card.IsCode,nil,e:GetLabel())
-			senya.overlaygroup(e:GetHandler(),tg)
+			Senya.OverlayGroup(e:GetHandler(),tg)
 			Duel.ShuffleHand(1-tp)
 		end
 	end)

@@ -24,13 +24,13 @@ function cm.filter(c,e,tp,m1,m2,ft)
 	end
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumGreater(Card.GetRitualLevel,8,rc)
 	else return false end
 end
 function cm.mfilter(c)
-	return senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
+	return Senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

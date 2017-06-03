@@ -2,11 +2,11 @@
 local m=37564013
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
-cm.named_with_prim=true
+cm.Senya_name_with_elem=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
-	senya.rxyz1(c,4,nil,2,63)
+	--Senya.setreg(c,m,37564600)
+	Senya.AddXyzProcedureRank(c,4,nil,2,63)
 	--攻击上升
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -29,18 +29,18 @@ function cm.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetValue(aux.tgoval)
-	e3:SetCondition(cm.xmcon(3))
+	e3:SetCondition(cm.XMaterialCountCondition(3))
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e1:SetCondition(cm.xmcon(3))
+	e1:SetCondition(cm.XMaterialCountCondition(3))
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--2属性吸素材
-	senya.atkdr(c,cm.xmcon(2),cm.destg)
+	Senya.AttackOverlayDrainEffect(c,cm.XMaterialCountCondition(2),cm.destg)
 	--4属性3康
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(m,1))
@@ -62,7 +62,7 @@ function cm.initial_effect(c)
 	e9:SetRange(LOCATION_MZONE)
 	e9:SetHintTiming(0,0x1e0)
 	e9:SetCountLimit(1)
-	e9:SetCondition(cm.xmcon(5))
+	e9:SetCondition(cm.XMaterialCountCondition(5))
 	e9:SetTarget(cm.tdtg)
 	e9:SetOperation(cm.tdop)
 	c:RegisterEffect(e9)
@@ -73,7 +73,7 @@ function cm.initial_effect(c)
 	e7:SetType(EFFECT_TYPE_QUICK_O)
 	e7:SetCode(EVENT_FREE_CHAIN)
 	e7:SetRange(LOCATION_MZONE)
-	e7:SetCondition(cm.xmcon(6))
+	e7:SetCondition(cm.XMaterialCountCondition(6))
 	e7:SetCost(cm.sppcost)
 	e7:SetTarget(cm.spptg)
 	e7:SetOperation(cm.sppop)
@@ -92,7 +92,7 @@ function cm.initial_effect(c)
 		--c:RegisterEffect(e0)
 end
 function cm.mtfilter(c)
-	return senya.check_set_elem(c)
+	return Senya.check_set_elem(c)
 end
 function cm.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.mtfilter,tp,LOCATION_EXTRA,0,1,nil) end
@@ -109,7 +109,7 @@ end
 function cm.atkval(e,c)
 	return c:GetOverlayCount()*1000
 end
-function cm.xmcon(ct)
+function cm.XMaterialCountCondition(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local g=e:GetHandler():GetOverlayGroup()
 		local ct1=g:Filter(cm.nfilter,nil):GetClassCount(Card.GetAttribute)
@@ -128,7 +128,7 @@ function cm.destg(c,ec)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
 end
 function cm.discon(e,tp,eg,ep,ev,re,r,rp)
-	return cm.xmcon(4)(e,tp,eg,ep,ev,re,r,rp) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
+	return cm.XMaterialCountCondition(4)(e,tp,eg,ep,ev,re,r,rp) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
 function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -161,15 +161,13 @@ function cm.sppcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(m,RESET_CHAIN,0,1)
 end
 function cm.fffilter(c,e,tp)
-	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,e:GetHandler(),c)>0
 end
 function cm.spptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(cm.fffilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.fffilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.sppop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsControler(1-tp) or c:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

@@ -3,7 +3,7 @@ local m=37564034
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)
 	 c:EnableReviveLimit()
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,m)
 	e1:SetTarget(cm.tg)
-	e1:SetCost(senya.rmovcost(2))
+	e1:SetCost(Senya.RemoveOverlayCost(2))
 	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
 	local e4=Effect.CreateEffect(c)
@@ -30,7 +30,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function cm.filter(c)
-	return c:IsFaceup() and senya.check_set_elem(c)
+	return c:IsFaceup() and Senya.check_set_elem(c)
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) end

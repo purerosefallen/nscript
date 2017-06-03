@@ -2,7 +2,7 @@
 local m=37564023
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 --sps
 	local e1=Effect.CreateEffect(c)
@@ -34,7 +34,7 @@ function cm.initial_effect(c)
 	Duel.AddCustomActivityCounter(m,ACTIVITY_SPSUMMON,cm.counterfilter)
 end
 function cm.counterfilter(c)
-	return senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
+	return Senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(m,tp,ACTIVITY_SPSUMMON)==0 end
@@ -48,10 +48,10 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function cm.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
+	return not Senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
 end
 function cm.filter(c)
-	return senya.check_set_elem(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(m) and c:GetLevel()==4
+	return Senya.check_set_elem(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsCode(m) and c:GetLevel()==4
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

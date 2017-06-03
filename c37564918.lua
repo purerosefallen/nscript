@@ -2,8 +2,8 @@
 local m=37564918
 local cm=_G["c"..m]
 
-cm.named_with_sayuri=true
-cm.named_with_rose=true
+cm.Senya_name_with_sayuri=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e,tp,mg)
-	if not senya.check_set_sayuri(c) or bit.band(c:GetType(),0x81)~=0x81 or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
+	if not Senya.check_set_sayuri(c) or bit.band(c:GetType(),0x81)~=0x81 or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end
 	if c.mat_filter then
 		mg=mg:Filter(c.mat_filter,nil)
 	end
@@ -24,7 +24,7 @@ function cm.rfilter(c,rc)
 	return c:GetRank()==rc:GetLevel()
 end
 function cm.exfilter(c)
-	return c:IsAbleToRemove() and senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
+	return c:IsAbleToRemove() and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -48,7 +48,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local mat=mg:FilterSelect(tp,cm.rfilter,1,1,nil,tc)
 		tc:SetMaterial(mat)
-		senya.sayuri_check_trigger(tc,e,tp,eg,ep,ev,re,r,rp)
+		Senya.SayuriCheckTrigger(tc,e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
 		Duel.BreakEffect()
 		Duel.SpecialSummonStep(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
@@ -68,7 +68,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.retfilter(c)
-	return c:IsFaceup() and c:IsAbleToDeckOrExtraAsCost() and senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsAbleToDeckOrExtraAsCost() and Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER)
 end
 function cm.rcon(e,tp,eg,ep,ev,re,r,rp)
 	local ct=bit.band(ev,0xffff)

@@ -1,7 +1,7 @@
 --miyan
 local m=37564315
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,7,3)
 	c:EnableReviveLimit()
@@ -16,7 +16,7 @@ function cm.initial_effect(c)
 	e1:SetProperty(0x14000+EFFECT_FLAG_AVAILABLE_BD)
 	e1:SetCode(EVENT_BATTLE_DAMAGE)
 	e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_DUEL)
-	e1:SetCost(senya.rmovcost(3))
+	e1:SetCost(Senya.RemoveOverlayCost(3))
 	e1:SetCondition(cm.atkcon)
 	e1:SetTarget(cm.atktg)
 	e1:SetOperation(cm.atkop)

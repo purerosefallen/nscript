@@ -1,11 +1,11 @@
 --反转·天音
 local m=37564302
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xab20),senya.check_fusion_set_3L,true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xab20),Senya.check_fusion_set_3L,true)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))

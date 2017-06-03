@@ -1,10 +1,10 @@
 --soku
 
-local m,cm=senya.sayuri_ritual(37564904)
-cm.named_with_remix=true
+local m,cm=Senya.SayuriRitualPreload(37564904)
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	senya.icopy(c,1,m,senya.sedescost,cm.condition2,LOCATION_HAND)
+	Senya.InstantCopyModule(c,1,m,Senya.SelfDiscardCost,cm.condition2,LOCATION_HAND)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetLabel(senya.order_table_new({}))
+	e2:SetLabel(Senya.order_table_new({}))
 	e2:SetOperation(cm.op)
 	c:RegisterEffect(e2)
 	local ex=Effect.CreateEffect(c)
@@ -31,9 +31,9 @@ function cm.initial_effect(c)
 	ex:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	c:RegisterEffect(ex)
 end
-cm.mat_filter=senya.sayuri_mat_filter_12
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel12
 function cm.cfilter(c,ori)
-	return senya.check_set_sayuri(c) and c:IsFaceup() and bit.band(c:GetType(),0x81)==0x81
+	return Senya.check_set_sayuri(c) and c:IsFaceup() and bit.band(c:GetType(),0x81)==0x81
 end
 function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_MZONE,0,1,nil)
@@ -58,7 +58,7 @@ function cm.gfilter2(c,code)
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local copyt=senya.order_table[e:GetLabel()]
+	local copyt=Senya.order_table[e:GetLabel()]
 	local exg=Group.CreateGroup()
 	for tc,cid in pairs(copyt) do
 		if tc and cid then exg:AddCard(tc) end

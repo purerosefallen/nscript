@@ -1,10 +1,10 @@
 --3L·光之舞
 local m=37564805
 local cm=_G["c"..m]
---
+
 cm.fusion_att_3L=ATTRIBUTE_LIGHT
 function cm.initial_effect(c)
-	senya.lfus(c,m)
+	Senya.Fusion_3L_Attribute(c,cm)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)

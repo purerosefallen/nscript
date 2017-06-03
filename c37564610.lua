@@ -2,9 +2,9 @@
 local m=37564610
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
+	--Senya.setreg(c,m,37564600)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -31,14 +31,14 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(c37564610.thcon)
 	e3:SetTarget(c37564610.sptg)
 	e3:SetOperation(c37564610.spop)
 	c:RegisterEffect(e3)
 end
 function c37564610.sfilter(c)
-	return senya.check_set_prim(c) and c:IsFaceup()
+	return Senya.check_set_prim(c) and c:IsFaceup()
 end
 function c37564610.spcon(e,c)
 	if c==nil then return true end
@@ -49,10 +49,10 @@ end
 function c37564610.reccon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetHandler():GetReasonCard()
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
-		and senya.check_set_prim(rc)
+		and Senya.check_set_prim(rc)
 end
 function c37564610.filter(c)
-	return senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return Senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c37564610.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564610.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -67,7 +67,7 @@ function c37564610.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564610.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564610)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564610)
 end
 function c37564610.spfilter(c,e,tp,m)
 	return c:IsCode(37564610) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

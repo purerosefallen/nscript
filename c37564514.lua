@@ -1,18 +1,18 @@
 --Malody of Nanahira
 local m=37564514
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)   
-	e1:SetTarget(senya.multi_choice_target(m,cm.tg1,cm.tg2))
-	e1:SetOperation(senya.multi_choice_operation(cm.op1,cm.op2))
+	e1:SetTarget(Senya.multi_choice_target(m,cm.tg1,cm.tg2))
+	e1:SetOperation(Senya.multi_choice_operation(cm.op1,cm.op2))
 	c:RegisterEffect(e1)
-	senya.nntrap(c,e1)
+	Senya.NanahiraTrap(c,e1)
 end
 function cm.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(37564765)

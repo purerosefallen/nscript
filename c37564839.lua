@@ -1,15 +1,16 @@
 --3L·mono
 local m=37564839
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(m,0))
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e6:SetRange(LOCATION_HAND)
 	e6:SetCountLimit(1,m)
-	e6:SetCost(senya.setgcost)
+	e6:SetCost(Senya.SelfToGraveCost)
 	e6:SetTarget(cm.target)
 	e6:SetOperation(cm.activate)
 	c:RegisterEffect(e6)
@@ -18,10 +19,10 @@ end
 function(e,c)
 	local copym=c:GetFlagEffectLabel(m)
 	if not copym then return end
-	local copyt=senya.order_table[copym]
+	local copyt=Senya.order_table[copym]
 	for i,rcode in pairs(copyt) do
 		Duel.Hint(HINT_OPSELECTED,c:GetControler(),m*16+2)
-		senya.lreseff(c,rcode)
+		Senya.RemoveCertainEffect_3L(c,rcode)
 	end
 	c:ResetFlagEffect(m)
 end,
@@ -33,7 +34,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(ctlm)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target1)
 	e1:SetOperation(cm.operation1)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
@@ -52,11 +53,11 @@ end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and cm.filter(tc) then
-		senya.lgeff(tc,m)
+		Senya.GainEffect_3L(tc,m)
 	end
 end
 function cm.cfilter(c,e)
-	return c:GetOriginalCode()~=m and senya.lefffilter(c,e:GetHandler()) and senya.check_set_3L(c)
+	return c:GetOriginalCode()~=m and Senya.EffectSourceFilter_3L(c,e:GetHandler()) and Senya.check_set_3L(c)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.cfilter(chkc,e) end
@@ -68,12 +69,12 @@ function cm.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
 	if c:IsFaceup() and c:IsRelateToEffect(e) and tc then
-		if not senya.lgeff(c,tc,2) then return end
+		if not Senya.GainEffect_3L(c,tc,2) then return end
 		if c:GetFlagEffect(m)==0 then
-			local tcode=senya.order_table_new({tc:GetOriginalCode()})
+			local tcode=Senya.order_table_new({tc:GetOriginalCode()})
 			c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2,tcode)
 		else
-			local copyt=senya.order_table[c:GetFlagEffectLabel(m)]
+			local copyt=Senya.order_table[c:GetFlagEffectLabel(m)]
 			table.insert(copyt,tc:GetOriginalCode())
 		end
 	end

@@ -2,9 +2,9 @@
 
 local m=37564221
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,2,true,false,false)
+	Senya.SawawaCommonEffect(c,2,true,false,false)
 	local e9=Effect.CreateEffect(c)
 	e9:SetDescription(aux.Stringid(37564221,1))
 	e9:SetCategory(CATEGORY_POSITION)
@@ -20,7 +20,7 @@ function cm.initial_effect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_F)
 	e6:SetProperty(EFFECT_FLAG_DELAY)
 	e6:SetCountLimit(1,375642212)
-	e6:SetCondition(senya.swwblex)
+	e6:SetCondition(Senya.CheckNoExtra)
 	e6:SetTarget(c37564221.target1)
 	e6:SetOperation(c37564221.operation1)
 	c:RegisterEffect(e6)

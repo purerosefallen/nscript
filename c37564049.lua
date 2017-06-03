@@ -2,12 +2,12 @@
 local m=37564049
 local cm=_G["c"..m]
 
-cm.named_with_remix=true
-cm.named_with_elem=true
+cm.Senya_name_with_remix=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,6,4,nil,nil,5)
-	senya.cneg(c,cm.discon,cm.discost,nil,m*16,true,nil)
+	Senya.NegateEffectWithoutChainingModule(c,cm.discon,cm.DiscardHandCost,nil,m*16,true,nil)
 		local e3=Effect.CreateEffect(c)
 		e3:SetDescription(aux.Stringid(m,0))
 		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -23,7 +23,7 @@ function cm.xcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(cm.xfilter,1,nil,4) and e:GetHandler():GetOverlayGroup():IsExists(cm.xfilter,1,nil,5)
 end
 function cm.xfilter(c,rr)
-	return c:IsType(TYPE_XYZ) and senya.check_set_elem(c) and c:GetRank()==rr
+	return c:IsType(TYPE_XYZ) and Senya.check_set_elem(c) and c:GetRank()==rr
 end
 function cm.mtfilter(c)
 	return true
@@ -44,6 +44,6 @@ function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return rp~=tp and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and cm.xcon(e,tp,eg,ep,ev,re,r,rp)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 end

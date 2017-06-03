@@ -3,12 +3,12 @@ local m=37564421
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
-cm.named_with_prism=true
+cm.Senya_name_with_elem=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	--senya.setreg(c,m,37564573)
-	aux.AddFusionProcFun2(c,senya.check_fusion_set_elem,senya.check_fusion_set_prism,true)
+	--Senya.setreg(c,m,37564573)
+	aux.AddFusionProcFun2(c,Senya.check_fusion_set_elem,Senya.check_fusion_set_prism,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_XYZ_LEVEL)
@@ -38,7 +38,7 @@ end
 function cm.efcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	return r==REASON_XYZ and (senya.check_set_elem(rc) or senya.check_fusion_set_prism(rc))
+	return r==REASON_XYZ and (Senya.check_set_elem(rc) or Senya.check_fusion_set_prism(rc))
 end
 function cm.efop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -67,7 +67,7 @@ function cm.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
 end
 function cm.filter(c)
-	return (senya.check_set_elem(c) or senya.check_set_prism(c)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return (Senya.check_set_elem(c) or Senya.check_set_prism(c)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function cm.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

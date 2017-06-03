@@ -2,9 +2,9 @@
 
 local m=37564213
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-senya.sww(c,1,true,false,false)
+Senya.SawawaCommonEffect(c,1,true,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564213,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -18,7 +18,7 @@ senya.sww(c,1,true,false,false)
 	c:RegisterEffect(e1)
 end
 function c37564213.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and senya.check_set_sawawa(c)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Senya.check_set_sawawa(c)
 end
 function c37564213.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and c37564213.filter(chkc,e,tp) end

@@ -1,7 +1,7 @@
 --scarlet 2
 local m=37564312
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,10,2)
 	c:EnableReviveLimit()
@@ -37,7 +37,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCost(senya.rmovcost(1))
+	e2:SetCost(Senya.RemoveOverlayCost(1))
 	e2:SetTarget(cm.destg)
 	e2:SetOperation(cm.desop)
 	c:RegisterEffect(e2)

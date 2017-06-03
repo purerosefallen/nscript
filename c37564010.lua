@@ -2,7 +2,7 @@
 local m=37564010
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -23,20 +23,19 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function cm.filter(c,e,tp)
 	local rk=c:GetRank()
-	return c:IsType(TYPE_XYZ) and c:IsFaceup() and senya.check_set_elem(c) and c:GetOverlayCount()>0
+	return c:IsType(TYPE_XYZ) and c:IsFaceup() and Senya.check_set_elem(c) and c:GetOverlayCount()>0
 		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk,c)
 end
 function cm.spfilter(c,e,tp,rk,tc)
-	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and senya.check_set_elem(c) and tc:IsCanBeXyzMaterial(c)
+	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Senya.check_set_elem(c) and tc:IsCanBeXyzMaterial(c) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(tc),c)>0
 end
 function cm.chkfilter(c,tc)
 	local rk=tc:GetRank()
-	return c:IsFaceup() and c:GetRank()==rk-1
+	return c:IsFaceup() and c:GetRank()==rk-1 and Duel.GetLocationCountFromEx(tp,tp,c,tc)>0
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and cm.chkfilter(chkc,e:GetLabelObject()) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingTarget(cm.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(m,0))
 	local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
@@ -44,7 +43,6 @@ function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(g:GetFirst())
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<-1 then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	local rk=tc:GetRank()

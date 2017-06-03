@@ -1,10 +1,10 @@
 --Nanahira & Physalis
 local m=37564522
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrp(c)
+	Senya.NanahiraPendulum(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -29,7 +29,7 @@ function cm.desfilter(c,tp)
 	end
 end
 function cm.filter(c,ignore)
-	return c.desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsSSetable(ignore)
+	return c.Senya_desc_with_nanahira and c:IsType(TYPE_TRAP) and c:IsSSetable(ignore)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and cm.desfilter(chkc,tp) and chkc~=e:GetHandler() end

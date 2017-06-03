@@ -1,10 +1,10 @@
 --Nanahira Revolution
 local m=37564543
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564765,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTarget(function(e,c)
-		return c.desc_with_nanahira
+		return c.Senya_desc_with_nanahira
 	end)
 	c:RegisterEffect(e1)
 end
@@ -40,7 +40,7 @@ function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function cm.filter(c)
-	return c:IsSSetable() and c:IsType(TYPE_TRAP) and c.desc_with_nanahira
+	return c:IsSSetable() and c:IsType(TYPE_TRAP) and c.Senya_desc_with_nanahira
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

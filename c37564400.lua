@@ -2,10 +2,10 @@
 local m=37564400
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	senya.rxyz1(c,3,cm.mfilter,2,63)
+	--Senya.setreg(c,m,37564573)
+	Senya.AddXyzProcedureRank(c,3,cm.mfilter,2,63)
 --atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -57,7 +57,7 @@ function cm.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCondition(cm.discon)
-	e6:SetCost(cm.discost)
+	e6:SetCost(cm.DiscardHandCost)
 	e6:SetTarget(cm.distg)
 	e6:SetOperation(cm.disop)
 	c:RegisterEffect(e6)
@@ -120,7 +120,7 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,cm.drfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,tc,e,tp)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
-			senya.overlaygroup(c,g)
+			Senya.OverlayGroup(c,g)
 		end
 	end
 end
@@ -129,7 +129,7 @@ function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and rc~=c
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end

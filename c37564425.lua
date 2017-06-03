@@ -1,7 +1,7 @@
 --Prism-Duo
 local m=37564425
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_DISABLE_SUMMON)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTarget(function(e,c)
-		return senya.bmchkfilter(c)
+		return Senya.CheckPrism(c)
 	end)
 	e2:SetTargetRange(0xff,0xff)
 	c:RegisterEffect(e2)
@@ -46,7 +46,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.sfilter(c,e,tp)
-	return senya.bmchkfilter(c) and c:GetLevel()==3 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.CheckPrism(c) and c:GetLevel()==3 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	
@@ -71,7 +71,7 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.limfilter(c,tp)
-	return c:GetSummonPlayer()==tp and senya.bmchkfilter(c)
+	return c:GetSummonPlayer()==tp and Senya.CheckPrism(c)
 end
 function cm.limcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(cm.limfilter,1,nil,tp)
@@ -95,7 +95,7 @@ end
 function cm.chcon(e,tp,eg,ep,ev,re,r,rp)
 	loc,np=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_CONTROLER)
 	local rc=re:GetHandler()
-	return loc==LOCATION_HAND and np==tp and senya.bmchkfilter(rc)
+	return loc==LOCATION_HAND and np==tp and Senya.CheckPrism(rc)
 end
 function cm.cfilter(c)
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED)

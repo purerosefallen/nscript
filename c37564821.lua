@@ -1,12 +1,12 @@
 --Alice's Emotion
 local m=37564821
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564800)
+	--Senya.setreg(c,m,37564800)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(senya.fuscate())
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(cm.target)
@@ -21,22 +21,22 @@ function cm.initial_effect(c)
 	e2:SetCondition(aux.exccon)
 	e2:SetCountLimit(1,m)
 	e2:SetCost(cm.thcost)
-	e2:SetTarget(senya.drawtg(1))
-	e2:SetOperation(senya.drawop)
+	e2:SetTarget(Senya.DrawTarget(1))
+	e2:SetOperation(Senya.DrawOperation)
 	c:RegisterEffect(e2)
 end
 function cm.mfilter(c,e)
 	if e and c:IsImmuneToEffect(e) then return false end
-	return senya.check_set_3L(c) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
+	return Senya.check_set_3L(c) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
 end
 function cm.filter2(c,e,tp,m,f,chkf)
-	return senya.check_set_3L(c) and c:IsType(TYPE_FUSION) and (not f or f(c))
+	return Senya.check_set_3L(c) and c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp)
 		local mgg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_GRAVE,0,nil)
 		mg1:Merge(mgg)
 		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
@@ -54,8 +54,8 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
 	local mgg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_GRAVE,0,nil,e)
 	mg1:Merge(mgg)
 	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
@@ -92,7 +92,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.cfilter(c)
-	return senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost()
+	return Senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost()
 end
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeckOrExtraAsCost()

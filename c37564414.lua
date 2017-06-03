@@ -2,12 +2,12 @@
 local m=37564414
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2,nil,nil,5)
+	--Senya.setreg(c,m,37564573)
+	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2,nil,nil,5)
 	c:EnableReviveLimit()
-	senya.bmdamchk(c,true)
+	Senya.PrismDamageCheckRegister(c,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
@@ -15,8 +15,8 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetCost(cm.cost)
-	e3:SetCondition(senya.bmdamchkcon)
-	e3:SetOperation(senya.bmdamchkop)
+	e3:SetCondition(Senya.PrismDamageCheckCondition)
+	e3:SetOperation(Senya.PrismDamageCheckOperation)
 	c:RegisterEffect(e3)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)

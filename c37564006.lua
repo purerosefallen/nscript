@@ -2,7 +2,7 @@
 local m=37564006
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 		--超量
 	local e1=Effect.CreateEffect(c)
@@ -11,49 +11,47 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetHintTiming(0,0x1e0)
-	e1:SetCountLimit(1,37564006)
-	e1:SetCost(c37564006.cost)
-	e1:SetTarget(c37564006.tg)
-	e1:SetOperation(c37564006.op)
+	e1:SetCountLimit(1,m)
+	e1:SetCost(cm.cost)
+	e1:SetTarget(cm.tg)
+	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
-	Duel.AddCustomActivityCounter(37564006,ACTIVITY_SPSUMMON,c37564006.counterfilter)
+	Duel.AddCustomActivityCounter(m,ACTIVITY_SPSUMMON,cm.counterfilter)
 end
-function c37564006.counterfilter(c)
-	return senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
+function cm.counterfilter(c)
+	return Senya.check_set_elem(c) or c:GetSummonLocation()~=LOCATION_EXTRA
 end
-function c37564006.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(37564006,tp,ACTIVITY_SPSUMMON)==0 and
+function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetCustomActivityCount(m,tp,ACTIVITY_SPSUMMON)==0 and
 	Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(c37564006.splimit)
+	e1:SetTarget(cm.splimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
-function c37564006.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
+function cm.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not Senya.check_set_elem(c) and c:IsLocation(LOCATION_EXTRA)
 end
-function c37564006.filter1(c,e,tp)
-	return c:GetRank()==4 and senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+function cm.filter1(c,e,tp)
+	return c:GetRank()==4 and Senya.check_set_elem(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(e:GetHandler()),c)>0
 end
-function c37564006.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c37564006.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function c37564006.matfilter(c)
+function cm.matfilter(c)
 	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and not c:IsType(TYPE_TOKEN) and c:GetLevel()==4 
 end
-function c37564006.op(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
+function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37564006.filter1,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,cm.filter1,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local sc=g:GetFirst()
 	if sc then
 		local mg=tc:GetOverlayGroup()
@@ -63,10 +61,10 @@ function c37564006.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		if Duel.IsExistingMatchingCard(c37564006.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(37564006,0)) then
+		if Duel.IsExistingMatchingCard(cm.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(m,0)) then
 			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(37564006,1))
-			local mg2=Duel.SelectMatchingCard(tp,c37564006.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
+			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(m,1))
+			local mg2=Duel.SelectMatchingCard(tp,cm.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 			Duel.HintSelection(mg2)
 			Duel.Overlay(sc,mg2)
 		end

@@ -1,13 +1,13 @@
 --Tomaru Susumu
 local m=37564503
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcCodeRep(c,37564765,2,true,true)
-	senya.fproc(c,LOCATION_MZONE,Duel.Release)
+	Senya.AddSelfFusionProcedure(c,LOCATION_MZONE,Duel.Release)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)

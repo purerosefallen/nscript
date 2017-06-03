@@ -2,7 +2,7 @@
 local m=37564005
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)

@@ -2,11 +2,11 @@
 local m=37564426
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	--senya.setreg(c,m,37564573)
-	senya.bmdamchk(c,true)
+	--Senya.setreg(c,m,37564573)
+	Senya.PrismDamageCheckRegister(c,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+  EFFECT_FLAG_UNCOPYABLE)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -45,22 +45,25 @@ function cm.initial_effect(c)
 	e3:SetLabel(5)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetCost(cm.cost)
-	e3:SetCondition(senya.bmdamchkcon)
-	e3:SetOperation(senya.bmdamchkop)
+	e3:SetCondition(Senya.PrismDamageCheckCondition)
+	e3:SetOperation(Senya.PrismDamageCheckOperation)
 	c:RegisterEffect(e3)
 end
-function cm.spfilter(c,fc)
-	return senya.check_set_prism(c) and (c:IsAbleToHandAsCost() or c:IsAbleToExtraAsCost())
+function cm.spfilter(c)
+	return Senya.check_set_prism(c) and (c:IsAbleToHandAsCost() or c:IsAbleToExtraAsCost())
+end
+function cm.spgcheck(g,ft)
+	return g:FilterCount(function(c) return c:GetSequence()<4 end,nil)+ft>0
 end
 function cm.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3
-		and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_MZONE,0,3,nil,c)
+	local mg=Duel.GetMatchingGroup(cm.spfilter,tp,LOCATION_MZONE,0,nil)
+	return Senya.CheckGroup(mg,cm.spgcheck,nil,3,3,Duel.GetLocationCount(tp,LOCATION_MZONE))
 end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_MZONE,0,3,3,nil,c)   
+	local mg=Duel.GetMatchingGroup(cm.spfilter,tp,LOCATION_MZONE,0,nil)
+	local g=Senya.SelectGroup(tp,HINTMSG_RTOHAND,mg,cm.spgcheck,nil,3,3,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	c:SetMaterial(g)
 	Duel.SendtoHand(g,nil,REASON_COST+REASON_FUSION+REASON_MATERIAL)
 end

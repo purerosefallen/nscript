@@ -2,7 +2,7 @@
 local m=37564043
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,63)
@@ -63,7 +63,7 @@ function cm.copycostx(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function cm.filter1(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(true,true,false) and senya.check_set_rose(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(true,true,false) and Senya.check_set_rose(c)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
@@ -121,7 +121,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end
 function cm.filter2(c,e,tp,eg,ep,ev,re,r,rp)
-	if c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost() and senya.check_set_rose(c) then
+	if c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost() and Senya.check_set_rose(c) then
 		if c:CheckActivateEffect(true,true,false) then return true end
 		local te=c:GetActivateEffect()
 		if te:GetCode()~=EVENT_CHAINING then return false end

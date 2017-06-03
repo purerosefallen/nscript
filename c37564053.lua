@@ -3,7 +3,7 @@ local m=37564053
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)
@@ -16,14 +16,14 @@ function cm.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(cm.discon)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.distg)
 	e1:SetOperation(cm.disop)
 	c:RegisterEffect(e1)
-	senya.scopy(c,0,0,nil,cm.xcon,nil,1,nil,nil,true)
+	Senya.CopySpellModule(c,0,0,nil,cm.xcon,nil,1,nil,nil,true)
 end
 function cm.xmfilter(c)
-	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
+	return Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.xcon(e)
 	return e:GetHandler():GetOverlayGroup():IsExists(cm.xmfilter,1,nil)
@@ -40,6 +40,6 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	if c:IsRelateToEffect(e) and rc:IsRelateToEffect(re) and c:IsType(TYPE_XYZ) then
-		senya.overlaycard(c,rc)
+		Senya.OverlayCard(c,rc)
 	end
 end

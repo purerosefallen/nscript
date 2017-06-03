@@ -2,15 +2,15 @@
 local m=37564454
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c)
+	Senya.PrismCommonEffect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_DRAW+CATEGORY_TODECK)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(senya.bmsscon)
+	e3:SetCondition(Senya.PrismSpsummonCheck)
 	e3:SetTarget(cm.tg)
 	e3:SetOperation(cm.op)
 	c:RegisterEffect(e3)

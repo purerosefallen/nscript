@@ -1,11 +1,11 @@
 --3L·散逝之樱-死蝶之魂
 local m=37564808
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
 	c:SetUniqueOnField(1,0,m)
-	senya.lfusm(c,nil,3,3)
+	Senya.Fusion_3L(c,Senya.check_fusion_set_3L,nil,3,3)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e5:SetCondition(function(e)
 		return e:GetHandler():GetFlagEffect(m)>0
 	end)
-	e5:SetCost(senya.desccost())
+	e5:SetCost(Senya.DescriptionCost())
 	e5:SetTarget(cm.target)
 	e5:SetOperation(cm.activate)
 	c:RegisterEffect(e5)

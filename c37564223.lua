@@ -2,9 +2,9 @@
 local m=37564223
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564299)
+	--Senya.setreg(c,m,37564299)
 	c:SetUniqueOnField(1,1,m)
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
@@ -57,17 +57,17 @@ function cm.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCondition(cm.discon)
-	e6:SetCost(senya.swwrmcost(1))
+	e6:SetCost(Senya.SawawaRemoveCost(1))
 	e6:SetTarget(cm.distg)
 	e6:SetOperation(cm.disop)
 	c:RegisterEffect(e6)
 end
 function cm.tlimit(e,c)
-	return not senya.check_set_sawawa(c)
+	return not Senya.check_set_sawawa(c)
 end
 function cm.ttcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3 and senya.swwblex(e,c:GetControler())
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3 and Senya.CheckNoExtra(e,c:GetControler())
 end
 function cm.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)
@@ -83,7 +83,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function cm.tgfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and senya.check_set_sawawa(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and Senya.check_set_sawawa(c)
 end
 function cm.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.tgfilter,tp,LOCATION_DECK,0,1,nil) end

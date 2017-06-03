@@ -1,12 +1,12 @@
 --Perfect Pretty Phantom
 local m=37564546
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrexp(c)
-	aux.AddFusionProcCodeFunRep(c,37564765,aux.FilterBoolFunction(Card.IsFusionType,TYPE_PENDULUM),1,1,true,true)
-	senya.fproc(c,LOCATION_ONFIELD,Duel.Release)
+	Senya.NanahiraExtraPendulum(c)
+	aux.AddFusionProcCodeFunRep(c,37564765,aux.FilterBoolFunction(Card.IsFusionType,TYPE_PENDULUM),2,2,true,true)
+	Senya.AddSelfFusionProcedure(c,LOCATION_ONFIELD,Duel.Release)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_DESTROY)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e3:SetHintTiming(0,0x1e0)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCountLimit(1)
+	e3:SetCountLimit(1,m)
 	e3:SetTarget(cm.thtg)
 	e3:SetOperation(cm.thop)
 	c:RegisterEffect(e3)

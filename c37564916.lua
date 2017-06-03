@@ -1,6 +1,6 @@
 --Sayuri·Bad Apple II
---
-local m,cm=senya.sayuri_ritual(37564916)
+
+local m,cm=Senya.SayuriRitualPreload(37564916)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e4=Effect.CreateEffect(c)
@@ -37,7 +37,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.matfilter(c,rc)
-	return c:IsCanBeRitualMaterial(rc) and senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER)
+	return c:IsCanBeRitualMaterial(rc) and Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER)
 end
 function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -57,7 +57,7 @@ function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumGreater(Card.GetRitualLevel,rc:GetLevel(),rc)
 	else return false end
@@ -93,7 +93,7 @@ function cm.sfilter(c,e,tp)
 	return c:IsCode(m) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsType(TYPE_MONSTER)
 end
 function cm.sfilter1(c,e,tp)
-	return c:IsLevelBelow(8) and senya.check_set_sayuri(c) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and bit.band(c:GetType(),0x81)==0x81
+	return c:IsLevelBelow(8) and Senya.check_set_sayuri(c) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and bit.band(c:GetType(),0x81)==0x81
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

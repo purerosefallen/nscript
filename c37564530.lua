@@ -1,19 +1,19 @@
 --ADVANTURE WORLD
 local m=37564530
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,7,2,cm.ovfilter,aux.Stringid(m,0),63,cm.xyzop)
 	c:EnableReviveLimit()
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(senya.desccost())
+	e1:SetCost(Senya.DescriptionCost())
 	e1:SetTarget(cm.target0)
 	e1:SetOperation(cm.operation0)
 	c:RegisterEffect(e1)
@@ -22,7 +22,7 @@ function cm.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(senya.desccost(senya.rmovcost(7)))
+	e1:SetCost(Senya.DescriptionCost(Senya.RemoveOverlayCost(7)))
 	e1:SetTarget(cm.target1)
 	e1:SetOperation(cm.operation1)
 	c:RegisterEffect(e1)
@@ -51,7 +51,7 @@ function cm.operation0(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		senya.overlaycard(c,tc,true)
+		Senya.OverlayCard(c,tc,true)
 	end
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk)

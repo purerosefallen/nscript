@@ -2,12 +2,12 @@
 local m=37564413
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
+	--Senya.setreg(c,m,37564573)
 	aux.AddXyzProcedure(c,nil,5,3,cm.ovfilter,aux.Stringid(m,0),3,cm.xyzop)
 	c:EnableReviveLimit()
-	senya.bmdamchk(c,true)
+	Senya.PrismDamageCheckRegister(c,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
@@ -16,8 +16,8 @@ function cm.initial_effect(c)
 	e3:SetLabel(3)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetCost(cm.cost)
-	e3:SetCondition(senya.bmdamchkcon)
-	e3:SetOperation(senya.bmdamchkop)
+	e3:SetCondition(Senya.PrismDamageCheckCondition)
+	e3:SetOperation(Senya.PrismDamageCheckOperation)
 	c:RegisterEffect(e3)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -34,12 +34,12 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function cm.ovfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and senya.bmchkfilter(c) and c:GetOverlayCount()==0
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and Senya.CheckPrism(c) and c:GetOverlayCount()==0
 end
 function cm.xyzop(e,tp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(senya.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Senya.PrismRemoveExtraCostfilter,tp,LOCATION_EXTRA,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,senya.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,Senya.PrismRemoveExtraCostfilter,tp,LOCATION_EXTRA,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function cm.con(e)

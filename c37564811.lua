@@ -2,9 +2,9 @@
 local m=37564811
 local cm=_G["c"..m]
 
-cm.named_with_remix=true
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND)
@@ -27,7 +27,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_SPSUMMON)
 	e3:SetCountLimit(ctlm)
-	e3:SetCost(senya.desccost())
+	e3:SetCost(Senya.DescriptionCost())
 	e3:SetCondition(cm.discon)
 	e3:SetTarget(cm.distg)
 	e3:SetOperation(cm.disop)
@@ -36,7 +36,7 @@ function cm.effect_operation_3L(c,ctlm)
 	return e3
 end
 function cm.filter(c)
-	return senya.check_set_3L(c) and c:IsAbleToHand()
+	return Senya.check_set_3L(c) and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end

@@ -2,10 +2,10 @@
 local m=37564328
 local cm=_G["c"..m]
 local coroutine=require("coroutine")
---
+
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(senya.fuscate())
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_DUEL)
@@ -19,8 +19,8 @@ function cm.filter2(c,e,tp,m,f,chkf,sgf)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp)
+		local chkf=PLAYER_NONE
+		local mg1=Senya.GetFusionMaterial(tp)
 		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -54,13 +54,30 @@ function cm.fieldcheck(tp,mgf,sgf,co)
 	end
 	return ft>0 and PLAYER_NONE or tp
 end
+function cm.fselect(tp,fc,mg,mgf,sgf,co)
+	local f=Duel.GetLocationCountFromEx
+	Duel.GetLocationCountFromEx=cm.fcheck(f,mgf,sgf,co)
+	local g=Duel.SelectFusionMaterial(tp,fc,mg,nil,PLAYER_NONE)
+	Duel.GetLocationCountFromEx=f
+	return g
+end
+function cm.fcheck(f,mgf,sgf,co)
+	return function(p1,p2,g,fc)
+		local tg=g:Clone()
+		tg:Merge(mgf)
+		for fc,mg in pairs(co) do
+			tg:Merge(mg)
+		end
+		return f(p1,p2,tg,fc)-sgf:GetCount()
+	end
+end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mgf=Group.CreateGroup()
 	local sgf=Group.CreateGroup()
 	local co={}
 	local crt={}
-	local mg1=senya.GetFusionMaterial(tp,nil,nil,cm.nfilter,nil,e,mgf,co)
-	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,cm.fieldcheck(tp,mgf,sgf,co),sgf)
+	local mg1=Senya.GetFusionMaterial(tp,nil,nil,cm.nfilter,nil,e,mgf,co)
+	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,PLAYER_NONE,sgf)
 	local mg2=nil
 	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
@@ -68,7 +85,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		local fgroup=ce:GetTarget()
 		mg2=fgroup(ce,e,tp):Filter(cm.nfilter,nil,mgf,co)
 		local mf=ce:GetValue()
-		sg2=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,cm.fieldcheck(tp,mgf,sgf,co),sgf,co)
+		sg2=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,PLAYER_NONE,sgf,co)
 	end
 	local check=true
 	while (sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0)) and (check or (not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.SelectYesNo(tp,210))) do
@@ -78,24 +95,24 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
-			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,cm.fieldcheck(tp,mgf,sgf,co))
+			local mat1=cm.fselect(tp,tc,mg,mgf,sgf,co)
 			tc:SetMaterial(mat1)
 			mgf:Merge(mat1)
 			sgf:AddCard(tc)
 		else
-			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,cm.fieldcheck(tp,mgf,sgf,co))
+			local mat2=cm.fselect(tp,tc,mg,mgf,sgf,co)
 			sgf:AddCard(tc)
 			local fop=ce:GetOperation()
 			co[tc]=mat2
 			crt[tc]=coroutine.create(cm.crop(fop,ce,e,tp,tc,mat2))
 		end
-		mg1=senya.GetFusionMaterial(tp,nil,nil,cm.nfilter,nil,e,mgf,co)
-		sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,cm.fieldcheck(tp,mgf,sgf,co),sgf)
+		mg1=Senya.GetFusionMaterial(tp,nil,nil,cm.nfilter,nil,e,mgf,co)
+		sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,PLAYER_NONE,sgf)
 		if ce~=nil then
 			local fgroup=ce:GetTarget()
 			mg2=fgroup(ce,e,tp):Filter(cm.nfilter,nil,mgf,co)
 			local mf=ce:GetValue()
-			sg2=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,cm.fieldcheck(tp,mgf,sgf,co),sgf)
+			sg2=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,PLAYER_NONE,sgf)
 		end
 		check=false
 	end

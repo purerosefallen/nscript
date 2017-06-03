@@ -3,7 +3,7 @@ local m=37564826
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.lfus(c,m,cm.mfilter)
+	Senya.Fusion_3L(c,Senya.check_fusion_set_3L,cm.mfilter,2,2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
@@ -12,6 +12,6 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 cm.custom_ctlm_3L=2
-function cm.mfilter(c)
-	return senya.check_fusion_set_3L(c) and c:IsFusionType(TYPE_FUSION)
+function cm.mfilter(g)
+	return g:IsExists(Card.IsFusionType,1,nil,TYPE_FUSION)
 end

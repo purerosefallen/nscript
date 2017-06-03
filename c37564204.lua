@@ -2,7 +2,7 @@
 
 local m=37564204
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564204,1))
@@ -10,11 +10,11 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCondition(senya.swwblex)
-	e2:SetCost(senya.swwrmcost(1))
+	e2:SetCondition(Senya.CheckNoExtra)
+	e2:SetCost(Senya.SawawaRemoveCost(1))
 	e2:SetOperation(c37564204.atkop)
 	c:RegisterEffect(e2)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
 end
 function c37564204.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local se=Duel.SelectOption(tp,aux.Stringid(37564204,2),aux.Stringid(37564204,3))

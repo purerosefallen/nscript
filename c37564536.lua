@@ -1,11 +1,11 @@
 --La La Fav
 local m=37564536
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	--
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -17,7 +17,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e)
-	return c.desc_with_nanahira and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
+	return c.Senya_desc_with_nanahira and c:IsAbleToDeck() and c:IsCanBeEffectTarget(e)
 end
 function cm.filter1(c,n)
 	return c:GetOriginalCode()==n

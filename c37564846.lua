@@ -1,10 +1,10 @@
 --3L·REDALiCE
 local m=37564846
 local cm=_G["c"..m]
---
-cm.named_with_3L=true
+
+cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564800)
+	--Senya.setreg(c,m,37564800)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -15,16 +15,15 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.filter(c,e,tp,mg,tc)
-	return c:IsType(TYPE_FUSION) and senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and tc:IsCanBeFusionMaterial(c) and mg:IsExists(cm.rfilter,1,tc,tc,c)
+	return c:IsType(TYPE_FUSION) and Senya.check_set_3L(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and mg:IsExists(cm.rfilter,1,tc,tc,c,tp)
 end
-function cm.rfilter(c,tc,fc)
-	if not c:IsCanBeFusionMaterial(fc) then return false end
+function cm.rfilter(c,tc,fc,tp)
 	local mg=Group.FromCards(c,tc)
-	return fc:CheckFusionMaterial(mg,c,PLAYER_NONE+0x100) and fc:CheckFusionMaterial(mg,tc,PLAYER_NONE+0x100)
+	return senya.CheckFusionMaterialExact(fc,mg,tp)
 end
 function cm.mfilter(c,e)
 	if e and c:IsImmuneToEffect(e) then return false end
-	return c:IsCanBeFusionMaterial() and c:IsType(TYPE_MONSTER) and senya.check_set_3L(c) and c:IsAbleToRemove()
+	return c:IsCanBeFusionMaterial() and c:IsType(TYPE_MONSTER) and Senya.check_set_3L(c) and c:IsAbleToRemove()
 end
 function cm.battlecheck(c,tp)
 	if c:IsReason(REASON_EFFECT) then return true end
@@ -36,7 +35,7 @@ function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then	  
 		if rp==tp or eg:GetCount()~=1 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
 		local tc=eg:GetFirst()
-		if not senya.check_set_3L(tc) or not tc:IsType(TYPE_MONSTER) or not tc:IsLocation(LOCATION_GRAVE) or not tc:IsAbleToRemove() or not cm.battlecheck(tc,tp) then return false end
+		if not Senya.check_set_3L(tc) or not tc:IsType(TYPE_MONSTER) or not tc:IsLocation(LOCATION_GRAVE) or not tc:IsAbleToRemove() or not cm.battlecheck(tc,tp) then return false end
 		local mg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_DECK,0,nil)
 		return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,tc)
 	end
@@ -52,7 +51,7 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	local fc=g:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-	local mat=mg:FilterSelect(tp,cm.rfilter,1,1,tc,tc,fc)
+	local mat=mg:FilterSelect(tp,cm.rfilter,1,1,tc,tc,fc,tp)
 	mat:AddCard(tc)
 	fc:SetMaterial(mat)
 	Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)

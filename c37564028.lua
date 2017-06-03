@@ -2,7 +2,7 @@
 local m=37564028
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)
 	c:EnableReviveLimit()
@@ -32,7 +32,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.xmfilter(c)
-	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
+	return Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.xmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(cm.xmfilter,1,nil)
@@ -63,7 +63,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function cm.filter1(c)
-	return c:IsFaceup() and not senya.check_set_elem(c) and c:IsType(TYPE_EFFECT)
+	return c:IsFaceup() and not Senya.check_set_elem(c) and c:IsType(TYPE_EFFECT)
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end

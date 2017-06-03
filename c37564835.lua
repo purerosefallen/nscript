@@ -3,17 +3,17 @@ local m=37564835
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCountLimit(1,m)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetProperty(senya.delay)
-	e2:SetCost(cm.discost)
+	e2:SetProperty(Senya.delay)
+	e2:SetCost(cm.DiscardHandCost)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetTarget(cm.target)
-	e2:SetOperation(senya.drawop)
+	e2:SetOperation(Senya.DrawOperation)
 	c:RegisterEffect(e2)
 end
 function cm.effect_operation_3L(c)
@@ -21,7 +21,7 @@ function cm.effect_operation_3L(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetLabel(senya.order_table_new({}))
+	e2:SetLabel(Senya.order_table_new({}))
 	e2:SetOperation(cm.op)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2,true)
@@ -37,7 +37,7 @@ end
 --[[cm.reset_operation_3L={
 function(e,c)
 	e:SetOperation(aux.NULL)
-	local copyt=senya.order_table[e:GetLabel()]
+	local copyt=Senya.order_table[e:GetLabel()]
 	for tc,cid in pairs(copyt) do
 		if tc and cid then
 			c:ResetEffect(cid,RESET_COPY)
@@ -68,7 +68,7 @@ function cm.gfilter2(c,code)
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local copyt=senya.order_table[e:GetLabel()]
+	local copyt=Senya.order_table[e:GetLabel()]
 	local exg=Group.CreateGroup()
 	for tc,cid in pairs(copyt) do
 		if tc and cid then exg:AddCard(tc) end
@@ -88,7 +88,7 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 		f(tc,e,forced)
 	end
 	for tc in aux.Next(cg) do
-		copyt[tc]=senya.CopyEffectExtraCount(c,senya.lkoishicount(c),tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
+		copyt[tc]=Senya.CopyEffectExtraCount(c,Senya.CheckKoishiCount(c),tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
 	end
 	Card.RegisterEffect=f
 end
@@ -104,9 +104,9 @@ function cm.rcon(con,tc,copyt)
 	end
 end
 function cm.costfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and senya.check_set_3L(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and Senya.check_set_3L(c)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToGraveAsCost() and 
 		Duel.IsExistingMatchingCard(cm.costfilter,tp,LOCATION_HAND,0,1,c) end

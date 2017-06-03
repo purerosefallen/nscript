@@ -2,7 +2,7 @@
 local m=37564512
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	--Activate(effect)
 	local e2=Effect.CreateEffect(c)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	e2:SetTarget(cm.target2)
 	e2:SetOperation(cm.activate2)
 	c:RegisterEffect(e2)
-	senya.nntrap(c,e2)
+	Senya.NanahiraTrap(c,e2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_TRAP_ACT_IN_HAND)
@@ -29,7 +29,7 @@ function cm.cfilter(c,ori)
 	if c:IsFacedown() then return false end
 	if ori then return c:GetOriginalCode()==37564765 and c:IsLocation(LOCATION_MZONE) end
 	if c:IsCode(37564765) then return true end
-	return (senya.check_set_sawawa(c) or (senya.check_set_3L(c) and c:IsType(TYPE_FUSION)) or (senya.check_set_sayuri(c) and bit.band(c:GetType(),0x81)==0x81)) and c:IsLocation(LOCATION_MZONE)
+	return (Senya.check_set_sawawa(c) or (Senya.check_set_3L(c) and c:IsType(TYPE_FUSION)) or (Senya.check_set_sayuri(c) and bit.band(c:GetType(),0x81)==0x81)) and c:IsLocation(LOCATION_MZONE)
 end
 function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsChainNegatable(ev) and Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_ONFIELD,0,1,nil,false)

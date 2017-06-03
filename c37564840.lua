@@ -1,9 +1,9 @@
 --3L·大神神话之道
 local m=37564840
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_DISABLE)
@@ -13,7 +13,7 @@ function cm.initial_effect(c)
 	e1:SetCountLimit(1,m)
 	e1:SetHintTiming(0,0x1e0)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCost(cm.discost)
+	e1:SetCost(cm.DiscardHandCost)
 	e1:SetTarget(cm.distg)
 	e1:SetOperation(cm.disop)
 	c:RegisterEffect(e1)
@@ -21,13 +21,13 @@ end
 function cm.effect_operation_3L(c,ctlm)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,1))
-	e3:SetCategory(senya.fuscate())
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(0,0x1e0)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(ctlm)
-	e3:SetCost(senya.desccost())
+	e3:SetCost(Senya.DescriptionCost())
 	e3:SetTarget(cm.sptg)
 	e3:SetOperation(cm.spop)
 	e3:SetReset(RESET_EVENT+0x1fe0000)
@@ -35,9 +35,9 @@ function cm.effect_operation_3L(c,ctlm)
 	return e3
 end
 function cm.costfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and senya.check_set_3L(c)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and Senya.check_set_3L(c)
 end
-function cm.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToGraveAsCost() and 
 		Duel.IsExistingMatchingCard(cm.costfilter,tp,LOCATION_HAND,0,1,c) end
@@ -89,13 +89,13 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.spfilter2(c,e,tp,m,f,gc,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf) and senya.check_set_3L(c)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,chkf) and Senya.check_set_3L(c)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp,nil,nil,nil,c)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp,nil,nil,nil,c)
 		local res=Duel.IsExistingMatchingCard(cm.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -113,8 +113,8 @@ end
 function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,nil,nil,nil,c,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,nil,nil,nil,c,e)
 	local sg1=Duel.GetMatchingGroup(cm.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,c,chkf)
 	local mg2=nil
 	local sg2=nil

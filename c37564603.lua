@@ -2,10 +2,10 @@
 local m=37564603
 local cm=_G["c"..m]
 
-cm.named_with_prim=true
+cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564600)
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(senya.prsyfilter),1)
+	--Senya.setreg(c,m,37564600)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Senya.PrimSynchroFilter),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	--e2:SetCost(senya.serlcost)
+	--e2:SetCost(Senya.SelfReleaseCost)
 	e2:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if chk==0 then return eg:IsExists(cm.tfilter,1,e:GetHandler(),tp) end
 		local g=eg:Filter(cm.tfilter,nil,tp)
@@ -40,7 +40,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
-	e3:SetCost(senya.discost(1))
+	e3:SetCost(Senya.DiscardHandCost(1))
 	e3:SetCondition(c37564603.thcon1)
 	e3:SetTarget(c37564603.sptg)
 	e3:SetOperation(c37564603.spop)
@@ -50,7 +50,7 @@ function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
 	Duel.DiscardDeck(tp,1,REASON_COST)
 	local tc=Duel.GetOperatedGroup():GetFirst()
-	if tc and senya.check_set_prim(tc) then
+	if tc and Senya.check_set_prim(tc) then
 		e:SetLabel(1)
 	else e:SetLabel(0) end
 end
@@ -124,7 +124,7 @@ function c37564603.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
 function c37564603.mtfilter(c,e)
-	return c:GetLevel()>0 and senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564603)
+	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564603)
 end
 function c37564603.spfilter(c,e,tp,m)
 	return c:IsCode(37564603) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)

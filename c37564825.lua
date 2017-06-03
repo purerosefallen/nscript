@@ -2,9 +2,9 @@
 local m=37564825
 local cm=_G["c"..m]
 
-cm.named_with_remix=true
+cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_EQUIP)
@@ -102,7 +102,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 				rc:CancelToGrave()
 			end
 			if rc:GetControler()~=tp then
-				--senya.ExileCard(rc)
+				--Senya.ExileCard(rc)
 				Duel.MoveToField(rc,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
 			else
 				Duel.ChangePosition(rc,POS_FACEDOWN)
@@ -124,5 +124,5 @@ function cm.mttg(e,c)
 	return c:GetEquipTarget()==e:GetHandler()
 end
 function cm.mtval(e,c)
-	return not c or senya.check_set_3L(c)
+	return not c or Senya.check_set_3L(c)
 end

@@ -2,10 +2,10 @@
 
 local m=37564228
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,1,true,false,false)
-	senya.bmdamchk(c,true)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
+	Senya.PrismDamageCheckRegister(c,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(37564228,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
@@ -13,7 +13,7 @@ function cm.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return senya.bmdamchkcon(e,tp,eg,ep,ev,re,r,rp) and senya.swwblex(e,tp)
+		return Senya.PrismDamageCheckCondition(e,tp,eg,ep,ev,re,r,rp) and Senya.CheckNoExtra(e,tp)
 	end)
 	e3:SetCost(c37564228.atkcost)
 	e3:SetOperation(c37564228.atkop)
@@ -22,9 +22,9 @@ end
 function c37564228.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=1
 	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(senya.swwcostfilter,tp,LOCATION_GRAVE,0,ct,nil) and c:GetFlagEffect(37564228)==0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,nil) and c:GetFlagEffect(37564228)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,senya.swwcostfilter,tp,LOCATION_GRAVE,0,ct,ct,nil)
+	local g=Duel.SelectMatchingCard(tp,Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,ct,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	c:RegisterFlagEffect(37564228,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end

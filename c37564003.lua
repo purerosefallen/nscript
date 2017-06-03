@@ -2,7 +2,7 @@
 local m=37564003
 local cm=_G["c"..m]
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2)
@@ -28,14 +28,14 @@ function cm.initial_effect(c)
 	--c:RegisterEffect(e3)
 end
 function cm.sumlimit(e,c,tp,sumtp,sumpos)
-	return c:IsLocation(LOCATION_EXTRA) and not senya.check_set_elem(c)
+	return c:IsLocation(LOCATION_EXTRA) and not Senya.check_set_elem(c)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function cm.filter(c)
-	return (c:GetLevel()==4 and senya.check_set_elem(c)) or senya.check_set_rose(c)
+	return (c:GetLevel()==4 and Senya.check_set_elem(c)) or Senya.check_set_rose(c)
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end

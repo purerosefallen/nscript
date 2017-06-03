@@ -2,17 +2,17 @@
 local m=37564236
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCondition(senya.swwblex)
-	e1:SetCost(senya.swwrmcost(1))
+	e1:SetCondition(Senya.CheckNoExtra)
+	e1:SetCost(Senya.SawawaRemoveCost(1))
 	e1:SetTarget(cm.tg)
 	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)

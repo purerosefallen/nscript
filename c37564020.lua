@@ -2,7 +2,7 @@
 local m=37564020
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -20,15 +20,15 @@ function cm.initial_effect(c)
 end
 
 function c37564020.thfilter(c,e,tp)
-	return c:IsFaceup() and senya.check_set_elem(c) and c:GetOverlayCount()>0
+	return c:IsFaceup() and Senya.check_set_elem(c) and c:GetOverlayCount()>0
 	and c:IsAbleToExtra() and Duel.IsExistingMatchingCard(c37564020.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode(),c:GetRank())
 end
 function c37564020.spfilter2(c,e,tp,code,rk)
-	return senya.check_set_elem(c) and c:GetRank()==rk and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_elem(c) and c:GetRank()==rk and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37564020.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c37564020.thfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCountFromEx(tp)>0
 		and Duel.IsExistingTarget(c37564020.thfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,c37564020.thfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
@@ -37,7 +37,7 @@ end
 function c37564020.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		if Duel.GetLocationCountFromEx(tp)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,c37564020.spfilter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetCode(),tc:GetRank())
 		local mg=sg:GetFirst()

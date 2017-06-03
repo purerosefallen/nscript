@@ -2,7 +2,7 @@
 local m=37564014
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	--Activate(effect)
 	local e2=Effect.CreateEffect(c)
@@ -18,7 +18,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c37564014.ofilter(c)
-	return c:GetOverlayCount()~=0 and senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:IsFaceup() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+	return c:GetOverlayCount()~=0 and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:IsFaceup() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c37564014.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564014.ofilter,tp,LOCATION_MZONE,0,1,nil) end

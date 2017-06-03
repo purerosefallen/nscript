@@ -2,9 +2,9 @@
 
 local m=37564409
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564409.target,c37564409.activate,true,CATEGORY_DESTROY)
+	Senya.PrismCommonEffect(c,c37564409.target,c37564409.activate,true,CATEGORY_DESTROY)
 end
 function c37564409.filter(c)
 	return c:IsDestructable() and c:IsType(TYPE_SPELL+TYPE_TRAP)

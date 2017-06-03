@@ -2,10 +2,9 @@
 local m=37564050
 local cm=_G["c"..m]
 
-
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
-	senya.rxyz4(c,4,senya.check_set_elem,1,1,63)
+	Senya.AddXyzProcedureCustom(c,cm.mfilter,cm.gfilter,2,63)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetCategory(CATEGORY_DESTROY)
@@ -19,6 +18,12 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 cm.prim_replace_att=true
+function cm.mfilter(c,xyzc)
+	return c:IsXyzLevel(xyzc,4)
+end
+function cm.gfilter(g)
+	return g:IsExists(Senya.check_set_elem,1,nil)
+end
 function cm.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)

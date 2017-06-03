@@ -1,6 +1,6 @@
 --Sayuri·永远鲜红的幼月
---
-local m,cm=senya.sayuri_ritual(37564909)
+
+local m,cm=Senya.SayuriRitualPreload(37564909)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e6=Effect.CreateEffect(c)
@@ -10,7 +10,7 @@ function cm.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e6:SetRange(LOCATION_HAND)
 	e6:SetCountLimit(1,m)
-	e6:SetCost(senya.sedescost)
+	e6:SetCost(Senya.SelfDiscardCost)
 	e6:SetTarget(cm.target)
 	e6:SetOperation(cm.activate)
 	c:RegisterEffect(e6)
@@ -34,10 +34,10 @@ function cm.initial_effect(c)
 	e2:SetOperation(cm.atkop)
 	c:RegisterEffect(e2)
 end
-cm.mat_filter=senya.sayuri_mat_filter_8
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel8
 function cm.filter1(c,att)
 	if att and not c:IsAttribute(att) then return false end
-	return senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function cm.filter2(c,mg)
 	return c:IsFaceup() and c:IsAbleToGrave() and mg:IsExists(Card.IsAttribute,1,nil,c:GetAttribute())
@@ -65,7 +65,7 @@ function cm.dtg(e,c)
 	return c:IsAttackBelow(500) and c:IsFaceup() and not c:IsImmuneToEffect(e)
 end
 function cm.thcfilter(c)
-	return senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost() and c:IsFaceup()
+	return Senya.check_set_sayuri(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost() and c:IsFaceup()
 end
 function cm.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thcfilter,tp,LOCATION_REMOVED,0,1,nil) end

@@ -2,12 +2,12 @@
 
 local m=37564406
 local cm=_G["c"..m]
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	senya.bm(c,c37564406.target,c37564406.activate,true,CATEGORY_TODECK+CATEGORY_DRAW)
+	Senya.PrismCommonEffect(c,c37564406.target,c37564406.activate,true,CATEGORY_TODECK+CATEGORY_DRAW)
 end
 function c37564406.filter(c)
-	return c:IsAbleToDeck() and senya.bmchkfilter(c) and c:IsFaceup()
+	return c:IsAbleToDeck() and Senya.CheckPrism(c) and c:IsFaceup()
 end
 function c37564406.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and c37564406.filter(chkc) end

@@ -1,7 +1,7 @@
 --teemo
 local m=37564317
 local cm=_G["c"..m]
---
+
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +11,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
-	senya.enable_get_all_cards()
+	Senya.enable_get_all_cards()
 	--[[if not cm.gg then
 		cm.gg=Group.CreateGroup()
 		cm.gg:KeepAlive()
@@ -20,7 +20,7 @@ function cm.initial_effect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_ADJUST)
 		e1:SetOperation(function()
-			local g=senya.get_all_cards:Clone()
+			local g=Senya.get_all_cards:Clone()
 			local rg=Group.CreateGroup()
 			g:ForEach(function(c)
 				if bit.band(c:GetOriginalType(),0x81)==0x81 and not cm.gg:IsExists(cm.ctfilter,1,nil,c:GetOriginalCode()) then
@@ -53,7 +53,7 @@ function cm.filter(c,e,tp,m,ft)
 	end
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
 	else return false end

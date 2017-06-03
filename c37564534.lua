@@ -1,10 +1,10 @@
 --Nanahira & Nanami
 local m=37564534
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -46,7 +46,7 @@ function cm.spcon(e,c)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 	local tc=g:GetFirst()
-	return g:GetCount()==1 and senya.nnfilter(tc,true)
+	return g:GetCount()==1 and Senya.NanahiraFilter(tc,true)
 end
 function cm.rdcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -57,16 +57,16 @@ function cm.rdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(ep,ev/2)
 end
 function cm.f1(c,e,tp)
-	return c:IsCode(37564765) and c:IsAbleToGrave() and Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,nil,e,tp) and c:IsFaceup()
+	return c:IsCode(37564765) and c:IsAbleToGrave() and Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,nil,e,tp,Group.FromCards(e:GetHandler(),nc)) and c:IsFaceup()
 end
-function cm.f2(c,e,tp)
-	return c.desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function cm.f2(c,e,tp,g)
+	return c.Senya_desc_with_nanahira and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,g,c)>0
 end
 function cm.f3(c,e,tp)
-	return c:IsCode(37564765) and c:IsAbleToGrave() and not c:IsImmuneToEffect(e) and c:IsFaceup()
+	return c:IsCode(37564765) and c:IsAbleToGrave() and not c:IsImmuneToEffect(e) and c:IsFaceup() and Duel.IsExistingMatchingCard(cm.f2,tp,LOCATION_EXTRA,0,1,nil,e,tp,Group.FromCards(e:GetHandler(),nc))
 end
 function cm.filter(c)
-	return c.desc_with_nanahira and bit.band(c:GetType(),TYPE_TRAP+TYPE_COUNTER)==TYPE_TRAP+TYPE_COUNTER and c:IsAbleToHand()
+	return c.Senya_desc_with_nanahira and bit.band(c:GetType(),TYPE_TRAP+TYPE_COUNTER)==TYPE_TRAP+TYPE_COUNTER and c:IsAbleToHand()
 end
 function cm.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGrave() and Duel.IsExistingMatchingCard(cm.f1,tp,LOCATION_MZONE,0,1,e:GetHandler(),e,tp) end
@@ -78,10 +78,10 @@ function cm.rmop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,cm.f3,tp,LOCATION_MZONE,0,1,1,e:GetHandler(),e,tp)
 	g:AddCard(e:GetHandler())
-	Duel.SendtoGrave(g,REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,cm.f2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	if sg:GetCount()>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)>0 and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,senya.desc(2)) then
+	local sg=Duel.SelectMatchingCard(tp,cm.f2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,g)
+	Duel.SendtoGrave(g,REASON_EFFECT)
+	if sg:GetCount()>0 and Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)>0 and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,Senya.DescriptionInNanahira(2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_DECK,0,1,1,nil)
 		if g:GetCount()>0 then

@@ -2,10 +2,10 @@
 local m=37564415
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,senya.bmchkfilter,3,3)
+	--Senya.setreg(c,m,37564573)
+	aux.AddXyzProcedure(c,Senya.CheckPrism,3,3)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -16,11 +16,11 @@ function cm.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m-4000)
-	e1:SetCost(senya.rmovcost(1))
+	e1:SetCost(Senya.RemoveOverlayCost(1))
 	e1:SetTarget(cm.destg)
 	e1:SetOperation(cm.desop)
 	c:RegisterEffect(e1)
-	senya.mk(c,1,m-3000,true,nil,cm.exop,cm.excon)
+	Senya.MokouReborn(c,1,m-3000,true,nil,cm.exop,cm.excon)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -50,7 +50,7 @@ function cm.exop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,cm.drfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,c,e)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		senya.overlaygroup(e:GetHandler(),g)
+		Senya.OverlayGroup(e:GetHandler(),g)
 	end
 end
 function cm.drfilter(c,e)

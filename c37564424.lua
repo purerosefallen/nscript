@@ -2,10 +2,10 @@
 local m=37564424
 local cm=_G["c"..m]
 
-cm.named_with_prism=true
+cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2)
+	--Senya.setreg(c,m,37564573)
+	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 		return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
 	end)
 	e2:SetProperty(0x14000)
-	e2:SetCost(senya.bmrmcost)
+	e2:SetCost(Senya.PrismRemoveExtraCost)
 	e2:SetTarget(cm.drtg)
 	e2:SetOperation(cm.drop)
 	c:RegisterEffect(e2)

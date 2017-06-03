@@ -1,10 +1,10 @@
 --Bijyutsu
 local m=37564507
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhr(c)
+	Senya.Nanahira(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -27,8 +27,8 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1,m)
 	e2:SetCondition(cm.spcon)
-	e2:SetTarget(senya.swwsstg)
-	e2:SetOperation(senya.swwssop)
+	e2:SetTarget(Senya.SelfSpsummonTarget)
+	e2:SetOperation(Senya.SelfSpsummonOperation)
 	c:RegisterEffect(e2)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(m,1))

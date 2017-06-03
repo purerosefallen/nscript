@@ -1,10 +1,10 @@
 --Wait for Spring
 local m=37564529
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	--senya.nntr(c)
+	--Senya.nntr(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -34,7 +34,7 @@ function cm.filter(c,e,tp,m1,m2,ft)
 	end
 end
 function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
 		Duel.SetSelectedCard(c)
 		return mg:CheckWithSumEqual(Card.GetRitualLevel,rc:GetLevel(),0,99,rc)
 	else return false end
@@ -83,7 +83,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 			local rc=re:GetHandler()
-			return rp==tp and re:IsActiveType(TYPE_TRAP) and rc:IsStatus(STATUS_LEAVE_CONFIRMED) and rc.desc_with_nanahira and rc:IsCanTurnSet() and rc:IsRelateToEffect(re) and e:GetHandler():GetFlagEffect(m)==0 
+			return rp==tp and re:IsActiveType(TYPE_TRAP) and rc:IsStatus(STATUS_LEAVE_CONFIRMED) and rc.Senya_desc_with_nanahira and rc:IsCanTurnSet() and rc:IsRelateToEffect(re) and e:GetHandler():GetFlagEffect(m)==0 
 		end)
 		e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 			if not Duel.SelectYesNo(tp,m*16+1) then return end

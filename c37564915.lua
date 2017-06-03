@@ -1,6 +1,6 @@
 --Sayuri·Lunatic Beat
---
-local m,cm=senya.sayuri_ritual(37564915)
+
+local m,cm=Senya.SayuriRitualPreload(37564915)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -52,7 +52,7 @@ function cm.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function cm.spfilter(c,e,tp)
-	return senya.check_set_sayuri(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_sayuri(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.spfilter(chkc,e,tp) end

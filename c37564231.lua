@@ -2,9 +2,9 @@
 local m=37564231
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,2,true,false,false)
+	Senya.SawawaCommonEffect(c,2,true,false,false)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_MZONE)
@@ -23,7 +23,7 @@ function cm.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e2:SetCountLimit(1)
-	e2:SetCost(senya.swwrmcost(1))
+	e2:SetCost(Senya.SawawaRemoveCost(1))
 	e2:SetOperation(cm.atkop)
 	c:RegisterEffect(e2)
 end
@@ -41,7 +41,7 @@ function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.effcon(e)
 	local tp=e:GetHandler():GetControler()
-	return senya.swwblex(e,tp) and Duel.IsExistingMatchingCard(senya.check_set_sawawa,tp,LOCATION_GRAVE,0,1,nil)
+	return Senya.CheckNoExtra(e,tp) and Duel.IsExistingMatchingCard(Senya.check_set_sawawa,tp,LOCATION_GRAVE,0,1,nil)
 end
 function cm.filter(e,c)
 	return c:GetAttack()>=3000 and c:IsFaceup() and not c:IsImmuneToEffect(e) and c:IsDestructable()

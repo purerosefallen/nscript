@@ -3,7 +3,7 @@ local m=37564827
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,2,nil,nil,63)
 	c:EnableReviveLimit()
 	local e2=Effect.CreateEffect(c)
@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
-	e2:SetCost(senya.desccost())
+	e2:SetCost(Senya.DescriptionCost())
 	e2:SetTarget(cm.tdtg)
 	e2:SetOperation(cm.tdop)
 	c:RegisterEffect(e2)
@@ -23,7 +23,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(function(e)
-		return e:GetHandler():GetOverlayGroup():IsExists(senya.lefffilter,1,nil,e:GetHandler())
+		return e:GetHandler():GetOverlayGroup():IsExists(Senya.EffectSourceFilter_3L,1,nil,e:GetHandler())
 	end)
 	e2:SetOperation(cm.op)
 	c:RegisterEffect(e2)
@@ -34,7 +34,7 @@ function cm.initial_effect(c)
 	e3:SetCode(m)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetValue(senya.order_table_new(cm.omit_group_3L))
+	e3:SetValue(Senya.order_table_new(cm.omit_group_3L))
 	c:RegisterEffect(e3)
 end
 function cm.omit_group_3L(c)
@@ -63,10 +63,10 @@ function cm.effect_operation_3L(c)
 	return e3
 end
 function cm.mfilter(c)
-	return senya.check_set_3L(c)
+	return Senya.check_set_3L(c)
 end
 function cm.filter(c)
-	return senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
+	return Senya.check_set_3L(c) and c:IsType(TYPE_MONSTER) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
 end
 function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -77,7 +77,7 @@ function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			break
 		end
 	end
-	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,e:GetHandler()) and e:GetHandler():IsType(TYPE_XYZ) and i>0 end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,e:GetHandler()) and e:GetHandler():IsType(TYPE_XYZ) and ct>0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_GRAVE+LOCATION_MZONE,LOCATION_GRAVE+LOCATION_MZONE,1,ct,e:GetHandler())
 	local rct=g:GetCount()
@@ -95,9 +95,9 @@ function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local og=c:GetOverlayGroup():Filter(senya.lefffilter,nil,e:GetHandler())
+	local og=c:GetOverlayGroup():Filter(Senya.EffectSourceFilter_3L,nil,e:GetHandler())
 	og:ForEach(function(tc)  
-		local t=senya.lgeff(c,tc,false,63)
+		local t=Senya.GainEffect_3L(c,tc,false,63)
 		if not t then return end
 		for i,te in pairs(t) do
 			te:SetCondition(cm.ccon(te:GetCondition(),tc:GetOriginalCode()))
@@ -112,7 +112,7 @@ function cm.ccon(con,cd)
 		if e:GetHandler():GetOverlayGroup():IsExists(aux.FilterEqualFunction(Card.GetOriginalCode,cd),1,nil) and e:GetHandler():IsHasEffect(m) then
 			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
 		else
-			senya.lreseff(e:GetHandler(),cd)
+			Senya.RemoveCertainEffect_3L(e:GetHandler(),cd)
 			return false
 		end
 	end
@@ -120,19 +120,19 @@ end
 function cm.ccost(costf,cd)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		local c=e:GetHandler()
-		local ctlm=senya.lkoishicount(c)
+		local ctlm=Senya.CheckKoishiCount(c)
 		if chk==0 then return c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 		if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 		c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
 	end
 end
-function cm.mkcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.MokouRebornCondition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY) and e:GetHandler():IsPreviousSetCard(0x770)
 end
 function cm.cfilter(c,e)
-	return not c:IsCode(m) and senya.lefffilter(c,e:GetHandler()) and senya.check_set_3L(c)
+	return not c:IsCode(m) and Senya.EffectSourceFilter_3L(c,e:GetHandler()) and Senya.check_set_3L(c)
 end
-function cm.mktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cm.MokouRebornTarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and chkc~=e:GetHandler() and cm.cfilter(chkc,e) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,true) and Duel.IsExistingTarget(cm.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),e) end
@@ -140,12 +140,12 @@ function cm.mktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,cm.cfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler(),e)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function cm.mkop(e,tp,eg,ep,ev,re,r,rp)
+function cm.MokouRebornOperation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,0,tp,true,true) then return end
 	Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
 	c:CompleteProcedure()
-	if tc then senya.lgeff(c,tc) end
+	if tc then Senya.GainEffect_3L(c,tc) end
 end

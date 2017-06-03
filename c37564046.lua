@@ -3,10 +3,10 @@ local m=37564046
 local cm=_G["c"..m]
 
 
-cm.named_with_elem=true
+cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunFunRep(c,senya.check_set_elem,cm.mf,1,63,true)
+	aux.AddFusionProcFunFunRep(c,Senya.check_set_elem,cm.mf,1,63,true)
 	local ge2=Effect.CreateEffect(c)
 	ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	ge2:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -88,7 +88,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e9)
 end
 function cm.mf(c)
-	return senya.tpf(c,TYPE_XYZ) and c:GetRank()==4
+	return c:IsFusionType(TYPE_XYZ) and c:GetRank()==4
 end
 function cm.valcheck(e,c)
 	local g=c:GetMaterial()

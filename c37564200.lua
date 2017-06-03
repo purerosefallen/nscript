@@ -2,16 +2,16 @@
 local m=37564200
 local cm=_G["c"..m]
 
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	--senya.setreg(c,m,37564299)
+	--Senya.setreg(c,m,37564299)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND+LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetCost(cm.rmcost)
 	e1:SetTarget(cm.thtg)
 	e1:SetOperation(cm.rmop)
@@ -22,7 +22,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_REMOVE)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,m-4000)
-	e2:SetCondition(senya.swwblex)
+	e2:SetCondition(Senya.CheckNoExtra)
 	e2:SetTarget(cm.drtg)
 	e2:SetOperation(cm.drop)
 	c:RegisterEffect(e2)
@@ -46,7 +46,7 @@ function cm.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function cm.thfilter(c)
-	return senya.check_set_sawawa(c) and c:IsAbleToHand() and (not c:IsCode(m))
+	return Senya.check_set_sawawa(c) and c:IsAbleToHand() and (not c:IsCode(m))
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,1,nil) end

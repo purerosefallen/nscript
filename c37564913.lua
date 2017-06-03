@@ -1,5 +1,6 @@
 --Sayuri·Lunatic Blue
-local m,cm=senya.sayuri_ritual(37564913)
+
+local m,cm=Senya.SayuriRitualPreload(37564913)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -8,7 +9,7 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCost(senya.sedescost)
+	e1:SetCost(Senya.SelfDiscardCost)
 	e1:SetTarget(cm.tg)
 	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
@@ -22,9 +23,9 @@ function cm.initial_effect(c)
 	e3:SetOperation(cm.retop)
 	c:RegisterEffect(e3)
 end
-cm.mat_filter=senya.sayuri_mat_filter_8
+cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel8
 function cm.f(c)
-	return c:IsFaceup() and c:IsCanTurnSet() and c:GetSequence()<6
+	return c:IsFaceup() and c:IsCanTurnSet() and not Senya.CheckPendulum(c)
 end
 function cm.sayuri_trigger_condition(c,e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(cm.f,tp,0,LOCATION_ONFIELD,1,nil)
@@ -41,7 +42,7 @@ function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.filter(c)
-	return c:IsAbleToRemove() and c:IsFaceup() and senya.check_set_sayuri(c)
+	return c:IsAbleToRemove() and c:IsFaceup() and Senya.check_set_sayuri(c)
 end
 function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) and c:IsControler(tp) end
@@ -105,7 +106,7 @@ function cm.move(c,co,e)
 end
 function cm.exile(c,e)
 	if c:IsImmuneToEffect(e) then return end
-	senya.ExileCard(c)
+	Senya.ExileCard(c)
 	Duel.SendtoGrave(c,REASON_RULE+REASON_RETURN)
 end
 function cm.retop(e,tp,eg,ep,ev,re,r,rp)
@@ -119,6 +120,25 @@ function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		if co==5 then co=1
 		elseif co==6 then co=3 end
+	end
+	for j=5,6 do
+		local pc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,j)
+		if pc and pc:IsControler(1-tp) then
+			Duel.HintSelection(Group.FromCards(pc))
+			cm.exile(pc,e)
+		end
+	end
+	for j=0,1 do
+		local pc=Duel.GetFieldCard(1-tp,LOCATION_PZONE,j)
+		if pc and pc:IsControler(1-tp) then
+			Duel.HintSelection(Group.FromCards(pc))
+			cm.exile(pc,e)
+		end
+	end
+	local pc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
+	if pc and pc:IsControler(1-tp) then
+		Duel.HintSelection(Group.FromCards(pc))
+		cm.exile(pc,e)
 	end
 	for i=0,4 do
 		for loc=4,8,4 do
@@ -135,20 +155,6 @@ function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 				local tc2=g:GetFirst()
 				cm.move(tc2,co,e)
 			end
-		end
-	end
-	for j=6,7 do
-		local pc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,j)
-		if pc and pc:IsControler(1-tp) then
-			Duel.HintSelection(Group.FromCards(pc))
-			cm.exile(pc,e)
-		end
-	end
-	for j=7,5,-1 do
-		local pc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,j)
-		if pc then
-			Duel.HintSelection(Group.FromCards(pc))
-			cm.exile(pc,e)
 		end
 	end
 end

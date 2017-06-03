@@ -1,8 +1,8 @@
 --uta
 local m=37564318
 local cm=_G["c"..m]
---
-cm.named_with_jysp=1
+
+cm.Senya_name_with_jysp=1
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_DRAW)
@@ -29,7 +29,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,m)>0 then return end
 	Duel.RegisterFlagEffect(tp,m,RESET_PHASE+PHASE_END,0,1)
 	local c=e:GetHandler()
-	local check_box=senya.order_table_new({
+	local check_box=Senya.order_table_new({
 	[LOCATION_HAND]=0,
 	[LOCATION_ONFIELD]=0,
 	[LOCATION_GRAVE]=0})
@@ -65,7 +65,7 @@ function cm.drcon1(e,tp,eg,ep,ev,re,r,rp)
 	return not re:IsHasType(EFFECT_TYPE_ACTIONS) or re:IsHasType(EFFECT_TYPE_CONTINUOUS)
 end
 function cm.drop1(e,tp,eg,ep,ev,re,r,rp)
-	local t=senya.order_table[e:GetLabel()]
+	local t=Senya.order_table[e:GetLabel()]
 	for loc,sct in pairs(t) do
 		if eg:IsExists(cm.filter,1,nil,tp,loc) and sct<2 then cm.op[loc](e,tp) end
 	end
@@ -74,13 +74,13 @@ function cm.regcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsHasType(EFFECT_TYPE_ACTIONS) and not re:IsHasType(EFFECT_TYPE_CONTINUOUS)
 end
 function cm.regop(e,tp,eg,ep,ev,re,r,rp)
-	local t=senya.order_table[e:GetLabel()]
+	local t=Senya.order_table[e:GetLabel()]
 	for loc,sct in pairs(t) do
 		if eg:IsExists(cm.filter,1,nil,tp,loc) and sct<2 then t[loc]=1 end
 	end
 end
 function cm.drop2(e,tp,eg,ep,ev,re,r,rp)
-	local t=senya.order_table[e:GetLabel()]
+	local t=Senya.order_table[e:GetLabel()]
 	for loc,sct in pairs(t) do
 		if sct==1 then
 			cm.op[loc](e,tp)
@@ -99,7 +99,7 @@ end
 cm.op={
 [LOCATION_HAND]=function(e,tp)
 	if Duel.IsPlayerCanDraw(tp,2) then
-		senya.order_table[e:GetLabel()][LOCATION_HAND]=2
+		Senya.order_table[e:GetLabel()][LOCATION_HAND]=2
 		Duel.Hint(HINT_CARD,0,m)
 		Duel.Draw(tp,2,REASON_EFFECT)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
@@ -110,7 +110,7 @@ cm.op={
 end,
 [LOCATION_ONFIELD]=function(e,tp)
 	if Duel.IsExistingMatchingCard(cm.sfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) then
-		senya.order_table[e:GetLabel()][LOCATION_ONFIELD]=2
+		Senya.order_table[e:GetLabel()][LOCATION_ONFIELD]=2
 		Duel.Hint(HINT_CARD,0,m)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local g=Duel.SelectMatchingCard(tp,cm.sfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
@@ -125,7 +125,7 @@ end,
 [LOCATION_GRAVE]=function(e,tp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_GRAVE,nil)
 	if g:GetCount()>0 then
-		senya.order_table[e:GetLabel()][LOCATION_GRAVE]=2
+		Senya.order_table[e:GetLabel()][LOCATION_GRAVE]=2
 		Duel.Hint(HINT_CARD,0,m)
 		local sg=g:RandomSelect(tp,1)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)

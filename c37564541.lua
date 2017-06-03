@@ -2,16 +2,16 @@
 local m=37564541
 local cm=_G["c"..m]
 
-cm.desc_with_nanahira=true
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
-	senya.nnhrp(c)
+	Senya.NanahiraPendulum(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(m)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCondition(senya.nnexpcon)
-	e2:SetValue(senya.order_table_new(cm.pendulum_info))
+	e2:SetCondition(Senya.NanahiraPCardCheck)
+	e2:SetValue(Senya.order_table_new(cm.pendulum_info))
 	c:RegisterEffect(e2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
@@ -30,7 +30,7 @@ cm.pendulum_info={
 	max_count=1,
 }
 function cm.filter(c)
-	return c.desc_with_nanahira and c:IsAbleToHand()
+	return c.Senya_desc_with_nanahira and c:IsAbleToHand()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end

@@ -2,9 +2,9 @@
 
 local m=37564229
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-	senya.sww(c,1,true,false,false)
+	Senya.SawawaCommonEffect(c,1,true,false,false)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(37564229,0))
 	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
@@ -13,13 +13,13 @@ function cm.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetCountLimit(1,37564229)
-	e5:SetCondition(senya.swwblex)
+	e5:SetCondition(Senya.CheckNoExtra)
 	e5:SetTarget(c37564229.destg)
 	e5:SetOperation(c37564229.desop)
 	c:RegisterEffect(e5)
 end
 function c37564229.drfilter(c,e,tp)
-	return senya.check_set_sawawa(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return Senya.check_set_sawawa(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37564229.desfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToHand() and c:IsRace(RACE_FAIRY) and c:IsFaceup()

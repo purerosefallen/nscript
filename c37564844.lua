@@ -2,9 +2,9 @@
 local m=37564844
 local cm=_G["c"..m]
 
-cm.named_with_myon=6
+cm.Senya_name_with_myon=6
 function cm.initial_effect(c)
-	senya.leff(c,m)
+	Senya.CommonEffect_3L(c,m)
 	aux.AddXyzProcedure(c,aux.FALSE,10,5,cm.xfilter,m*16)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +15,7 @@ function cm.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(37564827)
-	e3:SetValue(senya.order_table_new(cm.omit_group_3L))
+	e3:SetValue(Senya.order_table_new(cm.omit_group_3L))
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	c:RegisterEffect(e3)
@@ -24,7 +24,7 @@ function cm.initial_effect(c)
 	e2:SetCode(EVENT_ADJUST)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(function(e,tp)
-		return Duel.IsExistingMatchingCard(senya.lefffilter,tp,LOCATION_GRAVE,0,1,nil,e:GetHandler())
+		return Duel.IsExistingMatchingCard(Senya.EffectSourceFilter_3L,tp,LOCATION_GRAVE,0,1,nil,e:GetHandler())
 	end)
 	e2:SetOperation(cm.op)
 	c:RegisterEffect(e2)
@@ -38,7 +38,7 @@ function cm.effect_operation_3L(c,ctlm)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(0,0x1e0)
 	e3:SetCountLimit(ctlm)
-	e3:SetCost(senya.desccost(cm.cost))
+	e3:SetCost(Senya.DescriptionCost(cm.cost))
 	e3:SetTarget(cm.target)
 	e3:SetOperation(cm.activate)
 	e3:SetReset(RESET_EVENT+0x1fe0000)
@@ -50,17 +50,17 @@ function cm.omit_group_3L(c)
 	return Duel.GetMatchingGroup(aux.TRUE,c:GetControler(),LOCATION_GRAVE,0,nil)
 end
 function cm.xfilter(c)
-	return senya.check_set(c,"myon") and c:IsType(TYPE_XYZ) and c:IsFaceup() and c:GetOverlayCount()>2
+	return Senya.check_set(c,"myon") and c:IsType(TYPE_XYZ) and c:IsFaceup() and c:GetOverlayCount()>2
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		if not c:IsReleasable() then return false end
 		local ct=0
-		local t=senya.lgetcd(c)
+		local t=Senya.GetGainedList_3L(c)
 		for i,v in pairs(t) do
-			local mt=senya.load_metatable(v)
-			if mt and mt.named_with_myon then ct=ct+1 end
+			local mt=Senya.LoadMetatable(v)
+			if mt and mt.Senya_name_with_myon then ct=ct+1 end
 		end
 		return ct>=4
 	end
@@ -85,9 +85,9 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local og=Duel.GetMatchingGroup(senya.lefffilter,tp,LOCATION_GRAVE,0,nil,c)
+	local og=Duel.GetMatchingGroup(Senya.EffectSourceFilter_3L,tp,LOCATION_GRAVE,0,nil,c)
 	og:ForEach(function(tc)  
-		local t=senya.lgeff(c,tc,false,63)
+		local t=Senya.GainEffect_3L(c,tc,false,63)
 		if not t then return end
 		for i,te in pairs(t) do
 			te:SetCondition(cm.ccon(te:GetCondition(),tc:GetOriginalCode()))
@@ -106,7 +106,7 @@ function cm.ccon(con,cd)
 		if Duel.IsExistingMatchingCard(cm.kfilter,p,LOCATION_GRAVE,0,1,nil,cd) and e:GetHandler():IsHasEffect(37564827) then
 			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
 		else
-			senya.lreseff(e:GetHandler(),cd)
+			Senya.RemoveCertainEffect_3L(e:GetHandler(),cd)
 			return false
 		end
 	end
@@ -127,7 +127,7 @@ function cm.ccost(costf,cd,chks)
 	else
 		return function(e,tp,eg,ep,ev,re,r,rp,chk)
 			local c=e:GetHandler()
-			local ctlm=senya.lkoishicount(c)
+			local ctlm=Senya.CheckKoishiCount(c)
 			if chk==0 then return Duel.IsExistingMatchingCard(cm.excfilter,tp,LOCATION_GRAVE,0,1,c,cd) and c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
 			if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

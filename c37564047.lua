@@ -2,11 +2,11 @@
 local m=37564047
 local cm=_G["c"..m]
 
-cm.named_with_rose=true
+cm.Senya_name_with_rose=true
 function cm.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(senya.fuscate())
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(cm.target)
@@ -14,7 +14,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function cm.xf(c)
-	return senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:IsFaceup()
+	return Senya.check_set_elem(c) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:IsFaceup()
 end
 function cm.xfilter(c)
 	return c:IsCanBeFusionMaterial() and c:IsType(TYPE_MONSTER)
@@ -27,12 +27,12 @@ function cm.filter1(c,e)
 end
 function cm.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf) and senya.check_set_elem(c)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf) and Senya.check_set_elem(c)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=senya.GetFusionMaterial(tp)
+		local chkf=tp
+		local mg1=Senya.GetFusionMaterial(tp)
 		local xg=Duel.GetMatchingGroup(cm.xf,tp,LOCATION_MZONE,0,nil)
 		local tc=xg:GetFirst()
 		local og=Group.CreateGroup()
@@ -57,8 +57,8 @@ function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
+	local chkf=tp
+	local mg1=Senya.GetFusionMaterial(tp,nil,nil,nil,nil,e)
 		local xg=Duel.GetMatchingGroup(cm.xf,tp,LOCATION_MZONE,0,nil)
 		local tc=xg:GetFirst()
 		local og=Group.CreateGroup()

@@ -1,9 +1,10 @@
 --Sawawa-Seventh Doll
+
 local m=37564214
 local cm=_G["c"..m]
-cm.named_with_sawawa=true
+cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
-senya.sww(c,2,true,false,false)
+Senya.SawawaCommonEffect(c,2,true,false,false)
 	--move
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,1))
@@ -22,7 +23,7 @@ senya.sww(c,2,true,false,false)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,m-4000)
-	e2:SetCondition(senya.swwblex)
+	e2:SetCondition(Senya.CheckNoExtra)
 	e2:SetCost(cm.cost)
 	e2:SetTarget(cm.tg)
 	e2:SetOperation(cm.op)
@@ -61,7 +62,7 @@ end
 
 
 function cm.costfilter(c)
-	return senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return Senya.check_set_sawawa(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.costfilter,tp,LOCATION_GRAVE,0,1,nil) end

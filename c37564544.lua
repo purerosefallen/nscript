@@ -1,19 +1,19 @@
 --Bassdrop Freaks
 local m=37564544
 local cm=_G["c"..m]
---
-cm.desc_with_nanahira=true
+
+cm.Senya_desc_with_nanahira=true
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_HANDES)
 	e1:SetCode(EVENT_TO_HAND)
 	e1:SetCountLimit(1,m+EFFECT_COUNT_CODE_OATH)
-	e1:SetCondition(senya.nncon(false))
+	e1:SetCondition(Senya.NanahiraExistingCondition(false))
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
-	senya.nntrap(c,e1)
+	Senya.NanahiraTrap(c,e1)
 end
 function cm.cfilter(c,tp)
 	return c:IsControler(tp) and c:IsReason(REASON_EFFECT)
@@ -36,7 +36,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=eg:Filter(cm.filter,nil,e,1-tp)
 	if sg:GetCount()>0 and Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
 		local og=Duel.GetOperatedGroup():Filter(cm.setfilter,nil,e,tp)
-		if senya.nncon(true)(e,tp) and og:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(90809975,4)) then
+		if Senya.NanahiraExistingCondition(true)(e,tp) and og:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(90809975,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 			local rc=og:Select(tp,1,1,nil):GetFirst()
 			Duel.BreakEffect()
