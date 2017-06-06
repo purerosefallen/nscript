@@ -1,7 +1,7 @@
 --千年幻想郷～千年疾走響～
 local m=37564210
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 function cm.initial_effect(c)
 	--Senya.setreg(c,m,37564299)
 	c:SetUniqueOnField(1,1,m)

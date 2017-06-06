@@ -2,7 +2,7 @@
 local m=37564328
 local cm=_G["c"..m]
 local coroutine=require("coroutine")
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)

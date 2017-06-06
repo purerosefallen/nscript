@@ -1,5 +1,5 @@
 --百慕 全力偶像·萨妮娅
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 local m=37564410
 local cm=_G["c"..m]
 cm.Senya_name_with_prism=true

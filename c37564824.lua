@@ -1,7 +1,7 @@
 --3L·死灵的夜樱
 local m=37564824
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 function cm.initial_effect(c)
 	Senya.CommonEffect_3L(c,m)
 	Senya.AddXyzProcedureCustom(c,cm.xfilter,nil,2,63)

@@ -1,5 +1,5 @@
 --graze
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 local m,cm=Senya.SayuriSpellPreload(37564902)
 function cm.initial_effect(c)
 	Senya.SayuriSelfReturnCommonEffect(c,m)

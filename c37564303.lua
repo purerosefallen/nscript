@@ -1,7 +1,7 @@
 --new utakat
 local m=37564303
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 function cm.initial_effect(c)
 	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
 	Senya.MokouReborn(c,7,m,false,cm.dogcon)

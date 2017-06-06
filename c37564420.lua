@@ -1,5 +1,5 @@
 --Taqumi
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 local m=37564420
 local cm=_G["c"..m]
 function cm.initial_effect(c)

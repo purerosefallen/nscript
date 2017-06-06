@@ -1,7 +1,7 @@
 --少女人偶师·幽幽
 local m=57320001
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c57300000") end,function() require("script/c57300000") end)
+
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))

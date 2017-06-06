@@ -1,7 +1,7 @@
 --污浊的元素·Physalis
 local m=37564028
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,63)

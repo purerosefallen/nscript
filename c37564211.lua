@@ -1,7 +1,7 @@
 --Sawawa-NyaNya and Wa
 local m=37564211
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)   
 Senya.SawawaCommonEffect(c,1,false,false,false)

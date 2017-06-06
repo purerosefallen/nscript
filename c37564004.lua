@@ -1,7 +1,7 @@
 --冰雪元素·布利扎 
 local m=37564004
 local cm=_G["c"..m]
-xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+
 cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 		--xyz summon
