@@ -1,7 +1,7 @@
 --哈特曼的妖怪少女 -SDVX Remix-
 local m=37564313
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
 	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
@@ -25,12 +25,13 @@ end
 function cm.skipop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CARDTYPE)
-	local opt=Duel.SelectOption(tp,1057,1056,1063,1073,1074)
+	local opt=Duel.SelectOption(tp,1057,1056,1063,1073,1076,1074)
 	if opt==0 then ct=TYPE_RITUAL end
 	if opt==1 then ct=TYPE_FUSION end
 	if opt==2 then ct=TYPE_SYNCHRO end
 	if opt==3 then ct=TYPE_XYZ end
-	if opt==4 then ct=TYPE_PENDULUM end
+	if opt==4 then ct=TYPE_LINK end
+	if opt==5 then ct=TYPE_PENDULUM end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)

@@ -1,7 +1,7 @@
 --Sawawa-Prism Melody
 local m=37564234
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_sawawa=true
 function cm.initial_effect(c)
 	Senya.SawawaCommonEffect(c,2,true,false,false)
@@ -49,7 +49,11 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function cm.cfilter(c,tp)
 	local ty=c:GetSummonType()
-	return c:GetSummonPlayer()==1-tp and (bit.band(ty,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION or bit.band(ty,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO or bit.band(ty,SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ) and c:GetMaterialCount()>0
+	if c:GetSummonPlayer()==tp or c:GetMaterialCount()<=0 then return false end
+	for i,tty in pairs({SUMMON_TYPE_FUSION+SUMMON_TYPE_SYNCHRO+SUMMON_TYPE_XYZ+SUMMON_TYPE_LINK}) do
+		if bit.band(ty,tty)==tty then return true end
+	end
+	return false
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(cm.cfilter,nil,tp)

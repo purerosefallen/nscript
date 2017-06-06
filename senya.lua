@@ -153,6 +153,7 @@ function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
 	while ct<max and not (ct>=min and f(sg,...) and not (g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params) and Duel.SelectYesNo(tp,210))) do
 		Duel.Hint(HINT_SELECTMSG,tp,desc)
 		local tg=g:FilterSelect(tp,cm.CheckGroupRecursive,1,1,sg,sg,g,f,min,max,ext_params)
+		assert(tg:GetCount()>0,"Incorrect Group Filter")
 		if tg:GetCount()==0 then error("Incorrect Group Filter",2) end
 		sg:Merge(tg)
 		ct=sg:GetCount()
@@ -1642,19 +1643,19 @@ end
 function cm.FusionFilter_3L(c,fc,mf)
 	return c:IsCanBeFusionMaterial(fc) and not c:IsHasEffect(6205579) and (not mf or mf(c))
 end
-function cm.FusionCheck_3L(g,min,tp,fc,f,chkfnf)
+function cm.FusionCheck_3L(g,min,tp,fc,f,chkf)
 		--check sayuri_3L
-	local chkf=bit.band(chkfnf,0xff)
 	if chkf~=PLAYER_NONE and Duel.GetLocationCountFromEx(chkf,tp,g,fc)<=0 then return false end
 	if aux.FCheckAdditional and not aux.FCheckAdditional(tp,g,fc) then return false end
 	local ct=g:GetCount()
-	if ct==1 and fc:GetLevel()==7 and bit.band(chkfnf,0x100)==0 and g:GetFirst():IsHasEffect(37564914) then return true end
+	if ct==1 and fc:GetLevel()==7 and g:GetFirst():IsHasEffect(37564914) then return true end
 	return ct>=min and (not f or f(g,fc))
 end
 function cm.FusionCondition_3L(mf,f,min,max,myon)
 return function(e,g,gc,chkfnf)
 	if g==nil then return true end
 	local c=e:GetHandler()
+	local chkf=bit.band(chkfnf,0xff)
 	local mg=g:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf)
 	local tp=e:GetHandlerPlayer()
 	local sg=Group.CreateGroup()
@@ -1662,7 +1663,7 @@ return function(e,g,gc,chkfnf)
 		if not cm.FusionFilter_3L(gc,fc,mf) then return false end
 		sg:AddCard(gc)
 	end
-	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkfnf,myon)
+	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkf,myon)
 	mg:Merge(exg)
 	return cm.CheckGroup(mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkfnf)
 end
@@ -1674,9 +1675,9 @@ return function(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local mg=eg:Filter(cm.FusionFilter_3L,nil,e:GetHandler(),mf)
 	local sg=Group.CreateGroup()
 	if gc then sg:AddCard(gc) end
-	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkfnf,myon)
+	local exg=Duel.GetMatchingGroup(cm.MyonCheckFilter,tp,0,LOCATION_MZONE,nil,c,chkf,myon)
 	mg:Merge(exg)
-	local g=cm.SelectGroup(tp,HINTMSG_FMATERIAL,mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkfnf)
+	local g=cm.SelectGroup(tp,HINTMSG_FMATERIAL,mg,cm.FusionCheck_3L,sg,1,max,min,tp,c,f,chkf)
 	Duel.SetFusionMaterial(g)
 end
 end
@@ -1776,14 +1777,14 @@ function cm.GainEffect_3L(c,tc,pres,pctlm)
 	if not mt or c:GetFlagEffect(cd-4000)>0 or not mt.effect_operation_3L then return end
 	local ctlm=pctlm or cm.CheckKoishiCount(c)
 	local efft={mt.effect_operation_3L(c,ctlm)}
-	if not tc:IsType(TYPE_EFFECT) then
+	if not c:IsType(TYPE_EFFECT) then
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_ADD_TYPE)
 		e2:SetValue(TYPE_EFFECT)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e2,true)
+		c:RegisterEffect(e2,true)
 	end
 	c:RegisterFlagEffect(cd-4000,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,cm.order_table_new(efft),cd*16+1)
 	if pres then

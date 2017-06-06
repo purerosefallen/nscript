@@ -1,7 +1,7 @@
 --utakat sp
 local m=37564305
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
 	local e9=Effect.CreateEffect(c)
 	e9:SetDescription(Senya.DescriptionInNanahira(0))

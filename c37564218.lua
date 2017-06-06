@@ -1,5 +1,5 @@
 --千年的疾走梦   
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564218
 local cm=_G["c"..m]
 function cm.initial_effect(c)
@@ -21,19 +21,19 @@ function cm.initial_effect(c)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1)
-	e4:SetCondition(c37564218.descon)
-	e4:SetTarget(c37564218.destg)
-	e4:SetOperation(c37564218.desop)
+	e4:SetCondition(cm.descon)
+	e4:SetTarget(cm.destg)
+	e4:SetOperation(cm.desop)
 	c:RegisterEffect(e4)
 end
-function c37564218.descon(e,tp,eg,ep,ev,re,r,rp)
+function cm.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
-function c37564218.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
-function c37564218.desop(e,tp,eg,ep,ev,re,r,rp)
+function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		if Duel.Destroy(e:GetHandler(),REASON_EFFECT)>0 then
 			Duel.Draw(tp,1,REASON_EFFECT)

@@ -1,5 +1,5 @@
 --Syan High Speed
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564219
 local cm=_G["c"..m]
 function cm.initial_effect(c)	
@@ -10,23 +10,23 @@ local e1=Effect.CreateEffect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564219+EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(Senya.CheckNoExtra)
-	e1:SetTarget(c37564219.target)
-	e1:SetOperation(c37564219.activate)
+	e1:SetTarget(cm.target)
+	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
 end
-function c37564219.filter(c)
+function cm.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToDeck() and Senya.check_set_sawawa(c) and c:IsFaceup()
 end
-function c37564219.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and c37564219.filter(chkc) end
+function cm.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and cm.filter(chkc) end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2)
-		and Duel.IsExistingTarget(c37564219.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,LOCATION_REMOVED+LOCATION_GRAVE,5,nil) end
+		and Duel.IsExistingTarget(cm.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,LOCATION_REMOVED+LOCATION_GRAVE,5,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c37564219.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,LOCATION_REMOVED+LOCATION_GRAVE,5,5,nil)
+	local g=Duel.SelectTarget(tp,cm.filter,tp,LOCATION_REMOVED+LOCATION_GRAVE,LOCATION_REMOVED+LOCATION_GRAVE,5,5,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
 end
-function c37564219.activate(e,tp,eg,ep,ev,re,r,rp)
+function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=5 then return end
 	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)

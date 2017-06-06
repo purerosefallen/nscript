@@ -1,7 +1,7 @@
 --3L·月时针
 local m=37564814
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
 	Senya.CommonEffect_3L(c,m)
 	local e4=Effect.CreateEffect(c)
@@ -48,6 +48,7 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=e:GetHandler():GetBattleTarget()
 	if bc and bc:IsRelateToBattle() and c:IsRelateToBattle() and c:IsRelateToEffect(e) and not c:IsImmuneToEffect(e) and not bc:IsImmuneToEffect(e) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,cm.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,bc)
 		local tc=g:GetFirst()
 		if not tc then return end

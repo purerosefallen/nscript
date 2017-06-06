@@ -1,5 +1,5 @@
 --Sawawa-High Speed Cucumber
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564202
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -14,29 +14,29 @@ local e1=Effect.CreateEffect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564202)
 	e1:SetCondition(Senya.CheckNoExtra)
-	e1:SetTarget(c37564202.rmtg)
-	e1:SetOperation(c37564202.rmop)
+	e1:SetTarget(cm.rmtg)
+	e1:SetOperation(cm.rmop)
 	c:RegisterEffect(e1)
 end
-function c37564202.filter1(c)
+function cm.filter1(c)
 	return c:IsType(TYPE_TUNER) and c:IsFaceup() and c:IsAbleToRemove()
 end
-function c37564202.filter2(c)
+function cm.filter2(c)
 	return c:IsNotTuner() and c:IsFaceup() and c:IsAbleToRemove()
 end
-function c37564202.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cm.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(c37564202.filter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
-		and Duel.IsExistingTarget(c37564202.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+		and Duel.IsExistingTarget(cm.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectTarget(tp,c37564202.filter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g1=Duel.SelectTarget(tp,cm.filter1,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	local sc=g1:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectTarget(tp,c37564202.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,sc)
+	local g2=Duel.SelectTarget(tp,cm.filter2,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,sc)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,2,0,0)
 end
-function c37564202.rmop(e,tp,eg,ep,ev,re,r,rp)
+function cm.rmop(e,tp,eg,ep,ev,re,r,rp)
  local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
  local g=ac:Filter(Card.IsRelateToEffect,nil,e)
   if g:GetCount()>0 then
@@ -49,7 +49,7 @@ function c37564202.rmop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		e1:SetLabelObject(og)
 		e1:SetCountLimit(1)
-		e1:SetOperation(c37564202.retop)
+		e1:SetOperation(cm.retop)
 		Duel.RegisterEffect(e1,tp)
 		local dc=og:FilterCount(Card.IsType,nil,TYPE_SYNCHRO)
 		if dc and dc>0 then
@@ -59,7 +59,7 @@ function c37564202.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
  end
 end
-function c37564202.retop(e,tp,eg,ep,ev,re,r,rp)
+function cm.retop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	local tc=g:GetFirst()
 	while tc do

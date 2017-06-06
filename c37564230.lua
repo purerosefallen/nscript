@@ -1,5 +1,5 @@
 --Sawawa-Till When
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564230
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -16,20 +16,20 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetCountLimit(1,37564230)
-	e2:SetCondition(c37564230.descon)
-	e2:SetTarget(c37564230.distg)
-	e2:SetOperation(c37564230.disop)
+	e2:SetCondition(cm.descon)
+	e2:SetTarget(cm.distg)
+	e2:SetOperation(cm.disop)
 	c:RegisterEffect(e2)
 end
-function c37564230.descon(e,tp,eg,ep,ev,re,r,rp)
+function cm.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and Senya.CheckNoExtra(e,tp)
 end
-function c37564230.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
-function c37564230.disop(e,tp,eg,ep,ev,re,r,rp)
+function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if g:GetCount()>0 then

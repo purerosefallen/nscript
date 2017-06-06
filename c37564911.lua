@@ -1,5 +1,5 @@
 --Sayuri·Sweet Little Sister
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m,cm=Senya.SayuriRitualPreload(37564911)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()

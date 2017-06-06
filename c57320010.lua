@@ -1,11 +1,11 @@
 --人偶少女·曼珠沙华
 local m=57320010
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c57300000") end,function() require("script/c57300000") end)
 cm.named_with_doll=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep2(3,miyuki.isfusiondoll,2,63,true)
+	aux.AddFusionProcFunRep2(c,miyuki.isfusiondoll,3,63,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)

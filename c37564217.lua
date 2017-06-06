@@ -1,5 +1,5 @@
 --Sawawa-Lake Blizzard
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564217
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -14,14 +14,14 @@ function cm.initial_effect(c)
 	e1:SetCountLimit(1,37564217)
 	e1:SetCondition(Senya.CheckNoExtra)
 	e1:SetCost(Senya.SawawaRemoveCost(1))
-	e1:SetTarget(c37564217.tg)
-	e1:SetOperation(c37564217.op)
+	e1:SetTarget(cm.tg)
+	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
 end
-function c37564217.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetOverlayCount(tp,0,1)~=0 end
 end
-function c37564217.op(e,tp,eg,ep,ev,re,r,rp)
+function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetOverlayGroup(tp,0,1)
 	local val=g:GetCount()*300

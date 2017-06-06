@@ -1,7 +1,8 @@
 --四季的流转者·Kana
 local m=37564327
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
+cm.Senya_name_with_kana=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,false,false,table.unpack(cm.filters))

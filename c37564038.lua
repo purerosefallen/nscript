@@ -1,5 +1,5 @@
 --幽玄之乱
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 os=require('os')
 local m=37564038
 local cm=_G["c"..m]
@@ -12,30 +12,30 @@ function cm.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,37564038)
 	e2:SetCost(Senya.RemoveOverlayCost(2))
-	e2:SetTarget(c37564038.tdtg)
-	e2:SetOperation(c37564038.tdop)
+	e2:SetTarget(cm.tdtg)
+	e2:SetOperation(cm.tdop)
 	c:RegisterEffect(e2)
 end
-c37564038.list={["Mon"]=LOCATION_HAND,["Tue"]=LOCATION_MZONE,["Wed"]=LOCATION_SZONE,["Thu"]=LOCATION_GRAVE,["Fri"]=LOCATION_REMOVED,["Sat"]=LOCATION_EXTRA,["Sun"]=LOCATION_DECK}
-function c37564038.filter(c)
+cm.list={["Mon"]=LOCATION_HAND,["Tue"]=LOCATION_MZONE,["Wed"]=LOCATION_SZONE,["Thu"]=LOCATION_GRAVE,["Fri"]=LOCATION_REMOVED,["Sat"]=LOCATION_EXTRA,["Sun"]=LOCATION_DECK}
+function cm.filter(c)
 	return c:IsAbleToChangeControler() and not c:IsType(TYPE_TOKEN)
 end
-function c37564038.dtchk(tp)
+function cm.dtchk(tp)
 	local dt=os.date("%a")
-	local ar=c37564038.list[dt]
-	return ar and Duel.IsExistingMatchingCard(c37564038.filter,tp,0,ar,1,nil)
+	local ar=cm.list[dt]
+	return ar and Duel.IsExistingMatchingCard(cm.filter,tp,0,ar,1,nil)
 end
-function c37564038.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return c37564038.dtchk(tp) end
+function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return cm.dtchk(tp) end
 end
-function c37564038.tdop(e,tp,eg,ep,ev,re,r,rp)
+function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local dt=os.date("%a")
-	local ar=c37564038.list[dt]
+	local ar=cm.list[dt]
 	local g=Group.CreateGroup()
-	if not (ar and c37564038.dtchk(tp) and c:IsRelateToEffect(e)) then return end
+	if not (ar and cm.dtchk(tp) and c:IsRelateToEffect(e)) then return end
 	if bit.band(ar,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA)~=0 then
-		local g1=Duel.GetMatchingGroup(c37564038.filter,tp,0,ar,nil)
+		local g1=Duel.GetMatchingGroup(cm.filter,tp,0,ar,nil)
 		if g1:GetCount()>0 then
 			if ar==LOCATION_HAND then
 				g=g1:RandomSelect(tp,1)
@@ -47,7 +47,7 @@ function c37564038.tdop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
-		g=Duel.SelectMatchingCard(tp,c37564038.filter,tp,0,ar,1,1,nil)
+		g=Duel.SelectMatchingCard(tp,cm.filter,tp,0,ar,1,1,nil)
 	end
 	local tc=g:GetFirst()
 	if tc and not tc:IsImmuneToEffect(e) then

@@ -1,5 +1,5 @@
 --Sawawa-永远的三日天下
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564228
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -15,11 +15,11 @@ function cm.initial_effect(c)
 	e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return Senya.PrismDamageCheckCondition(e,tp,eg,ep,ev,re,r,rp) and Senya.CheckNoExtra(e,tp)
 	end)
-	e3:SetCost(c37564228.atkcost)
-	e3:SetOperation(c37564228.atkop)
+	e3:SetCost(cm.atkcost)
+	e3:SetOperation(cm.atkop)
 	c:RegisterEffect(e3)
 end
-function c37564228.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=1
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,nil) and c:GetFlagEffect(37564228)==0 end
@@ -28,7 +28,7 @@ function c37564228.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	c:RegisterFlagEffect(37564228,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
-function c37564228.atkop(e,tp,eg,ep,ev,re,r,rp)
+function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and bc then

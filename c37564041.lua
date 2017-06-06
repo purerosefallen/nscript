@@ -2,7 +2,7 @@
 local m=37564041
 local cm=_G["c"..m]
 
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,5,4)
@@ -16,7 +16,7 @@ function cm.initial_effect(c)
 	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return e:GetHandler():GetOverlayCount()>0
 	end)
-	e1:SetTarget(c37564041.sumlimit)
+	e1:SetTarget(cm.sumlimit)
 	c:RegisterEffect(e1)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
@@ -25,31 +25,31 @@ function cm.initial_effect(c)
 	e3:SetCountLimit(1)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_BOTH_SIDE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(c37564041.discon)
-	e3:SetCost(c37564041.DiscardHandCost)
-	e3:SetTarget(c37564041.distg)
-	e3:SetOperation(c37564041.disop)
+	e3:SetCondition(cm.discon)
+	e3:SetCost(cm.DiscardHandCost)
+	e3:SetTarget(cm.distg)
+	e3:SetOperation(cm.disop)
 	c:RegisterEffect(e3)
 end
-function c37564041.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+function cm.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return c:IsLocation(LOCATION_EXTRA)
 end
-function c37564041.discon(e,tp,eg,ep,ev,re,r,rp)
+function cm.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and re:GetHandler()~=e:GetHandler()
 end
-function c37564041.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.DiscardHandCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) and Duel.GetFlagEffect(tp,37564041)==0 end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 	Duel.RegisterFlagEffect(tp,37564041,RESET_PHASE+PHASE_END,0,1)
 end
-function c37564041.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
-function c37564041.disop(e,tp,eg,ep,ev,re,r,rp)
+function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end

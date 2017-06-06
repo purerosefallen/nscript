@@ -2,10 +2,10 @@
 local m=37564030
 local cm=_G["c"..m]
 
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
-	aux.AddXyzProcedure(c,nil,5,4,c37564030.ovfilter,aux.Stringid(37564030,0))
+	aux.AddXyzProcedure(c,nil,5,4,cm.ovfilter,aux.Stringid(37564030,0))
 	c:EnableReviveLimit()
 --ctxm
 	local e9=Effect.CreateEffect(c)
@@ -22,8 +22,8 @@ function cm.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1)
-	e1:SetTarget(c37564030.destg)
-	e1:SetOperation(c37564030.desop)
+	e1:SetTarget(cm.destg)
+	e1:SetOperation(cm.desop)
 	--c:RegisterEffect(e1)
 --lm
 	local e2=Effect.CreateEffect(c)
@@ -32,8 +32,8 @@ function cm.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(0,1)
-	e2:SetValue(c37564030.aclimit)
-	e2:SetCondition(c37564030.actcon)
+	e2:SetValue(cm.aclimit)
+	e2:SetCondition(cm.actcon)
 	--c:RegisterEffect(e2)
 --de
 	local e3=Effect.CreateEffect(c)
@@ -42,27 +42,27 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e3:SetCondition(c37564030.atkcon)
-	e3:SetCost(c37564030.atkcost)
-	e3:SetOperation(c37564030.atkop)
+	e3:SetCondition(cm.atkcon)
+	e3:SetCost(cm.atkcost)
+	e3:SetOperation(cm.atkop)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_EXTRA_ATTACK)
-	e4:SetValue(c37564030.exat)
+	e4:SetValue(cm.exat)
 	c:RegisterEffect(e4)
 end
-function c37564030.exat(e,c)
+function cm.exat(e,c)
 	return c:GetFlagEffect(375640302)
 end
-function c37564030.ovfilter(c)
+function cm.ovfilter(c)
 	return c:IsFaceup() and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
 end
-function c37564030.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,0,LOCATION_ONFIELD+LOCATION_HAND)
 end
-function c37564030.desop(e,tp,eg,ep,ev,re,r,rp)
+function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,e:GetHandler()) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil)
@@ -71,22 +71,22 @@ function c37564030.desop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(g,nil,0,REASON_EFFECT)
 		end
 end
-function c37564030.aclimit(e,re,tp)
+function cm.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
 end
-function c37564030.actcon(e)
+function cm.actcon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
 end
-function c37564030.atkcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattleTarget()~=nil
 end
-function c37564030.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:GetFlagEffect(37564030)==0 end
 	--c:RemoveOverlayCard(tp,2,2,REASON_COST)
 	c:RegisterFlagEffect(37564030,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
-function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
+function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
@@ -118,10 +118,10 @@ function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if dr:IsAttribute(ATTRIBUTE_WIND) then
 		Duel.Draw(tp,2,REASON_EFFECT)
 	end
-	if dr:IsAttribute(ATTRIBUTE_EARTH) and Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(c37564030.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) then
+	if dr:IsAttribute(ATTRIBUTE_EARTH) and Duel.GetLocationCountFromEx(tp)>0 and Duel.IsExistingMatchingCard(cm.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) then
 		if Duel.SelectYesNo(tp,aux.Stringid(37564030,4)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,c37564030.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+			local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
 			if g:GetCount()>0 then
 				local tc=g:GetFirst()
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
@@ -140,6 +140,6 @@ function c37564030.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ShuffleHand(tp)
 	end
 end
-function c37564030.spfilter(c,e,tp)
+function cm.spfilter(c,e,tp)
 	return Senya.check_set_elem(c) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

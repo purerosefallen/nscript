@@ -1,7 +1,7 @@
 --Prim-It's My Miracle
 local m=37564610
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
 	--Senya.setreg(c,m,37564600)
@@ -11,7 +11,7 @@ function cm.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,37560610)
-	e1:SetCondition(c37564610.spcon)
+	e1:SetCondition(cm.spcon)
 	c:RegisterEffect(e1)
 	--damage
 	local e2=Effect.CreateEffect(c)
@@ -19,9 +19,9 @@ function cm.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_BE_MATERIAL)
-	e2:SetCondition(c37564610.reccon)
-	e2:SetTarget(c37564610.rectg)
-	e2:SetOperation(c37564610.recop)
+	e2:SetCondition(cm.reccon)
+	e2:SetTarget(cm.rectg)
+	e2:SetOperation(cm.recop)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
@@ -32,60 +32,60 @@ function cm.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
 	e3:SetCost(Senya.DiscardHandCost(1))
-	e3:SetCondition(c37564610.thcon)
-	e3:SetTarget(c37564610.sptg)
-	e3:SetOperation(c37564610.spop)
+	e3:SetCondition(cm.thcon)
+	e3:SetTarget(cm.sptg)
+	e3:SetOperation(cm.spop)
 	c:RegisterEffect(e3)
 end
-function c37564610.sfilter(c)
+function cm.sfilter(c)
 	return Senya.check_set_prim(c) and c:IsFaceup()
 end
-function c37564610.spcon(e,c)
+function cm.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c37564610.sfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(cm.sfilter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
-function c37564610.reccon(e,tp,eg,ep,ev,re,r,rp)
+function cm.reccon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetHandler():GetReasonCard()
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
 		and Senya.check_set_prim(rc)
 end
-function c37564610.filter(c)
+function cm.filter(c)
 	return Senya.check_set_prim(c) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
-function c37564610.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c37564610.filter,tp,LOCATION_DECK,0,1,nil) end
+function cm.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
-function c37564610.recop(e,tp,eg,ep,ev,re,r,rp)
+function cm.recop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c37564610.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_DECK,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
-function c37564610.thcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
-function c37564610.mtfilter(c,e)
+function cm.mtfilter(c,e)
 	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564610)
 end
-function c37564610.spfilter(c,e,tp,m)
+function cm.spfilter(c,e,tp,m)
 	return c:IsCode(37564610) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 		and m:CheckWithSumEqual(Card.GetRitualLevel,2,1,99,c)
 end
-function c37564610.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
-		local mg=Duel.GetMatchingGroup(c37564610.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
-		return c37564610.spfilter(e:GetHandler(),e,tp,mg)
+		local mg=Duel.GetMatchingGroup(cm.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
+		return cm.spfilter(e:GetHandler(),e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c37564610.spop(e,tp,eg,ep,ev,re,r,rp)
+function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local mg=Duel.GetMatchingGroup(c37564610.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
+	local mg=Duel.GetMatchingGroup(cm.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37564610.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
+	local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

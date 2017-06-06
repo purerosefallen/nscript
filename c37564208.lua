@@ -1,5 +1,5 @@
 --Sawawa-Cosmic Drive
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564208
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -13,21 +13,21 @@ function cm.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564208)
 	e1:SetCondition(Senya.CheckNoExtra)
-	e1:SetTarget(c37564208.tg)
+	e1:SetTarget(cm.tg)
 	e1:SetCost(Senya.SawawaRemoveCost(1))
-	e1:SetOperation(c37564208.op)
+	e1:SetOperation(cm.op)
 	c:RegisterEffect(e1)
 end
-function c37564208.filter(c)
+function cm.filter(c)
 	return c:IsFaceup() and Senya.check_set_sawawa(c)
 end
-function c37564208.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c37564208.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c37564208.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+function cm.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c37564208.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,cm.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
-function c37564208.op(e,tp,eg,ep,ev,re,r,rp)
+function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
@@ -36,7 +36,7 @@ function c37564208.op(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetCode(EFFECT_IMMUNE_EFFECT)
-		e3:SetValue(c37564208.efilter)
+		e3:SetValue(cm.efilter)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
 		local e2=Effect.CreateEffect(c)
@@ -47,6 +47,6 @@ function c37564208.op(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 	end
 end
-function c37564208.efilter(e,te)
+function cm.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end

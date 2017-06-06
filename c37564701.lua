@@ -87,13 +87,13 @@ function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 		if og then
 			mg=og:Filter(cm.xyzfilter,nil,c)
 		else
+			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
 			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
-			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and Duel.SelectYesNo(tp,m*16) then
+			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and (not Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c) or Duel.SelectYesNo(tp,m*16)) then
 				c:SetMaterial(exg)
 				Senya.OverlayGroup(c,exg,false,true)
 				return
 			end
-			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
 		end
 		g=Senya.SelectGroup(tp,HINTMSG_XMATERIAL,mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 	end
@@ -134,44 +134,84 @@ function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
-function cm.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
-		and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
+function cm.PConditionFilter(c,e,tp)
+	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsType(TYPE_PENDULUM))) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
+		and not c:IsForbidden()
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil,e,tp) end
+	if chk==0 then
+		local loc=0
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
+		if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+		if loc==0 then return false end
+		local g=nil
+		if og then
+			g=og:Filter(Card.IsLocation,nil,loc)
+		else
+			g=Duel.GetFieldGroup(tp,loc,0)
+		end
+		return g:IsExists(cm.PConditionFilter,1,nil,e,tp,lscale,rscale)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,LOCATION_EXTRA+LOCATION_HAND)
 end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
-	local ft=math.min(Duel.GetLocationCount(tp,LOCATION_MZONE),2)
-	if ft<=0 then return end
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	local tg=Duel.GetMatchingGroup(cm.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,nil,e,tp)
-	local sg=Group.CreateGroup()
-	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
-	if ect and (ect<=0 or ect>ft) then ect=nil end
-	if ect==nil or tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<=ect then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=tg:Select(tp,1,ft,nil)
-		sg:Merge(g)
-	else
-		repeat
-			local ct=math.min(ft,ect)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=tg:Select(tp,1,ct,nil)
-			tg:Sub(g)
-			sg:Merge(g)
-			ft=ft-g:GetCount()
-			ect=ect-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
-		until ft==0 or ect==0 or not Duel.SelectYesNo(tp,210)
-		local hg=tg:Filter(Card.IsLocation,nil,LOCATION_HAND)
-		if ft>0 and ect==0 and hg:GetCount()>0 and Duel.SelectYesNo(tp,210) then
-			local g=hg:Select(tp,1,ft,nil)
-			sg:Merge(g)
-		end
-	end
-	Duel.SpecialSummon(sg,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)
+				if not cm.target(e,tp,eg,ep,ev,re,r,rp,0) then return end
+				local sg=Group.CreateGroup()
+				local ft1=math.max(Duel.GetLocationCount(tp,LOCATION_MZONE),2)
+				local ft2=math.max(Duel.GetLocationCountFromEx(tp),2)
+				local ft=math.max(Duel.GetUsableMZoneCount(tp),2)
+				if Duel.IsPlayerAffectedByEffect(tp,59822133) then
+					if ft1>0 then ft1=1 end
+					if ft2>0 then ft2=1 end
+					ft=1
+				end
+				local loc=0
+				if ft1>0 then loc=loc+LOCATION_HAND end
+				if ft2>0 then loc=loc+LOCATION_EXTRA end
+				local tg=nil
+				if og then
+					tg=og:Filter(Card.IsLocation,nil,loc):Filter(cm.PConditionFilter,nil,e,tp,lscale,rscale)
+				else
+					tg=Duel.GetMatchingGroup(cm.PConditionFilter,tp,loc,0,nil,e,tp,lscale,rscale)
+				end
+				ft1=math.min(ft1,tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND))
+				ft2=math.min(ft2,tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA))
+				local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+				if ect and ect<ft2 then ft2=ect end
+				while true do
+					local ct1=tg:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+					local ct2=tg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+					local ct=ft
+					if ct1>ft1 then ct=math.min(ct,ft1) end
+					if ct2>ft2 then ct=math.min(ct,ft2) end
+					if ct<=0 then break end
+					if sg:GetCount()>0 and not Duel.SelectYesNo(tp,210) then ft=0 break end
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+					local g=tg:Select(tp,1,ct,nil)
+					tg:Sub(g)
+					sg:Merge(g)
+					if g:GetCount()<ct then ft=0 break end
+					ft=ft-g:GetCount()
+					ft1=ft1-g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)
+					ft2=ft2-g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)
+				end
+				if ft>0 then
+					local tg1=tg:Filter(Card.IsLocation,nil,LOCATION_HAND)
+					local tg2=tg:Filter(Card.IsLocation,nil,LOCATION_EXTRA)
+					if ft1>0 and ft2==0 and tg1:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+						local ct=math.min(ft1,ft)
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+						local g=tg1:Select(tp,1,ct,nil)
+						sg:Merge(g)
+					end
+					if ft1==0 and ft2>0 and tg2:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,210)) then
+						local ct=math.min(ft2,ft)
+						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+						local g=tg2:Select(tp,1,ct,nil)
+						sg:Merge(g)
+					end
+				end
+				Duel.SpecialSummon(sg,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)
 end
 function cm.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)

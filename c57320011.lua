@@ -1,7 +1,7 @@
 --莉莉丝游戏
 local m=57320011
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c57300000") end,function() require("script/c57300000") end)
 function cm.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

@@ -1,7 +1,7 @@
 --3L·Your Song
 local m=37564850
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	Senya.CommonEffect_3L(c,m)
@@ -17,6 +17,7 @@ function cm.initial_effect(c)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e0:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e0:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		return bit.band(c:GetSummonType(),SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK and e:GetHandler():GetFlagEffectLabel(m)

@@ -1,7 +1,7 @@
 --Prim-渚之小恶魔Lovely Radio
 local m=37564603
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
 	--Senya.setreg(c,m,37564600)
@@ -41,9 +41,9 @@ function cm.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetCountLimit(1,37564699)
 	e3:SetCost(Senya.DiscardHandCost(1))
-	e3:SetCondition(c37564603.thcon1)
-	e3:SetTarget(c37564603.sptg)
-	e3:SetOperation(c37564603.spop)
+	e3:SetCondition(cm.thcon1)
+	e3:SetTarget(cm.sptg)
+	e3:SetOperation(cm.spop)
 	c:RegisterEffect(e3)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -120,29 +120,29 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 end
-function c37564603.thcon1(e,tp,eg,ep,ev,re,r,rp)
+function cm.thcon1(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
-function c37564603.mtfilter(c,e)
+function cm.mtfilter(c,e)
 	return c:GetLevel()>0 and Senya.check_set_prim(c) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564603)
 end
-function c37564603.spfilter(c,e,tp,m)
+function cm.spfilter(c,e,tp,m)
 	return c:IsCode(37564603) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 		and m:CheckWithSumEqual(Card.GetRitualLevel,8,1,99,c)
 end
-function c37564603.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
-		local mg=Duel.GetMatchingGroup(c37564603.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
-		return c37564603.spfilter(e:GetHandler(),e,tp,mg)
+		local mg=Duel.GetMatchingGroup(cm.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
+		return cm.spfilter(e:GetHandler(),e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c37564603.spop(e,tp,eg,ep,ev,re,r,rp)
+function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local mg=Duel.GetMatchingGroup(c37564603.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
+	local mg=Duel.GetMatchingGroup(cm.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37564603.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
+	local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

@@ -1,7 +1,7 @@
 --人偶少女·雏菊
 local m=57320009
 local cm=_G["c"..m]
-
+xpcall(function() require("expansions/script/c57300000") end,function() require("script/c57300000") end)
 cm.named_with_doll=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()

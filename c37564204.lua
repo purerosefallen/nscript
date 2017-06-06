@@ -1,5 +1,5 @@
 --Sawawa-Pattern Fire
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564204
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -12,18 +12,18 @@ function cm.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetCondition(Senya.CheckNoExtra)
 	e2:SetCost(Senya.SawawaRemoveCost(1))
-	e2:SetOperation(c37564204.atkop)
+	e2:SetOperation(cm.atkop)
 	c:RegisterEffect(e2)
 	Senya.SawawaCommonEffect(c,1,true,false,false)
 end
-function c37564204.atkop(e,tp,eg,ep,ev,re,r,rp)
+function cm.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local se=Duel.SelectOption(tp,aux.Stringid(37564204,2),aux.Stringid(37564204,3))
 	if se==0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
 		e1:SetCode(EFFECT_TO_GRAVE_REDIRECT)
-		e1:SetTarget(c37564204.rmtg)
+		e1:SetTarget(cm.rmtg)
 		e1:SetTargetRange(0,0xff)
 		e1:SetValue(LOCATION_REMOVED)
 		e1:SetReset(RESET_PHASE+PHASE_END)
@@ -48,6 +48,6 @@ function c37564204.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e2,tp)
 	end
 end
-function c37564204.rmtg(e,c)
+function cm.rmtg(e,c)
 	return c:GetOwner()~=e:GetHandlerPlayer()
 end

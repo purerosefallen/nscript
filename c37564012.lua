@@ -2,7 +2,7 @@
 local m=37564012
 local cm=_G["c"..m]
 
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 cm.Senya_name_with_elem=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
@@ -65,7 +65,7 @@ function cm.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.RegisterEffect(e3,tp)
 end
 function cm.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsType(TYPE_SYNCHRO+TYPE_XYZ+TYPE_FUSION)
+	return c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsType(TYPE_SYNCHRO+TYPE_XYZ+TYPE_FUSION+TYPE_LINK)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and cm.filter(chkc,e,tp) end

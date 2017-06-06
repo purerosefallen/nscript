@@ -1,5 +1,5 @@
 --Sawawa-Flowering Night
-
+xpcall(function() require("expansions/script/c37564765") end,function() require("script/c37564765") end)
 local m=37564227
 local cm=_G["c"..m]
 cm.Senya_name_with_sawawa=true
@@ -13,31 +13,31 @@ function cm.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(1,37564227)
 	e5:SetCondition(Senya.CheckNoExtra)
-	e5:SetCost(c37564227.descost)
-	e5:SetTarget(c37564227.destg)
-	e5:SetOperation(c37564227.desop)
+	e5:SetCost(cm.descost)
+	e5:SetTarget(cm.destg)
+	e5:SetOperation(cm.desop)
 	c:RegisterEffect(e5)
 end
-function c37564227.cfilter(c)
+function cm.cfilter(c)
 	return c:IsFacedown() and c:IsAbleToRemoveAsCost()
 end
-function c37564227.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=1
-	if chk==0 then return Duel.IsExistingMatchingCard(c37564227.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,nil) and Duel.IsExistingMatchingCard(Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,nil) and Duel.IsExistingMatchingCard(Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c37564227.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,nil)
+	local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,2,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g2=Duel.SelectMatchingCard(tp,Senya.SawawaRemoveCostFilter,tp,LOCATION_GRAVE,0,ct,ct,nil)
 	g:Merge(g2)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c37564227.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(800)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
 end
-function c37564227.desop(e,tp,eg,ep,ev,re,r,rp)
+function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
