@@ -41,7 +41,7 @@ function cm.fselect(tp,tc,mg,gc,chkf)
 	return g
 end
 function cm.spfilter2(c,e,tp,m,f,gc,chkf)
-	return c:IsType(TYPE_FUSION) and (not f or f(c))
+	return c:IsType(TYPE_FUSION) and (not f or f(c)) and Senya.check_set_3L(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and cm.fcheck(c,m,gc,chkf)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

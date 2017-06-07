@@ -19,7 +19,7 @@ function cm.filter(c,e,tp,mg,tc)
 end
 function cm.rfilter(c,tc,fc,tp)
 	local mg=Group.FromCards(c,tc)
-	return senya.CheckFusionMaterialExact(fc,mg,tp)
+	return Senya.CheckFusionMaterialExact(fc,mg,tp)
 end
 function cm.mfilter(c,e)
 	if e and c:IsImmuneToEffect(e) then return false end

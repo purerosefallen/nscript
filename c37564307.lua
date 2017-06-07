@@ -98,7 +98,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		if not (r2 and Duel.SelectYesNo(tp,ce:GetDescription())) then
 			local mat1=Duel.SelectFusionMaterial(tp,c,mg1,nil,chkf)
 			val=val+mat1:GetSum(cm.val)
-			tc:SetMaterial(mat1)
+			c:SetMaterial(mat1)
 			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(c,SUMMON_TYPE_FUSION,tp,tp,true,true,POS_FACEUP)
