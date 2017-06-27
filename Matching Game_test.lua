@@ -19,10 +19,9 @@ DIRECTION_DOWN=0x2
 DIRECTION_LEFT=0x4
 DIRECTION_RIGHT=0x8
 DIRECTION_ALL=0xf
-TIMES = 0
 MAX_DM = 0
 START_LP = 8000
-START_TIME = os.clock()
+PLAY_TIME = 0
 
 function Group.MergeCard(g,p,loc,seq)
 	local tc=Duel.GetFieldCard(p,loc,seq)
@@ -141,14 +140,14 @@ function Duel.CheckToGrave()
 		if g1:IsExists(Card.IsCode,2,nil,code) then tg:Merge(g1) end
 		if g2:IsExists(Card.IsCode,2,nil,code) then tg:Merge(g2) end
 	end
-	TIMES = TIMES + 1
 	return Duel.SendtoGrave(tg,REASON_RULE)
 end
 function Duel.CheckScore(ct,mul)
-	local score=200*(ct-2)*mul
-	MAX_DM = math.max(score,MAX_DM)
-	Duel.Damage(1,score,REASON_RULE)
-	Duel.Recover(0,score/5,REASON_RULE)
+	local score1=200*(ct-2)*mul
+	local score2=100*(ct+mul-2)
+	MAX_DM = math.max(score1,MAX_DM)
+	Duel.Damage(1,score1,REASON_RULE)
+	Duel.Recover(0,score2,REASON_RULE)
 end
 function Duel.RefreshField()
 	local finish=true
@@ -215,7 +214,7 @@ function Duel.ReloadField()
 end
 function Duel.WinMsg()
 	local end_time = os.clock()
-	local s = string.format("You Win!\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\n",START_LP,MAX_DM,end_time-START_TIME) 
+	local s = string.format("You Win!\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\n",START_LP,MAX_DM,PLAY_TIME) 
 	Debug.ShowHint(s)
 end
 function Duel.StartGame()
@@ -253,15 +252,13 @@ function Duel.StartGame()
 			sg:Merge(g2)
 		until sg:IsFitToExchange()
 		local t2=os.clock()
-		--RemainTime=math.max(RemainTime-((t2-t1)*300),0)
-		RemainTime=math.max(((t2-t1)*300),0)
+		PLAY_TIME = PLAY_TIME + (t2 - t1)
+		RemainTime=math.max(((t2-t1)*400),0)
 		Duel.SetLP(0,Duel.GetLP(0) - RemainTime)
 		if Duel.GetLP(0)==0   then
 			Debug.ShowHint("Game Over.")
 			return
 		end
-		--Duel.SetLP(0,RemainTime)
-		--if RemainTime==0 then return end
 		sg:Exchange()
 	end
 end
