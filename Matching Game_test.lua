@@ -325,6 +325,9 @@ function Duel.StartGame()
 		local g=Duel.GetFieldGroup(0,LOCATION_ONFIELD,LOCATION_ONFIELD)
 		while not g:IsExists(Card.IsCanBeSelected,1,nil) do
 			Debug.ShowHint("No more available moves")
+			for tc in aux.Next(g) do
+				tc:ResetFlagEffect(10000002)
+			end
 			Duel.Remove(g,POS_FACEUP,REASON_RULE)
 			Duel.ReloadField()
 			Duel.RefreshField()
