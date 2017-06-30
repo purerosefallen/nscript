@@ -14,14 +14,19 @@ CardList={
 	55586621,
 }
 
-DIRECTION_UP=0x1
-DIRECTION_DOWN=0x2
-DIRECTION_LEFT=0x4
-DIRECTION_RIGHT=0x8
-DIRECTION_ALL=0xf
-MAX_DM = 0
-START_LP = 8000
-PLAY_TIME = 0
+DIRECTION_UP	=0x1
+DIRECTION_DOWN	=0x2
+DIRECTION_LEFT	=0x4
+DIRECTION_RIGHT	=0x8
+DIRECTION_ALL	=0xf
+DIRECTION_UP_LEFT	=0x10
+DIRECTION_UP_RIGHT	=0x20
+DIRECTION_DOWN_LEFT	=0x40
+DIRECTION_DOWN_RIGHT=0x80
+MAX_DM			=0
+START_LP		=8000
+PLAY_TIME		=0
+SHOW_HINT_TIME	=0
 
 function Group.MergeCard(g,p,loc,seq)
 	local tc=Duel.GetFieldCard(p,loc,seq)
@@ -71,6 +76,42 @@ function Card.GetDirectionGroup(c,direction)
 			g:MergeCard(0,LOCATION_SZONE,seq)
 		end
 	end
+	if bit.band(direction,DIRECTION_UP_LEFT)~=0 then
+		if loc==LOCATION_SZONE and cp==0 and seq~=0 then
+			g:MergeCard(0,LOCATION_MZONE,seq-1)
+		elseif loc==LOCATION_MZONE and cp==0 and seq~=0 then
+			g:MergeCard(1,LOCATION_MZONE,5-seq)
+		elseif loc==LOCATION_MZONE and cp==1 and seq~=4 then
+			g:MergeCard(1,LOCATION_SZONE,seq+1)
+		end
+	end
+	if bit.band(direction,DIRECTION_UP_RIGHT)~=0 then
+		if loc==LOCATION_SZONE and cp==0 and seq~=4 then
+			g:MergeCard(0,LOCATION_MZONE,seq+1)
+		elseif loc==LOCATION_MZONE and cp==0 and seq~=4 then
+			g:MergeCard(1,LOCATION_MZONE,3-seq)
+		elseif loc==LOCATION_MZONE and cp==1 and seq~=0 then
+			g:MergeCard(1,LOCATION_SZONE,seq-1)
+		end
+	end
+	if bit.band(direction,DIRECTION_DOWN_LEFT)~=0 then
+		if loc==LOCATION_SZONE and cp==1 and seq~=4 then
+			g:MergeCard(1,LOCATION_MZONE,seq+1)
+		elseif loc==LOCATION_MZONE and cp==1 and seq~=4 then
+			g:MergeCard(0,LOCATION_MZONE,3-seq)
+		elseif loc==LOCATION_MZONE and cp==0 and seq~=0 then
+			g:MergeCard(0,LOCATION_SZONE,seq-1)
+		end
+	end
+	if bit.band(direction,DIRECTION_DOWN_RIGHT)~=0 then
+		if loc==LOCATION_SZONE and cp==1 and seq~=0 then
+			g:MergeCard(1,LOCATION_MZONE,seq-1)
+		elseif loc==LOCATION_MZONE and cp==1 and seq~=0 then
+			g:MergeCard(0,LOCATION_MZONE,5-seq)
+		elseif loc==LOCATION_MZONE and cp==0 and seq~=4 then
+			g:MergeCard(0,LOCATION_SZONE,seq+1)
+		end
+	end
 	return g
 end
 function Card.IsCanMoveDownwards(c)
@@ -101,17 +142,17 @@ function Card.IsNeedToGrave(c)
 	local code=c:GetChangedCode()
 	return c:GetDirectionGroup(DIRECTION_UP+DIRECTION_DOWN):IsExists(Card.IsChangedCode,2,nil,code) or c:GetDirectionGroup(DIRECTION_LEFT+DIRECTION_RIGHT):IsExists(Card.IsChangedCode,2,nil,code)
 end
-function Card.CreateRandomCard()
-	local code=CardList[math.random(#CardList)]
-	local tc=Duel.GetFirstMatchingCard(Card.IsCode,0,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,code)
-	if tc then return tc end
-	local c=Duel.CreateToken(0,code)
+function Card.CreateSingleCard(code)
+	local code=code or CardList[math.random(#CardList)]
+	local c=Duel.GetFirstMatchingCard(Card.IsCode,0,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,code) or Duel.CreateToken(0,code)
 	c:ResetEffect(c:GetOriginalCode(),RESET_CARD)
+	c:ResetFlagEffect(10000001)
+	c:ResetFlagEffect(10000002)
 	return c
 end
 function Duel.CheckTop()
 	while Duel.GetFieldGroupCount(0,0,LOCATION_SZONE)<5 do
-		Duel.MoveToField(Card.CreateRandomCard(),1,1,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
+		Duel.MoveToField(Card.CreateSingleCard(),1,1,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
 	end
 end
 function Duel.CheckMoveDownwards()
@@ -123,8 +164,39 @@ function Duel.CheckMoveDownwards()
 		g=Duel.GetMatchingGroup(Card.IsCanMoveDownwards,0,LOCATION_MZONE,LOCATION_ONFIELD,nil)
 	end
 end
+function Card.IsAlreadyToGrave(c)
+	return c:GetFlagEffect(10000001)>0
+end
+function Card.IsNotAlreadyToGrave(c)
+	return c:GetFlagEffect(10000001)==0
+end
+function Group.ProcessToGrave(g)
+	local ag=g:Filter(Card.IsNotAlreadyToGrave,nil)
+	local ct1=ag:GetCount()
+	local ct2=0
+	for tc in aux.Next(ag) do
+		tc:RegisterFlagEffect(10000001,0,0,0)
+	end
+	for tc in aux.Next(ag) do
+		local l=tc:GetFlagEffectLabel(10000002)
+		tc:ResetFlagEffect(10000002)
+		if l then
+			Duel.Hint(HINT_CARD,0,l)
+			local f=Item.FunctionList[l]
+			local lg=f(tc)
+			if lg then
+				local n1,n2=lg:ProcessToGrave()
+				ct2=ct2+n1+n2
+			end
+		end
+		tc:ResetFlagEffect(10000001)
+		Duel.SendtoGrave(tc,REASON_RULE)
+	end
+	return ct1,ct2
+end
 function Duel.CheckToGrave()
 	local g=Duel.GetMatchingGroup(Card.IsNeedToGrave,0,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	if g:GetCount()==0 then return end
 	local tg=g:Clone()
 	for tc in aux.Next(g) do
 		local code=tc:GetCode()
@@ -133,14 +205,34 @@ function Duel.CheckToGrave()
 		if g1:IsExists(Card.IsCode,2,nil,code) then tg:Merge(g1) end
 		if g2:IsExists(Card.IsCode,2,nil,code) then tg:Merge(g2) end
 	end
-	return Duel.SendtoGrave(tg,REASON_RULE)
+	return tg:ProcessToGrave()
 end
-function Duel.CheckScore(ct,mul)
-	local score1=200*(ct-2)*mul
-	local score2=100*(ct+mul-2)
+function Card.IsNoItem(c)
+	return c:GetFlagEffect(10000002)==0
+end
+function Duel.AddItem(item_type)
+	local g=Duel.GetMatchingGroup(Card.IsNoItem,0,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local tc=g:RandomSelect(0,1):GetFirst()
+	if tc then
+		local list=Item.List[item_type]
+		local code=list[math.random(#list)]
+		tc:RegisterFlagEffect(10000002,0,EFFECT_FLAG_CLIENT_HINT,0,code,aux.Stringid(code,0))
+	end
+end
+function Duel.CheckScore(ct1,ct2,mul)
+	local score1=150*(ct1-2)*mul
+	local score2=100*(ct1+mul-3)
+	local score3=ct2*50
 	MAX_DM = math.max(score1,MAX_DM)
+	MAX_DM = math.max(score3,MAX_DM)
 	Duel.Damage(1,score1,REASON_RULE)
+	Duel.Damage(1,score3,REASON_RULE)
 	Duel.Recover(0,score2,REASON_RULE)
+	if mul==1 and ct1>5 then
+		Duel.AddItem(2)
+	elseif mul==1 and ct1>3 then
+		Duel.AddItem(1)
+	end
 end
 function Duel.RefreshField()
 	local finish=true
@@ -150,9 +242,9 @@ function Duel.RefreshField()
 			Duel.CheckMoveDownwards()
 			Duel.CheckTop()
 		end
-		local ct=Duel.CheckToGrave()
-		if ct>0 then
-			Duel.CheckScore(ct,mul)
+		local ct1,ct2=Duel.CheckToGrave()
+		if ct1 then
+			Duel.CheckScore(ct1,ct2,mul)
 			mul=mul*2
 		else break end
 	end
@@ -188,20 +280,35 @@ function Group.Exchange(g)
 	Duel.MoveToField(c1,1,cp2,loc2,POS_FACEUP_ATTACK,true)
 	Duel.MoveSequence(c1,seq2)
 end
+
 function Duel.ReloadField()
 	for p=0,1 do
 		for loc=4,8,4 do
 			for i=0,4 do
-				Duel.MoveToField(Card.CreateRandomCard(),1,p,loc,POS_FACEUP_ATTACK,true)
+				Duel.MoveToField(Card.CreateSingleCard(),1,p,loc,POS_FACEUP_ATTACK,true)
 			end
 		end
 	end
+end
+function Duel.CalculateTime(t1,t2)
+	local ltime=t2-t1
+	PLAY_TIME=PLAY_TIME+ltime
+	SHOW_HINT_TIME=math.max(SHOW_HINT_TIME-ltime,0)
+	local mlp=(Duel.GetLP(0)-(ltime*400))
+	Duel.SetLP(0,math.max(mlp,0))
+	if Duel.GetLP(0)==0 then
+		Debug.ShowHint("Game Over.")
+		return true
+	end
+	return false
 end
 function Duel.WinMsg()
 	local end_time = os.clock()
 	local s = string.format("You Win!\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\n",START_LP,MAX_DM,PLAY_TIME) 
 	Debug.ShowHint(s)
 end
+
+
 function Duel.StartGame()
 	Debug.ShowHint("Created By purerosefallen.\nYGOPro1 recommanded.")
 	START_LP = Duel.AnnounceNumber(0,8000,16000,40000,80000)
@@ -228,25 +335,78 @@ function Duel.StartGame()
 			g=Duel.GetFieldGroup(0,LOCATION_ONFIELD,LOCATION_ONFIELD)
 		end
 		local sg=Group.CreateGroup()
-		local t1=os.clock()
 		repeat
 			sg:Clear()
-			local g1=g:Select(0,1,1,nil)
-			sg:Merge(g1)
-			local g2=g1:GetFirst():GetDirectionGroup(DIRECTION_ALL):Select(0,1,1,nil)
-			sg:Merge(g2)
-		until sg:IsFitToExchange()
-		local t2=os.clock()
-		PLAY_TIME = PLAY_TIME + (t2 - t1)
-		RemainTime=math.max(((t2-t1)*400),0)
-		Duel.SetLP(0,Duel.GetLP(0) - RemainTime)
-		if Duel.GetLP(0)==0   then
-			Debug.ShowHint("Game Over.")
-			return
-		end
+			local t1=os.clock()
+			if SHOW_HINT_TIME>0 then
+				local g1=g:FilterSelect(0,Card.IsCanBeSelected,1,1,nil)
+				sg:Merge(g1)
+			else
+				local g1=g:Select(0,1,1,nil)
+				sg:Merge(g1)
+			end
+			local tc=sg:GetFirst()
+			if SHOW_HINT_TIME>0 then
+				local g2=tc:GetDirectionGroup(DIRECTION_ALL):FilterSelect(0,Card.IsCanBeSelected,1,1,nil)
+				sg:Merge(g2)
+			else
+				local g2=tc:GetDirectionGroup(DIRECTION_ALL):Select(0,1,1,nil)
+				sg:Merge(g2)
+			end
+			local t2=os.clock()
+			if Duel.CalculateTime(t1,t2) then return end
+		until sg:IsFitToExchange()		
 		sg:Exchange()
 	end
 end
+
+Item={}
+Item.List={
+	[1]={
+		4141820,
+		8903700,
+		30492798,
+		33145233,
+	},
+	[2]={
+		34358408,
+		77153811,
+	},
+}
+function Item.StrikeFilter(c,ec)
+	if c:IsAlreadyToGrave() then return false end
+	if c:IsControler(ec:GetControler()) then
+		return c:IsLocation(ec:GetLocation()) or c:GetSequence()==ec:GetSequence()
+	else
+		return c:GetSequence()+ec:GetSequence()==4
+	end
+end
+function Item.PaintFilter(c,code)
+	return not c:IsCode(code) and c:IsNotAlreadyToGrave()
+end
+function Item.LightingFilter(c,code)
+	return c:IsCode(code) and c:IsNotAlreadyToGrave()
+end
+Item.FunctionList={
+[4141820]=function(c)
+	Duel.Recover(0,2000,REASON_RULE)
+end,
+[8903700]=function(c)
+	return Duel.GetMatchingGroup(Item.StrikeFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c)
+end,
+[30492798]=function(c)
+	Duel.Damage(1,1000,REASON_RULE)
+end,
+[33145233]=function(c)
+	return c:GetDirectionGroup(0xff):Filter(Card.IsNotAlreadyToGrave,nil)
+end,
+[34358408]=function(c)
+	SHOW_HINT_TIME=SHOW_HINT_TIME+10
+end,
+[77153811]=function(c)
+	return Duel.GetMatchingGroup(Item.LightingFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c:GetCode())
+end,
+}
 
 math.randomseed(os.time()+os.clock())
 for i=1,100 do
