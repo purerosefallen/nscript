@@ -81,13 +81,13 @@ function Card.MoveDownwards(c)
 	local cp=c:GetControler()
 	local seq=c:GetSequence()
 	if loc==LOCATION_SZONE and cp==1 then
-		Duel.MoveToField(c,cp,cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+		Duel.MoveToField(c,1,cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
 		Duel.MoveSequence(c,seq)
 	elseif loc==LOCATION_MZONE and cp==1 then
-		Duel.GetControl(c,0)
+		Duel.MoveToField(c,1,1-cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
 		Duel.MoveSequence(c,4-seq)
 	elseif loc==LOCATION_MZONE and cp==0 then
-		Duel.MoveToField(c,0,cp,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
+		Duel.MoveToField(c,1,cp,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
 		Duel.MoveSequence(c,seq)
 	end
 end
@@ -101,17 +101,10 @@ function Card.IsNeedToGrave(c)
 	local code=c:GetChangedCode()
 	return c:GetDirectionGroup(DIRECTION_UP+DIRECTION_DOWN):IsExists(Card.IsChangedCode,2,nil,code) or c:GetDirectionGroup(DIRECTION_LEFT+DIRECTION_RIGHT):IsExists(Card.IsChangedCode,2,nil,code)
 end
-function Card.filter(c,code)
-	return c:IsCode(code)
-end
 function Card.CreateRandomCard()
 	local code=CardList[math.random(#CardList)]
-	local g = Duel.GetMatchingGroup(Card.filter,0,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,code)
-	if g:GetCount() >= 1 then
-		local c=Group.GetFirst(g)
-		c:ResetEffect(c:GetOriginalCode(),RESET_CARD)
-		return c
-	end
+	local tc=Duel.GetFirstMatchingCard(Card.IsCode,0,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,code)
+	if tc then return tc end
 	local c=Duel.CreateToken(0,code)
 	c:ResetEffect(c:GetOriginalCode(),RESET_CARD)
 	return c
@@ -189,25 +182,17 @@ function Group.Exchange(g)
 	local loc2=c2:GetLocation()
 	local cp2=c2:GetControler()
 	local seq2=c2:GetSequence()
-	if cp1==cp2 then
-		if loc1==LOCATION_MZONE and loc2==LOCATION_MZONE and Duel.SwapSequence then
-			Duel.SwapSequence(c1,c2)
-		else
-			Duel.SendtoDeck(c1,nil,-1,REASON_RULE)
-			Duel.MoveToField(c2,cp1,cp1,loc1,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(c2,seq1)
-			Duel.MoveToField(c1,cp2,cp2,loc2,POS_FACEUP_ATTACK,true)
-			Duel.MoveSequence(c1,seq2)
-		end
-	else
-		Duel.SwapControl(c1,c2)
-	end
+	Duel.SendtoDeck(c1,nil,-1,REASON_RULE)
+	Duel.MoveToField(c2,1,cp1,loc1,POS_FACEUP_ATTACK,true)
+	Duel.MoveSequence(c2,seq1)
+	Duel.MoveToField(c1,1,cp2,loc2,POS_FACEUP_ATTACK,true)
+	Duel.MoveSequence(c1,seq2)
 end
 function Duel.ReloadField()
 	for p=0,1 do
 		for loc=4,8,4 do
 			for i=0,4 do
-				Duel.MoveToField(Card.CreateRandomCard(),0,p,loc,POS_FACEUP_ATTACK,true)
+				Duel.MoveToField(Card.CreateRandomCard(),1,p,loc,POS_FACEUP_ATTACK,true)
 			end
 		end
 	end
@@ -271,4 +256,4 @@ local e=Effect.GlobalEffect()
 e:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 e:SetCode(EVENT_ADJUST)
 e:SetOperation(Duel.StartGame)
-Duel.RegisterEffect(e,0)
+Duel.RegisterEffect(e,1)
