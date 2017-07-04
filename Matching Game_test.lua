@@ -124,7 +124,7 @@ function Card.GetDirectionGroup(c,direction)
 	return g
 end
 function Card.IsCanMoveDownwards(c)
-	return c:GetDirectionGroup(DIRECTION_DOWN):GetCount()==0
+	return c:GetDirectionGroup(DIRECTION_DOWN):GetCount()==0 and (c:IsLocation(LOCATION_MZONE) or c:IsControler(1))
 end
 function Card.SetItemHint(c)
 	local code = c:GetFlagEffectLabel(10000002)
