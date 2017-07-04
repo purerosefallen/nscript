@@ -368,7 +368,7 @@ function Duel.StartGame()
 			end
 			local tc=sg:GetFirst()
 			if SHOW_HINT_TIME>0 then
-				local g2=tc:GetDirectionGroup(DIRECTION_ALL):FilterSelect(0,Card.IsCanBeSelected,1,1,nil)
+				local g2=tc:GetDirectionGroup(DIRECTION_ALL):FilterSelect(0,Card.IsExchangable,1,1,nil,tc)
 				sg:Merge(g2)
 			else
 				local g2=tc:GetDirectionGroup(DIRECTION_ALL):Select(0,1,1,nil)
