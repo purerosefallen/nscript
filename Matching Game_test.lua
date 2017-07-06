@@ -35,6 +35,8 @@ for i=1,20 do
 		Debug.AddCard(code,0,0,loc,0,POS_FACEUP_ATTACK,true)
 	end
 end
+Debug.AddCard(19162134,1,1,LOCATION_GRAVE,0,POS_FACEUP_ATTACK)
+BODING_CARD = Duel.GetFirstMatchingCard(Card.IsCode,1,LOCATION_GRAVE,0,nil,19162134)
 Debug.ReloadFieldEnd()
 
 function Group.MergeCard(g,p,loc,seq)
@@ -128,7 +130,10 @@ function Card.IsCanMoveDownwards(c)
 end
 function Card.SetItemHint(c)
 	local code = c:GetFlagEffectLabel(10000002)
-	if code then c:SetHint(CHINT_CARD,code) end
+	if code then 
+		c:SetHint(CHINT_CARD,code)
+		c:SetCardTarget(BODING_CARD)
+	end
 end
 function Card.MoveDownwards(c)
 	local loc=c:GetLocation()
