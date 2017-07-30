@@ -36,8 +36,7 @@ for i=1,20 do
 		Debug.AddCard(code,0,0,loc,0,POS_FACEUP_ATTACK,true)
 	end
 end
-Debug.AddCard(19162134,1,1,LOCATION_GRAVE,0,POS_FACEUP_ATTACK)
-BODING_CARD = Duel.GetFirstMatchingCard(Card.IsCode,1,LOCATION_GRAVE,0,nil,19162134)
+BODING_CARD = Debug.AddCard(19162134,1,1,LOCATION_GRAVE,0,POS_FACEUP_ATTACK)
 Debug.ReloadFieldEnd()
 
 function Group.MergeCard(g,p,loc,seq)
@@ -320,6 +319,9 @@ function Duel.ReloadField()
 		end
 	end
 end
+function Duel.GetScore()
+	return math.max(Duel.GetLP(0),0)-math.max(Duel.GetLP(1),0)
+end
 function Duel.CalculateTime(t1,t2)
 	local ltime=t2-t1
 	PLAY_TIME=PLAY_TIME+ltime
@@ -327,14 +329,15 @@ function Duel.CalculateTime(t1,t2)
 	local mlp=(Duel.GetLP(0)-(ltime*400))
 	Duel.SetLP(0,math.max(mlp,0))
 	if Duel.GetLP(0)==0 then
-		Debug.ShowHint("Game Over.")
+		local s = string.format("Game Over.\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\nScore: %d",START_LP,MAX_DM,PLAY_TIME,Duel.GetScore())
+		Debug.ShowHint(s)
 		return true
 	end
 	return false
 end
 function Duel.WinMsg()
 	local end_time = os.clock()
-	local s = string.format("You Win!\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\n",START_LP,MAX_DM,PLAY_TIME) 
+	local s = string.format("You Win!\nStart LP: %d\nMax Damage: %d\nTotal Time: %d second\nScore: %d",START_LP,MAX_DM,PLAY_TIME,Duel.GetScore()) 
 	Debug.ShowHint(s)
 end
 
