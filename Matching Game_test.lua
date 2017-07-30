@@ -135,31 +135,33 @@ function Card.SetItemHint(c)
 		c:SetCardTarget(BODING_CARD)
 	end
 end
-function Card.MoveDownwards(c)
+function Card.GetDownwardsPlace(c)
 	local loc=c:GetLocation()
 	local cp=c:GetControler()
 	local seq=c:GetSequence()
-	local g=Group.CreateGroup()
 	if loc==LOCATION_SZONE and cp==1 then
-		g:MergeCard(1,LOCATION_MZONE,seq)
-		if g:GetCount() == 0 then
+		local tc=Duel.GetFieldCard(1,LOCATION_MZONE,seq)
+		if not tc then
 			loc = LOCATION_MZONE
 		end
 	end
 	if loc==LOCATION_MZONE and cp==1 then
-		g:MergeCard(0,LOCATION_MZONE,4-seq)
-		if g:GetCount() == 0 then
+		local tc=Duel.GetFieldCard(0,LOCATION_MZONE,4-seq)
+		if not tc then
 			cp = 0
 			seq = 4-seq
 		end
-		g:MergeCard(0,LOCATION_SZONE,seq)
 	end
 	if loc==LOCATION_MZONE and cp==0 then
-		g:MergeCard(0,LOCATION_SZONE,seq)
-		if g:GetCount() == 0 then
+		local tc=Duel.GetFieldCard(0,LOCATION_SZONE,seq)
+		if not tc then
 			loc = LOCATION_SZONE
 		end
 	end
+	return loc,cp,seq
+end
+function Card.MoveDownwards(c)
+	local loc,cp,seq = c:GetDownwardsPlace()
 	Duel.MoveToField(c,1,cp,loc,POS_FACEUP_ATTACK,true)
 	Duel.MoveSequence(c,seq)
 	c:SetItemHint()
@@ -183,6 +185,15 @@ function Card.CreateSingleCard(code)
 	return c
 end
 function Duel.CheckTop()
+	while Duel.GetFieldGroupCount(1,1,LOCATION_SZONE)<5 do
+		Duel.MoveToField(Card.CreateSingleCard(),1,0,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
+	end
+	while Duel.GetFieldGroupCount(1,1,LOCATION_MZONE)<5 do
+		Duel.MoveToField(Card.CreateSingleCard(),1,0,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+	end
+	while Duel.GetFieldGroupCount(0,0,LOCATION_MZONE)<5 do
+		Duel.MoveToField(Card.CreateSingleCard(),1,1,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
+	end
 	while Duel.GetFieldGroupCount(0,0,LOCATION_SZONE)<5 do
 		Duel.MoveToField(Card.CreateSingleCard(),1,1,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
 	end
