@@ -442,27 +442,27 @@ function Item.LightingFilter(c,code)
 	return c:IsCode(code) and c:IsNotAlreadyToGrave()
 end
 Item.FunctionList={
-[98380593]=function(c)
-	Duel.Recover(0,2000,REASON_RULE)
-end,
-[38430673]=function(c)
-	return Duel.GetMatchingGroup(Item.StrikeFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c)
-end,
-[33767325]=function(c)
-	Duel.Damage(1,1000,REASON_RULE)
-end,
-[77754944]=function(c)
-	return c:GetDirectionGroup(0xff):Filter(Card.IsNotAlreadyToGrave,nil)
-end,
-[72403299]=function(c)
-	SHOW_HINT_TIME=SHOW_HINT_TIME+10
-end,
-[86361354]=function(c)
-	return Duel.GetMatchingGroup(Item.LightingFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c:GetCode())
-end,
-[23171610]=function(c)
-	SCORE_ADD_TIME=SCORE_ADD_TIME+10
-end,
+	[98380593]=function(c)
+		Duel.Recover(0,2000,REASON_RULE)
+	end,
+	[38430673]=function(c)
+		return Duel.GetMatchingGroup(Item.StrikeFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c)
+	end,
+	[33767325]=function(c)
+		Duel.Damage(1,1000,REASON_RULE)
+	end,
+	[77754944]=function(c)
+		return c:GetDirectionGroup(0xff):Filter(Card.IsNotAlreadyToGrave,nil)
+	end,
+	[72403299]=function(c)
+		SHOW_HINT_TIME=SHOW_HINT_TIME+10
+	end,
+	[86361354]=function(c)
+		return Duel.GetMatchingGroup(Item.LightingFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c:GetCode())
+	end,
+	[23171610]=function(c)
+		SCORE_ADD_TIME=SCORE_ADD_TIME+10
+	end,
 }
 
 math.randomseed(os.time()+os.clock())

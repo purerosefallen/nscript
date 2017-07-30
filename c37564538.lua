@@ -79,7 +79,7 @@ function cm.add(tc)
 	tc:RegisterEffect(e2)
 	cm.effect_list[tc]=e2
 end
-function cm.DescriptionCost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.desccost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_CARD,0,m)
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())

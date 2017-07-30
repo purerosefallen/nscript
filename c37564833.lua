@@ -57,7 +57,7 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tg=g:Filter(cm.cf,nil,e)
 	if tg:GetCount()>0 then
-		Duel.ChangePosition(tg,POS_FACEDOWN_ATTACK,0,POS_FACEDOWN_DEFENSE,0)
+		Duel.ChangePosition(tg,POS_FACEDOWN_DEFENSE)
 	end
 end
 function cm.cf(c,e)

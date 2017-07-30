@@ -1,6 +1,7 @@
 --邪眼之魔女-Sandorion
 local m=37564701
 local cm=_G["c"..m]
+
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)
@@ -40,7 +41,6 @@ function cm.initial_effect(c)
 	e14:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DELAY)
 	e14:SetCategory(CATEGORY_TOHAND)
 	e14:SetCode(EVENT_LEAVE_FIELD)
-	--e14:SetCountLimit(1,60150512)
 	e14:SetCondition(cm.sumcon)
 	e14:SetTarget(cm.target2)
 	e14:SetOperation(cm.activate2)
@@ -49,8 +49,8 @@ end
 function cm.xyzfilter(c,xyzc)
 	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzc) and c:IsXyzLevel(xyzc,1)
 end
-function cm.xyzfilter1(c)
-	return c:IsFaceup()
+function cm.xyzfilter1(c,xyzc)
+	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzc)
 end
 function cm.xyzcon(e,c,og,min,max)
 		if c==nil then return true end
@@ -67,8 +67,8 @@ function cm.xyzcon(e,c,og,min,max)
 			mg=og:Filter(cm.xyzfilter,nil,c)
 		else
 			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
-			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 then return true end
+			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil,c)
+			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and Duel.GetFlagEffect(tp,m)==0 then return true end
 		end
 		return Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
 end
@@ -77,8 +77,8 @@ function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	if og and not min then
 		g=og
 	else
-		local minc=2
-		local maxc=2
+		local minc=4
+		local maxc=4
 		if min then
 			minc=math.max(minc,min)
 			maxc=math.min(maxc,max)
@@ -88,8 +88,10 @@ function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 			mg=og:Filter(cm.xyzfilter,nil,c)
 		else
 			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
-			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and (not Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c) or Duel.SelectYesNo(tp,m*16)) then
+			local exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil,c)
+			if exg:GetCount()==2 and Duel.GetLocationCountFromEx(tp,tp,exg,c)>0 and Duel.GetFlagEffect(tp,m)==0 and (not Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c) or Duel.SelectYesNo(tp,m*16)) then
+				Duel.HintSelection(exg)
+				Duel.RegisterFlagEffect(tp,m,RESET_PHASE+PHASE_END,0,1)
 				c:SetMaterial(exg)
 				Senya.OverlayGroup(c,exg,false,true)
 				return

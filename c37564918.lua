@@ -12,6 +12,7 @@ function cm.initial_effect(c)
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.activate)
 	c:RegisterEffect(e1)
+	Senya.sayuri_activate_effect[c]=e1
 end
 function cm.filter(c,e,tp,mg)
 	if not Senya.check_set_sayuri(c) or bit.band(c:GetType(),0x81)~=0x81 or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true) then return false end

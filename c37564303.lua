@@ -3,7 +3,7 @@ local m=37564303
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
-	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
+	Senya.AddXyzProcedureRank(c,nil,nil,2,2)
 	Senya.MokouReborn(c,7,m,false,cm.dogcon)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)

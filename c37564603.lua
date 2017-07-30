@@ -5,7 +5,7 @@ local cm=_G["c"..m]
 cm.Senya_name_with_prim=true
 function cm.initial_effect(c)
 	--Senya.setreg(c,m,37564600)
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Senya.PrimSynchroFilter),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSynchroType,TYPE_SYNCHRO),aux.NonTuner(Senya.PrimSynchroFilter),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)

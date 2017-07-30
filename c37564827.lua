@@ -6,6 +6,7 @@ function cm.initial_effect(c)
 	Senya.CommonEffect_3L(c,m)
 	aux.AddXyzProcedure(c,cm.mfilter,7,2,nil,nil,63)
 	c:EnableReviveLimit()
+	Senya.ContinuousEffectGainModule_3L(c,cm.omit_group_3L)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -18,28 +19,8 @@ function cm.initial_effect(c)
 	e2:SetTarget(cm.tdtg)
 	e2:SetOperation(cm.tdop)
 	c:RegisterEffect(e2)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ADJUST)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(function(e)
-		return e:GetHandler():GetOverlayGroup():IsExists(Senya.EffectSourceFilter_3L,1,nil,e:GetHandler())
-	end)
-	e2:SetOperation(cm.op)
-	c:RegisterEffect(e2)
-	--special check
-	--for removing effect as cost
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(m)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetValue(Senya.order_table_new(cm.omit_group_3L))
-	c:RegisterEffect(e3)
 end
-function cm.omit_group_3L(c)
-	return c:GetOverlayGroup()
-end
+cm.omit_group_3L=Card.GetOverlayGroup
 function cm.effect_operation_3L(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -54,9 +35,9 @@ function cm.effect_operation_3L(c)
 		e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e2:SetCode(EVENT_TO_GRAVE)
-		e2:SetCondition(cm.mkcon)
-		e2:SetTarget(cm.mktg)
-		e2:SetOperation(cm.mkop)
+		e2:SetCondition(cm.MokouRebornCondition)
+		e2:SetTarget(cm.MokouRebornTarget)
+		e2:SetOperation(cm.MokouRebornOperation)
 		c:RegisterEffect(e2,true)
 		c:RegisterFlagEffect(m+1000,0,0,0)
 	end
@@ -91,39 +72,6 @@ function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=g:Filter(Card.IsRelateToEffect,nil,e)
 	if tg:GetCount()>0 and e:GetHandler():IsRelateToEffect(e) then
 		Duel.Overlay(e:GetHandler(),tg)
-	end
-end
-function cm.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local og=c:GetOverlayGroup():Filter(Senya.EffectSourceFilter_3L,nil,e:GetHandler())
-	og:ForEach(function(tc)  
-		local t=Senya.GainEffect_3L(c,tc,false,63)
-		if not t then return end
-		for i,te in pairs(t) do
-			te:SetCondition(cm.ccon(te:GetCondition(),tc:GetOriginalCode()))
-			if te:IsHasType(0x7e0) and not tc.single_effect_3L then
-				te:SetCost(cm.ccost(te:GetCost(),tc:GetOriginalCode()))
-			end
-		end
-	end)
-end
-function cm.ccon(con,cd)
-	return function(e,tp,eg,ep,ev,re,r,rp)
-		if e:GetHandler():GetOverlayGroup():IsExists(aux.FilterEqualFunction(Card.GetOriginalCode,cd),1,nil) and e:GetHandler():IsHasEffect(m) then
-			return (not con or con(e,tp,eg,ep,ev,re,r,rp))
-		else
-			Senya.RemoveCertainEffect_3L(e:GetHandler(),cd)
-			return false
-		end
-	end
-end
-function cm.ccost(costf,cd)
-	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		local c=e:GetHandler()
-		local ctlm=Senya.CheckKoishiCount(c)
-		if chk==0 then return c:GetFlagEffect(cd-3000)<ctlm and (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
-		if costf then costf(e,tp,eg,ep,ev,re,r,rp,1) end
-		c:RegisterFlagEffect(cd-3000,0x1fe1000+RESET_PHASE+PHASE_END,0,1)
 	end
 end
 function cm.MokouRebornCondition(e,tp,eg,ep,ev,re,r,rp)

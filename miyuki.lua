@@ -55,7 +55,7 @@ function cm.rxyz1(c,rk,f,minct,maxct,xm,...)
 	return e1
 end
 function cm.mfilter(c,xyzc,rk,f,ext_params)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyzc) and (not rk or c:GetRank()==rk) and (not f or f(c,xyzc,table.unpack(ext_params)))
+	return c:IsFaceup() and c:IsXyzType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyzc) and (not rk or c:GetRank()==rk) and (not f or f(c,xyzc,table.unpack(ext_params)))
 end
 function cm.xyzfilter1(c,tp,g,xyzc,minc,maxc)
 	local tg=g:Filter(cm.xyzfilter2,c,c:GetRank())
@@ -106,9 +106,9 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 			maxc=math.min(maxc,max)
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g1=mg:FilterSelect(tp,cm.xyzfilter1,1,1,nil,tp,mg,xyzc,minc,maxc)
+		local g1=mg:FilterSelect(tp,cm.xyzfilter1,1,1,nil,tp,mg,c,minc,maxc)
 		local tg=mg:Filter(cm.xyzfilter2,nil,g1:GetFirst():GetRank())
-		g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,tg,cm.CheckFieldFilter,Group.FromCards(c),minc,maxc,tp,c)
+		g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,tg,cm.CheckFieldFilter,g1,minc,maxc,tp,c)
 	end
 	c:SetMaterial(g)
 	cm.overlaygroup(c,g,xm,true)
@@ -154,7 +154,7 @@ function cm.rxyz3Condition(func,gf,minct,maxct,ext_params)
 		else
 			mg=Duel.GetMatchingGroup(cm.rxyz3Filter,tp,LOCATION_MZONE,0,nil,c,func,ext_params)
 		end
-		return maxc>=minc and cm.CheckGroup(mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf)
+		return maxc>=minc and cm.CheckGroup(mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf,c)
 	end
 end
 function cm.rxyz3Operation(func,gf,minct,maxct,xm,ext_params)
@@ -175,7 +175,7 @@ function cm.rxyz3Operation(func,gf,minct,maxct,xm,ext_params)
 				minc=math.max(minc,min)
 				maxc=math.min(maxc,max)
 			end
-			g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf)
+			g=cm.SelectGroup(tp,HINTMSG_XMATERIAL,mg,cm.CheckFieldFilter,nil,minc,maxc,tp,c,gf,c)
 		end
 		c:SetMaterial(g)
 		cm.overlaygroup(c,g,xm,true)
@@ -205,13 +205,24 @@ function cm.SelectGroup(tp,desc,g,f,cg,min,max,...)
 	local max=max or g:GetCount()
 	local ext_params={...}
 	local sg=Group.CreateGroup()
-	if cg then sg:Merge(cg) end
+	if cg then
+		sg:Merge(cg)
+	end
 	local ct=sg:GetCount()
-	while ct<max and not (ct>=min and f(sg,...) and not (g:IsExists(cm.CheckGroupRecursive,1,sg,sg,g,f,min,max,ext_params) and Duel.SelectYesNo(tp,210))) do
+	local ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)	
+	while ct<max and ag:GetCount()>0 do
+		local minc=1
+		local finish=(ct>=min and f(sg,...))
+		if finish then
+			minc=0
+			if not Duel.SelectYesNo(tp,210) then break end
+		end
 		Duel.Hint(HINT_SELECTMSG,tp,desc)
-		local tg=g:FilterSelect(tp,cm.CheckGroupRecursive,1,1,sg,sg,g,f,min,max,ext_params)
+		local tg=ag:Select(tp,minc,1,nil)
+		if tg:GetCount()==0 then break end
 		sg:Merge(tg)
 		ct=sg:GetCount()
+		ag=g:Filter(cm.CheckGroupRecursive,sg,sg,g,f,min,max,ext_params)
 	end
 	return sg
 end
@@ -402,4 +413,107 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		return
 	end
 end
+end
+
+function cm.IsWindbot(c)
+	local codet={c:GetCode()}
+	for i,code in pairs(codet) do
+		local mt=_G["c"..code]
+		if not mt then
+			_G["c"..code]={}
+			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+				mt=_G["c"..code]
+				_G["c"..code]=nil
+			else
+				_G["c"..code]=nil
+			end
+		end
+		if mt and mt.named_with_windbot then return true end
+	end
+	return false
+end
+function cm.IsFusionWindbot(c)
+	local codet={c:GetFusionCode()}
+	for i,code in pairs(codet) do
+		local mt=_G["c"..code]
+		if not mt then
+			_G["c"..code]={}
+			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+				mt=_G["c"..code]
+				_G["c"..code]=nil
+			else
+				_G["c"..code]=nil
+			end
+		end
+		if mt and mt.named_with_windbot then return true end
+	end
+	return false
+end
+function cm.IsSanae(c)
+	local codet={c:GetCode()}
+	for i,code in pairs(codet) do
+		local mt=_G["c"..code]
+		if not mt then
+			_G["c"..code]={}
+			if pcall(function() dofile("expansions/script/c"..code..".lua") end) or pcall(function() dofile("script/c"..code..".lua") end) then
+				mt=_G["c"..code]
+				_G["c"..code]=nil
+			else
+				_G["c"..code]=nil
+			end
+		end
+		if mt and mt.named_with_sanae then return true end
+	end
+	return false
+end
+function cm.WindbotCommonEffect(c,tg,op,expr,ctg)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(57300000,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,0x1e0)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCost(cm.WindbotSSCost)
+	e1:SetTarget(cm.WindbotSSTarget)
+	e1:SetOperation(cm.WindbotSSOperation)
+	c:RegisterEffect(e1)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(c:GetOriginalCode(),0))
+	e1:SetCategory(ctg)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+expr)
+	e1:SetCountLimit(1,c:GetOriginalCode())
+	e1:SetTarget(tg)
+	e1:SetOperation(op)
+	c:RegisterEffect(e1)
+end
+function cm.WindbotSSCost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_NORMAL)==SUMMON_TYPE_NORMAL end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
+function cm.WindbotSSFilter(c,e,tp)
+	return cm.IsWindbot(c) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) and not c:IsCode(e:GetHandler():GetCode())
+end
+function cm.WindbotSSTarget(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.IsExistingMatchingCard(cm.WindbotSSFilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK)
+end
+function cm.WindbotSSOperation(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,cm.WindbotSSFilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
+end
+function cm.SanaeCostFilter(c)
+	return c:IsCode(57330007) and c:IsAbleToRemoveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+end
+function cm.SanaeCost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.SanaeCostFilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,cm.SanaeCostFilter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end

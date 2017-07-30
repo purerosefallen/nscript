@@ -56,7 +56,7 @@ function cm.exat(e,c)
 	return c:GetFlagEffect(375640302)
 end
 function cm.ovfilter(c)
-	return c:IsFaceup() and Senya.check_set_elem(c) and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and Senya.check_set_elem(c) and c:IsXyzType(TYPE_XYZ)
 end
 function cm.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end

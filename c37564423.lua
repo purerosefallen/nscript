@@ -4,10 +4,8 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--Senya.setreg(c,m,37564573)
 	Senya.PrismDamageCheckRegister(c,false)
-	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2)
-	c:EnableReviveLimit()
+	Senya.PrismXyzProcedure(c,2,2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(m,0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -30,25 +28,43 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end
+end
+function cm.tfilter(c,e,tp)
+	return Senya.CheckPrism(c) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLocation(LOCATION_DECK)
 end
 function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
-		if not Duel.GetFieldGroupCount(tp,LOCATION_DECK,0) then return end
-		Duel.ConfirmDecktop(tp,1)
-		local ag=Duel.GetDecktopGroup(tp,1)
-		local tc=ag:GetFirst()
-		local val={tc:GetTextAttack()}
-		if tc.bm_check_operation and (not tc.bm_check_condition or tc.bm_check_condition(e,tp,eg,ep,ev,re,r,rp)) then
-			Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
-			tc.bm_check_operation(e,tp,eg,ep,ev,re,r,rp,val)
-		end
-		if Senya.CheckPrism(tc) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and tc:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
-			if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
-				local cval=math.floor(val[1]/2)
-				Duel.BreakEffect()
-				Duel.Recover(tp,cval,REASON_EFFECT)
-				Duel.Damage(1-tp,cval,REASON_EFFECT)
+		local c=e:GetHandler()
+		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)==0 then return end
+		local ct=1
+		if Card.FilterEffect then
+			local exte={c:FilterEffect(37564427)}
+			for _,te in ipairs(exte) do
+				if Duel.SelectEffectYesNo(tp,te:GetHandler()) then
+					Duel.Hint(HINT_CARD,0,te:GetHandler():GetOriginalCode())
+					ct=ct+1
+				end
 			end
+		else
+			ct=ct+c:GetEffectCount(37564427)
+		end
+		Duel.ConfirmDecktop(tp,ct)
+		local ag=Duel.GetDecktopGroup(tp,ct)
+		local val={0}
+		for tc in aux.Next(ag) do
+			val[1]=val[1]+tc:GetTextAttack()
+			if tc.bm_check_operation and (not tc.bm_check_condition or tc.bm_check_condition(e,tp,eg,ep,ev,re,r,rp)) then
+				Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
+				tc.bm_check_operation(e,tp,eg,ep,ev,re,r,rp,val)
+			end
+		end
+		local sg=ag:Filter(cm.tfilter,nil,e,tp)
+		if sg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=sg:GetCount() and not (sg:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) then
+			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+			local cval=math.floor(val[1]/2)
+			Duel.BreakEffect()
+			Duel.Recover(tp,cval,REASON_EFFECT)
+			Duel.Damage(1-tp,cval,REASON_EFFECT)
 		end
 		Duel.ShuffleDeck(tp)
 end

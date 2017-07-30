@@ -21,7 +21,10 @@ function c57300020.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e1:SetCountLimit(1)
-	e1:SetCost(miyuki.rmovcost(1))
+	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	end)
 	e1:SetOperation(c57300020.atkop)
 	c:RegisterEffect(e1)
 end

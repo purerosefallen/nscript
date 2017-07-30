@@ -43,7 +43,7 @@ function c57300014.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c57300014.mfilter(c,xyzc)
-	return c:IsFaceup() and c:IsSetCard(0x570) and c:IsCanBeXyzMaterial(xyzc) and c:GetRank()==2
+	return c:IsFaceup() and c:IsSetCard(0x570) and c:IsXyzType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyzc) and c:GetRank()==2
 end
 function c57300014.xyzfilter(c,mg,sg,ct,min,max,tp,xyzc)
 	sg:AddCard(c)
@@ -56,8 +56,6 @@ end
 function c57300014.xyzgoal(g,ct,tp,xyzc)
 	local i=g:GetCount()
 	if not g:CheckWithSumEqual(c57300014.xyzval,ct,i,i) then return false end
-	--to be changed in mr4
-	--return Duel.GetLocationCountFromEx(tp,tp,g,xyzc)>0
 	return Duel.GetLocationCountFromEx(tp,tp,g,xyzc)>0 
 end
 function c57300014.xyzval(c)

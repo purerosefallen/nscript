@@ -104,7 +104,8 @@ function c57300012.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	end
 	c:SetMaterial(sg)
 	Duel.SendtoGrave(tg,REASON_RULE)
-	Duel.Overlay(c,sg)  
+	Duel.Overlay(c,sg)
+	Duel.Hint(11,0,aux.Stringid(57300012,1))
 end
 function c57300012.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

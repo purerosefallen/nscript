@@ -19,7 +19,7 @@ function prim.se(c,at)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,cd1)
-	e2:SetCost(prim.sethcost(at))
+	e2:SetCost(prim.SelfToHandCost(at))
 	e2:SetTarget(prim.sethtg)
 	e2:SetOperation(prim.sethop)
 	c:RegisterEffect(e2)
@@ -44,7 +44,7 @@ function prim.se(c,at)
 	e4:SetCode(EFFECT_SET_PROC)
 	c:RegisterEffect(e5)
 end
-function prim.sermcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function prim.SelfRemoveCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
@@ -78,7 +78,7 @@ end
 function prim.sethfilter(c,at)
 	return (c:IsSetCard(0x777) or c:IsAttribute(at)) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
-function prim.sethcost(at)
+function prim.SelfToHandCost(at)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(prim.sethfilter,tp,LOCATION_GRAVE,0,2,e:GetHandler(),at) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

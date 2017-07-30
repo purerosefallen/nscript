@@ -29,7 +29,7 @@ function cm.initial_effect(c)
 	e3:SetTarget(cm.atktg)
 	e3:SetOperation(cm.atkop)
 	c:RegisterEffect(e3)
-	local e2=Effect.CreateEffect(c)
+	--[[local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
@@ -38,7 +38,7 @@ function cm.initial_effect(c)
 	e2:SetTarget(function(e,c)
 		return not Senya.check_set_3L(c)
 	end)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2)]]
 end
 function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetFirstCardTarget()
@@ -46,14 +46,33 @@ function cm.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
+function cm.mfilter(c)
+	return c:IsAbleToRemove() and Senya.check_set_3L(c)
+end
+function cm.flimit(tp,g,fc)
+	return not g:IsExists(Senya.NOT(Senya.check_set_3L),1,nil)
+end
+function cm.fcheck(c,mg,chkf)
+	aux.FCheckAdditional=cm.flimit
+	local res=c:CheckFusionMaterial(mg,nil,chkf)
+	aux.FCheckAdditional=nil
+	return res
+end
+
+function cm.fselect(tp,tc,mg,chkf)
+	aux.FCheckAdditional=cm.flimit
+	local g=Duel.SelectFusionMaterial(tp,tc,mg,nil,chkf)
+	aux.FCheckAdditional=nil
+	return g
+end
 function cm.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and Senya.check_set_3L(c) and (not f or f(c)) and c:GetLevel()==7
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and cm.fcheck(c,m,chkf)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=tp
-		local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil)
+		local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,cm.mfilter,nil)
 		local res=Duel.IsExistingMatchingCard(cm.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -71,7 +90,7 @@ end
 function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local chkf=tp
-	local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,Card.IsAbleToRemove,nil,e)
+	local mg1=Senya.GetFusionMaterial(tp,LOCATION_DECK,nil,cm.mfilter,nil,e)
 	local sg1=Duel.GetMatchingGroup(cm.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -90,13 +109,15 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc=tg:GetFirst()
 		tc:RegisterFlagEffect(m,RESET_CHAIN,0,1)
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
-			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
+			local mat1=cm.fselect(tp,tc,mg1,chkf)
 			tc:SetMaterial(mat1)
 			Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
-			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummonStep(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+			tc:ReplaceEffect(80316585,0x1fe1000,1)
+			Duel.SpecialSummonComplete()
 		else
-			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
+			local mat2=cm.fselect(tp,tc,mg2,chkf)
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2)
 		end

@@ -38,7 +38,11 @@ function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsStatus(STATUS_LEAVE_CONFIRMED) then
 			tc:CancelToGrave()
 		end
-		Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK,POS_FACEDOWN_ATTACK,POS_FACEDOWN_DEFENSE,POS_FACEDOWN_DEFENSE)
+		if tc:IsLocation(LOCATION_SZONE) then
+			Duel.ChangePosition(tc,POS_FACEDOWN_ATTACK)
+		else
+			Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
+		end
 	end
 end
 function cm.filter(c)
@@ -89,7 +93,7 @@ function cm.move(c,co,e)
 	if c:IsImmuneToEffect(e) then return end
 	local s=c:GetSequence()
 	if s==co then
-		cm.exile(c)
+		cm.exile(c,e)
 	elseif s>co then
 		if Duel.CheckLocation(c:GetControler(),c:GetLocation(),s-1) then
 			Duel.MoveSequence(c,s-1)

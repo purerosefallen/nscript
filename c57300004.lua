@@ -19,7 +19,7 @@ function c57300004.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c57300004.filter(c,e,tp)
-	return c:IsSetCard(0x570) and not c:IsCode(57300004) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x570) and not c:IsCode(57300004) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c57300004.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c57300004.filter(chkc,e,tp) end

@@ -4,9 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--Senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2,nil,nil,5)
-	c:EnableReviveLimit()
+	Senya.PrismXyzProcedure(c,2,63)
 	Senya.PrismDamageCheckRegister(c,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,1))
@@ -14,16 +12,19 @@ function cm.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e3:SetCost(cm.cost)
+	--e3:SetCost(Senya.ForbiddenCost())
 	e3:SetCondition(Senya.PrismDamageCheckCondition)
+	e3:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then
+			--if e:GetLabel()==0 then return false end
+			--e:SetLabel(0)
+			return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 and c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(m)==0
+		end
+		c:RemoveOverlayCard(tp,1,99,REASON_COST)
+		local ct=Duel.GetOperatedGroup():GetCount()
+		e:SetLabel(ct)
+		c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
+	end)
 	e3:SetOperation(Senya.PrismDamageCheckOperation)
 	c:RegisterEffect(e3)
-end
-function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(m)==0 end
-	c:RemoveOverlayCard(tp,1,99,REASON_COST)
-	local ct=Duel.GetOperatedGroup():GetCount()
-	e:SetLabel(ct)
-	c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end

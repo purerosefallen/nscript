@@ -4,9 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--Senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,nil,5,3,cm.ovfilter,aux.Stringid(m,0),3,cm.xyzop)
-	c:EnableReviveLimit()
+	Senya.AddXyzProcedureCustom(c,nil,cm.xyzcheck,1,3)	
 	Senya.PrismDamageCheckRegister(c,true)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(m,1))
@@ -27,14 +25,20 @@ function cm.initial_effect(c)
 	e2:SetOperation(cm.op)
 	c:RegisterEffect(e2)
 end
+function cm.xyzcheck(g,xyzc)
+	local ct=g:GetCount()
+	if ct==1 and cm.ovfilter(g:GetFirst()) then return true end
+	if g:IsExists(function(c) return not c:IsXyzLevel(xyzc,5) end,1,nil) then return false end
+	return Senya.PrismXyzCheck(3,3)(g)
+end
+function cm.ovfilter(c)
+	return c:IsFaceup() and c:IsXyzType(TYPE_XYZ) and Senya.CheckPrism(c) and c:GetOverlayCount()==0 and c:GetRank()==3
+end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(m)==0 end
 	c:RemoveOverlayCard(tp,1,1,REASON_COST)
 	c:RegisterFlagEffect(m,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
-end
-function cm.ovfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and Senya.CheckPrism(c) and c:GetOverlayCount()==0
 end
 function cm.xyzop(e,tp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Senya.PrismRemoveExtraCostfilter,tp,LOCATION_EXTRA,0,1,e:GetHandler()) end

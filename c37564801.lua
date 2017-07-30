@@ -4,6 +4,7 @@ local cm=_G["c"..m]
 
 cm.fusion_att_3L=ATTRIBUTE_WATER
 function cm.initial_effect(c)
+	Senya.AddSummonMusic(c,m*16,SUMMON_TYPE_FUSION)
 	Senya.Fusion_3L_Attribute(c,cm)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)

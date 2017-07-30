@@ -3,6 +3,7 @@
 local m,cm=Senya.SayuriRitualPreload(37564916)
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
+	Senya.AddSummonMusic(c,m*16,SUMMON_TYPE_RITUAL)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetDescription(aux.Stringid(37564765,0))

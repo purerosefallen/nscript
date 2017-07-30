@@ -32,6 +32,7 @@ function cm.effect_operation_3L(c)
 	ex:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	ex:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(ex,true)
+	Duel.Readjust()
 	return e2,ex
 end
 --[[cm.reset_operation_3L={
@@ -74,14 +75,14 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 		if tc and cid then exg:AddCard(tc) end
 	end
 	local g=Duel.GetMatchingGroup(cm.copyfilter,tp,0,LOCATION_MZONE,nil)
-	local maxg=g:GetMaxGroup(cm.val) or Group.CreateGroup()
-	local dg=exg:Filter(cm.gfilter,nil,maxg)
+	--local maxg=g:GetMaxGroup(cm.val) or Group.CreateGroup()
+	local dg=exg:Filter(cm.gfilter,nil,g)
 	for tc in aux.Next(dg) do
 		c:ResetEffect(copyt[tc],RESET_COPY)
 		exg:RemoveCard(tc)
 		copyt[tc]=nil
 	end
-	local cg=maxg:Filter(cm.gfilter1,nil,exg)
+	local cg=g:Filter(cm.gfilter1,nil,exg)
 	local f=Card.RegisterEffect
 	Card.RegisterEffect=function(tc,e,forced)
 		e:SetCondition(cm.rcon(e:GetCondition(),tc,copyt))	  

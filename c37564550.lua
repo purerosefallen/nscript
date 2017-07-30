@@ -9,7 +9,7 @@ function cm.initial_effect(c)
 	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsCode,37564765),2,2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	--e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -32,21 +32,21 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function cm.thfilter(c)
-	return c.Senya_desc_with_nanahira and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c.Senya_desc_with_nanahira and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable()
 end
 function cm.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(cm.thfilter,tp,LOCATION_DECK,0,3,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	--Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function cm.thop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(cm.thfilter,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>=3 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SET)
 		local sg=g:Select(tp,3,3,nil)
 		Duel.ConfirmCards(1-tp,sg)
-		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_ATOHAND)
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SET)
 		local tg=sg:Select(1-tp,1,1,nil)
-		Duel.SendtoHand(tg,nil,REASON_EFFECT)
+		Duel.SSet(tp,tg:GetFirst())
 		Duel.ConfirmCards(1-tp,tg)
 	end
 end

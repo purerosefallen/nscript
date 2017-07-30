@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
-	Senya.AddXyzProcedureRank(c,nil,nil,3,3)
+	Senya.AddXyzProcedureRank(c,nil,nil,2,2)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)

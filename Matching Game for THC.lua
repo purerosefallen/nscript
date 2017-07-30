@@ -1,11 +1,6 @@
 --Made by purerosefallen
+
 os=require('os')
-
---block functions
-function Auxiliary.Stringid(code,id)
-	return code*16+id
-end
-
 
 CardList={
 	10001,
@@ -41,7 +36,7 @@ for i=1,20 do
 		Debug.AddCard(code,0,0,loc,0,POS_FACEUP_ATTACK,true)
 	end
 end
-BODING_CARD = Debug.AddCard(10000,1,1,LOCATION_GRAVE,0,POS_FACEUP_ATTACK)
+BODING_CARD = Debug.AddCard(19162134,1,1,LOCATION_GRAVE,0,POS_FACEUP_ATTACK)
 Debug.ReloadFieldEnd()
 
 function Group.MergeCard(g,p,loc,seq)
@@ -144,16 +139,29 @@ function Card.MoveDownwards(c)
 	local loc=c:GetLocation()
 	local cp=c:GetControler()
 	local seq=c:GetSequence()
+	local g=Group.CreateGroup()
 	if loc==LOCATION_SZONE and cp==1 then
-		Duel.MoveToField(c,1,cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,seq)
-	elseif loc==LOCATION_MZONE and cp==1 then
-		Duel.MoveToField(c,1,1-cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,4-seq)
-	elseif loc==LOCATION_MZONE and cp==0 then
-		Duel.MoveToField(c,1,cp,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,seq)
+		g:MergeCard(1,LOCATION_MZONE,seq)
+		if g:GetCount() == 0 then
+			loc = LOCATION_MZONE
+		end
 	end
+	if loc==LOCATION_MZONE and cp==1 then
+		g:MergeCard(0,LOCATION_MZONE,4-seq)
+		if g:GetCount() == 0 then
+			cp = 0
+			seq = 4-seq
+		end
+		g:MergeCard(0,LOCATION_SZONE,seq)
+	end
+	if loc==LOCATION_MZONE and cp==0 then
+		g:MergeCard(0,LOCATION_SZONE,seq)
+		if g:GetCount() == 0 then
+			loc = LOCATION_SZONE
+		end
+	end
+	Duel.MoveToField(c,1,cp,loc,POS_FACEUP_ATTACK,true)
+	Duel.MoveSequence(c,seq)
 	c:SetItemHint()
 end
 function Card.GetChangedCode(c)
@@ -257,9 +265,9 @@ function Duel.CheckScore(ct1,ct2,mul)
 	end
 	MAX_DM = math.max(score1,MAX_DM)
 	MAX_DM = math.max(score3,MAX_DM)
-	Duel.Damage(1,score1,REASON_RULE)
+	Duel.SetLP(0,Duel.GetLP(0)+score2)
 	Duel.Damage(1,score3,REASON_RULE)
-	Duel.Recover(0,score2,REASON_RULE)
+	Duel.Damage(1,score1,REASON_RULE)
 	if mul==1 and ct1>5 then
 		Duel.AddItem(2)
 	elseif mul==1 and ct1>3 then
@@ -433,28 +441,29 @@ end
 function Item.LightingFilter(c,code)
 	return c:IsCode(code) and c:IsNotAlreadyToGrave()
 end
+
 Item.FunctionList={
-[200216]=function(c)
-	Duel.Recover(0,2000,REASON_RULE)
-end,
-[200215]=function(c)
-	return Duel.GetMatchingGroup(Item.StrikeFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c)
-end,
-[200212]=function(c)
-	Duel.Damage(1,1000,REASON_RULE)
-end,
-[200221]=function(c)
-	return c:GetDirectionGroup(0xff):Filter(Card.IsNotAlreadyToGrave,nil)
-end,
-[200203]=function(c)
-	SHOW_HINT_TIME=SHOW_HINT_TIME+10
-end,
-[200208]=function(c)
-	return Duel.GetMatchingGroup(Item.LightingFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c:GetCode())
-end,
-[200210]=function(c)
-	SCORE_ADD_TIME=SCORE_ADD_TIME+10
-end,
+	[200216]=function(c)
+		Duel.Recover(0,2000,REASON_RULE)
+	end,
+	[200215]=function(c)
+		return Duel.GetMatchingGroup(Item.StrikeFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c)
+	end,
+	[200212]=function(c)
+		Duel.Damage(1,1000,REASON_RULE)
+	end,
+	[200221]=function(c)
+		return c:GetDirectionGroup(0xff):Filter(Card.IsNotAlreadyToGrave,nil)
+	end,
+	[200203]=function(c)
+		SHOW_HINT_TIME=SHOW_HINT_TIME+10
+	end,
+	[200208]=function(c)
+		return Duel.GetMatchingGroup(Item.LightingFilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,c,c:GetCode())
+	end,
+	[200210]=function(c)
+		SCORE_ADD_TIME=SCORE_ADD_TIME+10
+	end,
 }
 
 math.randomseed(os.time()+os.clock())

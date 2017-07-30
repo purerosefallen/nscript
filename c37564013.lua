@@ -151,6 +151,7 @@ function cm.tdop(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
+		Duel.HintSelection(sg)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 end
 function cm.sppcost(e,tp,eg,ep,ev,re,r,rp,chk)

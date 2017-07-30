@@ -17,12 +17,22 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e1)
 	Senya.CopySpellModule(c,LOCATION_DECK+LOCATION_GRAVE,0,cm.check_nnhr,nil,nil,1,EFFECT_COUNT_CODE_SINGLE,nil,false)
 end
-cm.flist={
-	aux.FilterBoolFunction(Card.IsType,TYPE_FUSION),
-	aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),
-	aux.FilterBoolFunction(Card.IsType,TYPE_XYZ),
-	aux.FilterBoolFunction(Card.IsType,TYPE_LINK),
-}
+if Senya.master_rule_3_flag then
+	cm.flist={
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_FUSION),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_SYNCHRO),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_XYZ),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_RITUAL),
+	}
+
+else
+	cm.flist={
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_FUSION),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_SYNCHRO),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_XYZ),
+		aux.FilterBoolFunction(Card.IsXyzType,TYPE_LINK),
+	}
+end
 function cm.check_nnhr(c)
 	return c.Senya_desc_with_nanahira
 end

@@ -59,6 +59,12 @@ function cm.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2,true)
+		--[[local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e2:SetValue(1)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e2,true)]]
 		Duel.SpecialSummonComplete()
 	end
 end

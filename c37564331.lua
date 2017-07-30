@@ -47,6 +47,8 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCategory(re:GetCategory())
 	local t=re:GetType()
 	local cd=re:GetCode()
+	local pr1,pr2=re:GetProperty()
+	pr1=bit.bor(pr1,EFFECT_FLAG_NO_TURN_RESET)
 	if bit.band(t,EFFECT_TYPE_ACTIVATE)~=0 then
 		t=bit.bor(t-EFFECT_TYPE_ACTIVATE,EFFECT_TYPE_QUICK_O)
 	end
@@ -58,6 +60,7 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if bit.band(t,EFFECT_TYPE_TRIGGER_F)~=0 then
 		t=bit.bor(t-EFFECT_TYPE_TRIGGER_F,EFFECT_TYPE_TRIGGER_O)
+		pr1=bit.bor(pr1,EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	end
 	if bit.band(t,EFFECT_TYPE_IGNITION)~=0 then
 		t=bit.bor(t-EFFECT_TYPE_IGNITION,EFFECT_TYPE_QUICK_O)
@@ -65,13 +68,13 @@ function cm.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	e1:SetType(t)
 	e1:SetCode(cd)
+	e1:SetProperty(pr1,pr2)
 	if cd==EVENT_FREE_CHAIN then
 		e1:SetHintTiming(0,0x1e0)
 	end
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetLabel(re:GetLabel())
 	e1:SetLabelObject(re:GetLabelObject())
-	e1:SetProperty(bit.bor(re:GetProperty(),EFFECT_FLAG_NO_TURN_RESET))
 	e1:SetCountLimit(1)
 	e1:SetCondition(function(e)
 		return e:GetHandler():IsHasEffect(m)

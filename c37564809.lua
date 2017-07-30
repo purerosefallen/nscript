@@ -3,6 +3,7 @@ local m=37564809
 local cm=_G["c"..m]
 
 function cm.initial_effect(c)
+	--Senya.CommonEffect_3L(c,m,function(e) return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD) end)
 	Senya.CommonEffect_3L(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))

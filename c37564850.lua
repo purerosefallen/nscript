@@ -4,6 +4,7 @@ local cm=_G["c"..m]
 
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
+	Senya.AddSummonMusic(c,m*16+2,SUMMON_TYPE_LINK)
 	Senya.CommonEffect_3L(c,m)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -39,10 +40,10 @@ function cm.effect_operation_3L(c)
 	return e1
 end
 function cm.linkfilter1(c,tp,ec)
-	return c:IsFaceup() and Senya.check_set_3L(c) and Duel.IsExistingMatchingCard(cm.linkfilter2,tp,LOCATION_MZONE,0,1,c,tp,c,ec)
+	return c:IsFaceup() and Senya.check_set_3L(c) and c:IsCanBeLinkMaterial(ec) and Duel.IsExistingMatchingCard(cm.linkfilter2,tp,LOCATION_MZONE,0,1,c,tp,c,ec)
 end
 function cm.linkfilter2(c,tp,lc,ec)
-	return c:IsFaceup() and Senya.check_set_3L(c) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,lc),ec)>0
+	return c:IsFaceup() and Senya.check_set_3L(c) and c:IsCanBeLinkMaterial(ec) and Duel.GetLocationCountFromEx(tp,tp,Group.FromCards(c,lc),ec)>0
 end
 function cm.linkcon(e,c)
 	if c==nil then return true end
@@ -56,7 +57,8 @@ function cm.linkop(e,tp,eg,ep,ev,re,r,rp,c)
 	g1:Merge(g2)
 	local efg=g1:Filter(function(c) return c.effect_operation_3L end,nil)
 	if efg:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EFFECT)
+		Duel.Hint(HINT_CARD,0,m)
+		Duel.Hint(HINT_SELECTMSG,tp,m*16)
 		local tg=efg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		Duel.HintSelection(tg)

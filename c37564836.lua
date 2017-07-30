@@ -4,7 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_3L=true
 function cm.initial_effect(c)
-	Senya.Fusion_3L(c,cm.mfilter,nil,2,2)
+	Senya.Fusion_3L(c,cm.mfilter,nil,2,63)
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e0:SetCode(EVENT_SPSUMMON_SUCCESS)

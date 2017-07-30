@@ -4,7 +4,9 @@ local m,cm=Senya.SayuriRitualPreload(37564904)
 cm.Senya_name_with_remix=true
 function cm.initial_effect(c)
 	c:EnableReviveLimit()
-	Senya.InstantCopyModule(c,1,m,Senya.SelfDiscardCost,cm.condition2,LOCATION_HAND)
+	Senya.AddSummonMusic(c,m*16,SUMMON_TYPE_RITUAL)
+	local e0=Senya.InstantCopyModule(c,1,m,cm.cost,cm.condition2,LOCATION_HAND)
+	e0:SetOperation(cm.CopyOperation)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -32,16 +34,47 @@ function cm.initial_effect(c)
 	c:RegisterEffect(ex)
 end
 cm.mat_filter=Senya.SayuriDefaultMaterialFilterLevel12
-function cm.cfilter(c,ori)
-	return Senya.check_set_sayuri(c) and c:IsFaceup() and bit.band(c:GetType(),0x81)==0x81
+function cm.cfilter(c)
+	return Senya.check_set_sayuri(c) and not c:IsPublic() and c:IsType(TYPE_MONSTER)
 end
-function cm.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_MZONE,0,1,nil)
+function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return not e:GetHandler():IsPublic() and Duel.IsExistingMatchingCard(cm.cfilter,tp,LOCATION_HAND,0,1,c) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+	local g=Duel.SelectMatchingCard(tp,cm.cfilter,tp,LOCATION_HAND,0,1,1,c)
+	Duel.ConfirmCards(1-tp,g)
+end
+function cm.CopyOperation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		c:RegisterFlagEffect(m,0x1fe1000+RESET_CHAIN,0,1)
+	end
+	local te=e:GetLabelObject()
+	if te and Senya.GetValueType(te)=="Effect" then 
+		e:SetLabelObject(te:GetLabelObject())
+		local op=te:GetOperation()
+		if te:IsHasType(EFFECT_TYPE_ACTIVATE) then
+			c:ReleaseEffectRelation(e)
+		end
+		if op then op(e,tp,eg,ep,ev,re,r,rp) end
+	end
+	if c:GetFlagEffect(m)>0 then
+		Duel.BreakEffect()
+		Duel.SendtoGrave(c,REASON_EFFECT)
+	end
+	Duel.ShuffleHand(tp)
+end
+function cm.sayuri_trigger_condition(c,e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil)
 end
 function cm.sayuri_trigger_operation(c,e,tp,eg,ep,ev,re,r,rp)
-	c:RegisterFlagEffect(m,0xfe1000+RESET_PHASE+PHASE_END,EFFECT_FLAG_CLIENT_HINT,1,0,m*16)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.HintSelection(g)
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	end
 end
-cm.sayuri_trigger_forced=true
 function cm.copyfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsType(TYPE_TRAPMONSTER) and not c:IsHasEffect(m)
 end
@@ -74,6 +107,12 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local f=Card.RegisterEffect
 	Card.RegisterEffect=function(tc,e,forced)
 		e:SetCondition(cm.rcon(e:GetCondition(),tc,copyt))
+		e:SetCost(cm.rcost(e:GetCost()))
+		if e:IsHasType(EFFECT_TYPE_IGNITION) then
+			e:SetType(bit.bor(e:GetType()-EFFECT_TYPE_IGNITION,EFFECT_TYPE_QUICK_O))
+			e:SetCode(EVENT_FREE_CHAIN)
+			e:SetHintTiming(0,0x1c0)
+		end
 		f(tc,e,forced)
 	end
 	for tc in aux.Next(cg) do
@@ -89,7 +128,12 @@ function cm.rcon(con,tc,copyt)
 			copyt[tc]=nil
 			return false
 		end
-		if not con or con(e,tp,eg,ep,ev,re,r,rp) then return true end
-		return e:IsHasType(0x7e0) and c:GetFlagEffect(m)>0
+		return not con or con(e,tp,eg,ep,ev,re,r,rp) or e:IsHasType(0x7e0)
+	end
+end
+function cm.rcost(cost)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return not cost or cost(e,tp,eg,ep,ev,re,r,rp,0) or e:IsHasType(0x7e0) end
+		return not cost or e:IsHasType(0x7e0) or cost(e,tp,eg,ep,ev,re,r,rp,1)
 	end
 end

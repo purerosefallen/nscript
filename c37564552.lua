@@ -11,14 +11,17 @@ function cm.initial_effect(c)
 	e5:SetRange(LOCATION_ONFIELD+LOCATION_GRAVE)
 	e5:SetCode(37564900)
 	c:RegisterEffect(e5)
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DRAW)
-	e4:SetDescription(aux.Stringid(37564765,0))
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_HAND)
-	e4:SetTarget(cm.sptg2)
-	e4:SetOperation(cm.spop2)
-	c:RegisterEffect(e4)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(m,0))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetCountLimit(1,m)
+	e1:SetCondition(Senya.SummonTypeCondition(SUMMON_TYPE_RITUAL))
+	e1:SetTarget(cm.target)
+	e1:SetOperation(cm.operation)
+	c:RegisterEffect(e1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(m,0))
 	e1:SetCategory(CATEGORY_DESTROY)
@@ -35,67 +38,29 @@ end
 function cm.mat_filter(c)
 	return c:GetLevel()~=8
 end
-function cm.matfilter(c,rc)
-	return c:IsCanBeRitualMaterial(rc) and (c.Senya_desc_with_nanahira or Senya.check_set_sayuri(c)) and c:IsType(TYPE_MONSTER)
-end
-function cm.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		local mg=Duel.GetRitualMaterial(tp):Filter(cm.matfilter,c,c)
-		if c.mat_filter then
-			mg=mg:Filter(c.mat_filter,nil)
-		end
-		if not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true) then return end
-		if ft>0 then
-			return mg:CheckWithSumGreater(Card.GetRitualLevel,c:GetLevel(),c)
-		else
-			return mg:IsExists(cm.mfilterf,1,nil,tp,mg,c)
-		end
-	end 
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
-end
-function cm.mfilterf(c,tp,mg,rc)
-	if c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then
-		Duel.SetSelectedCard(c)
-		return mg:CheckWithSumGreater(Card.GetRitualLevel,rc:GetLevel(),rc)
-	else return false end
-end
-function cm.spop2(e,tp,eg,ep,ev,re,r,rp)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local c=e:GetHandler()
-	local mg=Duel.GetRitualMaterial(tp):Filter(cm.matfilter,c,c)
-	if c.mat_filter then
-		mg=mg:Filter(c.mat_filter,nil)
-	end
-	local mat=nil
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	if ft>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		mat=mg:SelectWithSumGreater(tp,Card.GetRitualLevel,c:GetLevel(),c)
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		mat=mg:FilterSelect(tp,cm.mfilterf,1,1,nil,tp,mg,c)
-		Duel.SetSelectedCard(mat)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		local mat2=mg:SelectWithSumGreater(tp,Card.GetRitualLevel,c:GetLevel(),c)
-		mat:Merge(mat2)
-	end
-	c:SetMaterial(mat)
-	Duel.ReleaseRitualMaterial(mat)
-	Duel.BreakEffect()
-	Duel.SpecialSummon(c,SUMMON_TYPE_RITUAL,tp,tp,true,true,POS_FACEUP)
-	c:CompleteProcedure()
-end
 function cm.filter(c)
+	return (c.Senya_desc_with_nanahira or Senya.check_set_sayuri(c)) and c:IsAbleToHand() and c:IsType(TYPE_SPELL)
+end
+function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function cm.operation(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,cm.filter,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
+function cm.filter1(c)
 	return c:IsFaceup() and not c:IsDisabled()
 end
 function cm.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and cm.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(cm.filter,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsOnField() and cm.filter1(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(cm.filter1,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,cm.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,cm.filter1,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function cm.operation1(e,tp,eg,ep,ev,re,r,rp)

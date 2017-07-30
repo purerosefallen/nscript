@@ -4,8 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--Senya.setreg(c,m,37564573)
-	aux.AddXyzProcedure(c,Senya.CheckPrism,3,2,nil,nil,5)
+	Senya.PrismXyzProcedure(c,2,63)
 	c:EnableReviveLimit()
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(m,0))

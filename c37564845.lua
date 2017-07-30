@@ -95,5 +95,6 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function cm.rmcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	local ph=Duel.GetCurrentPhase()
+	return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 end

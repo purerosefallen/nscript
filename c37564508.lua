@@ -18,7 +18,7 @@ function cm.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,m)
-	e1:SetCost(Senya.SelfReleaseCost)
+	e1:SetCost(Senya.ForbiddenCost(Senya.SelfReleaseCost))
 	e1:SetTarget(cm.target)
 	e1:SetOperation(cm.operation)
 	c:RegisterEffect(e1)
@@ -31,7 +31,11 @@ function cm.filter(c,e,tp)
 	return c:IsCode(37564765) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
+	local l=e:GetLabel()
+	e:SetLabel(0)
+	local mft=0
+	if l==1 and e:GetHandler():GetSequence()<5 then mft=-1 end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>mft and Duel.IsExistingMatchingCard(cm.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK+LOCATION_GRAVE)
 end
 function cm.operation(e,tp,eg,ep,ev,re,r,rp)

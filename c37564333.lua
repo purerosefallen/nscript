@@ -47,7 +47,7 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function cm.xfilter(c,xyzcard)
-	return c:IsType(TYPE_FUSION) and c.material
+	return c:IsXyzType(TYPE_FUSION) and c.material
 end
 function cm.gcheck(g)
 	local tc1=g:GetFirst()

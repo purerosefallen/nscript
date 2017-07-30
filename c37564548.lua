@@ -49,10 +49,10 @@ cm.list={
 }
 function cm.xyzfilter(c,xyzcard)
 	if c:IsLocation(LOCATION_ONFIELD+LOCATION_REMOVED) and c:IsFacedown() then return false end
-	return c:IsCanBeXyzMaterial(xyzcard) and c:IsType(TYPE_PENDULUM) and c:IsXyzLevel(xyzcard,7)
+	return c:IsCanBeXyzMaterial(xyzcard) and c:IsXyzType(TYPE_PENDULUM) and c:IsXyzLevel(xyzcard,7)
 end
-function cm.xyzfilter1(c)
-	return c:GetOriginalLevel()==7 and c:IsCode(37564765)
+function cm.xyzfilter1(c,xyzcard)
+	return c:GetOriginalLevel()==7 and c:IsCode(37564765) and c:IsCanBeXyzMaterial(xyzcard)
 end
 function cm.xyzcon(e,c,og,min,max)
 		if c==nil then return true end
@@ -70,7 +70,7 @@ function cm.xyzcon(e,c,og,min,max)
 			mg=og:Filter(cm.xyzfilter,nil,c)
 		else
 			mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-			exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+			exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil,c)
 			mg:Merge(exg)
 		end
 		return Senya.CheckGroup(mg,Senya.CheckFieldFilter,nil,minc,maxc,tp,c)
@@ -86,7 +86,7 @@ function cm.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 				mg=og:Filter(cm.xyzfilter,nil,c)
 			else
 				mg=Duel.GetMatchingGroup(cm.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
-				exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil)
+				exg=Duel.GetMatchingGroup(cm.xyzfilter1,tp,LOCATION_PZONE,0,nil,c)
 				mg:Merge(exg)
 			end
 			local minc=2

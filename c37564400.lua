@@ -4,8 +4,7 @@ local cm=_G["c"..m]
 
 cm.Senya_name_with_prism=true
 function cm.initial_effect(c)
-	--Senya.setreg(c,m,37564573)
-	Senya.AddXyzProcedureRank(c,3,cm.mfilter,2,63)
+	Senya.AddXyzProcedureCustom(c,cm.mfilter,Senya.PrismXyzCheck(2,63),1,63)	
 --atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -66,7 +65,7 @@ function cm.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(m)>0
 end
 function cm.mfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsRace(RACE_SEASERPENT)
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsRace(RACE_SEASERPENT) and c:GetRank()==3
 end
 function cm.atkval(e,c)
 	return c:GetOverlayCount()*500
