@@ -139,16 +139,29 @@ function Card.MoveDownwards(c)
 	local loc=c:GetLocation()
 	local cp=c:GetControler()
 	local seq=c:GetSequence()
+	local g=Group.CreateGroup()
 	if loc==LOCATION_SZONE and cp==1 then
-		Duel.MoveToField(c,1,cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,seq)
-	elseif loc==LOCATION_MZONE and cp==1 then
-		Duel.MoveToField(c,1,1-cp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,4-seq)
-	elseif loc==LOCATION_MZONE and cp==0 then
-		Duel.MoveToField(c,1,cp,LOCATION_SZONE,POS_FACEUP_ATTACK,true)
-		Duel.MoveSequence(c,seq)
+		g:MergeCard(1,LOCATION_MZONE,seq)
+		if g:GetCount() == 0 then
+			loc = LOCATION_MZONE
+		end
 	end
+	if loc==LOCATION_MZONE and cp==1 then
+		g:MergeCard(0,LOCATION_MZONE,4-seq)
+		if g:GetCount() == 0 then
+			cp = 0
+			seq = 4-seq
+		end
+		g:MergeCard(0,LOCATION_SZONE,seq)
+	end
+	if loc==LOCATION_MZONE and cp==0 then
+		g:MergeCard(0,LOCATION_SZONE,seq)
+		if g:GetCount() == 0 then
+			loc = LOCATION_SZONE
+		end
+	end
+	Duel.MoveToField(c,1,cp,loc,POS_FACEUP_ATTACK,true)
+	Duel.MoveSequence(c,seq)
 	c:SetItemHint()
 end
 function Card.GetChangedCode(c)
@@ -252,9 +265,9 @@ function Duel.CheckScore(ct1,ct2,mul)
 	end
 	MAX_DM = math.max(score1,MAX_DM)
 	MAX_DM = math.max(score3,MAX_DM)
-	Duel.Damage(1,score1,REASON_RULE)
+	Duel.SetLP(0,Duel.GetLP(0)+score2)
 	Duel.Damage(1,score3,REASON_RULE)
-	Duel.Recover(0,score2,REASON_RULE)
+	Duel.Damage(1,score1,REASON_RULE)
 	if mul==1 and ct1>5 then
 		Duel.AddItem(2)
 	elseif mul==1 and ct1>3 then
