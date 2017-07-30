@@ -1,5 +1,9 @@
 --Made by purerosefallen
 
+function Auxiliary.Stringid(code,id)
+	return code*16+id
+end
+
 os=require('os')
 
 CardList={
